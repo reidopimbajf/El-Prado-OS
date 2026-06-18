@@ -921,9 +921,9 @@ Os pedidos realizados aparecerão aqui.
 </div>
 
 </section>
-<!-- ===========================
+<!-- ==================================================
 CLIENTES
-=========================== -->
+================================================== -->
 
 <section
 id="clientes"
@@ -933,9 +933,32 @@ class="pagina">
 
 <div>
 
-<h2>Clientes</h2>
+<h2>
 
-<p>Clientes cadastrados.</p>
+Clientes
+
+</h2>
+
+<p>
+
+Clientes cadastrados automaticamente após os pedidos.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="toolbar">
+
+<div class="search-box">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+type="text"
+id="pesquisaCliente"
+placeholder="Pesquisar cliente...">
 
 </div>
 
@@ -953,7 +976,7 @@ class="pagina">
 
 <th>Telefone</th>
 
-<th>Email</th>
+<th>E-mail</th>
 
 <th>Pedidos</th>
 
@@ -969,7 +992,21 @@ class="pagina">
 
 <td colspan="5">
 
+<div class="sem-registros">
+
+<h3>
+
 Nenhum cliente cadastrado.
+
+</h3>
+
+<p>
+
+Os clientes aparecerão automaticamente após o primeiro pedido.
+
+</p>
+
+</div>
 
 </td>
 
@@ -1199,6 +1236,8 @@ Informações gerais da loja.
 id="formConfiguracoes"
 class="config-form">
 
+<!-- Nome + WhatsApp -->
+
 <div class="grid-2">
 
 <div class="form-group">
@@ -1230,6 +1269,8 @@ id="telefoneLoja">
 </div>
 
 </div>
+
+<!-- PIX + Taxa -->
 
 <div class="grid-2">
 
@@ -1264,7 +1305,24 @@ id="taxaEntrega">
 
 </div>
 
+<!-- Endereço + Horário -->
+
 <div class="grid-2">
+
+<div class="form-group">
+
+<label>
+
+Endereço da Loja
+
+</label>
+
+<input
+type="text"
+id="enderecoLoja"
+placeholder="Rua, Número, Bairro">
+
+</div>
 
 <div class="form-group">
 
@@ -1281,6 +1339,12 @@ placeholder="18:00 às 23:30">
 
 </div>
 
+</div>
+
+<!-- Tempo -->
+
+<div class="grid-2">
+
 <div class="form-group">
 
 <label>
@@ -1295,6 +1359,8 @@ id="tempoEntrega"
 placeholder="40-60 min">
 
 </div>
+
+<div></div>
 
 </div>
 
@@ -1403,6 +1469,10 @@ rows="4"></textarea>
 
 </div>
 
+<!-- ==================================================
+PREÇO / ORDEM / IMAGEM
+================================================== -->
+
 <div class="grid-3">
 
 <div class="form-group">
@@ -1449,6 +1519,25 @@ id="imagemProduto"
 placeholder="URL da imagem">
 
 </div>
+
+</div>
+
+<!-- ==================================================
+PREVIEW DA IMAGEM
+================================================== -->
+
+<div class="preview-imagem">
+
+<img
+id="previewProduto"
+src="../assets/img/sem-imagem.png"
+alt="Preview do Produto">
+
+<p>
+
+Pré-visualização da imagem do produto
+
+</p>
 
 </div>
 
@@ -1549,36 +1638,25 @@ class="overlay">
 <!-- ==================================================
 FOOTER
 ================================================== -->
-
 <footer class="footer-admin">
 
-<div>
+<p>© 2026 El Prado Control</p>
 
-© 2026 El Prado Control
+<p>Versão 4.1</p>
 
-</div>
-
-<div>
-
-Versão 4.1
-
-</div>
-
-<div>
-
-Desenvolvido por Joaquim Prado
-
-</div>
+<p>Powered by Joaquim Prado</p>
 
 </footer>
 
-</div>
+</main>
 
 <!-- FIM CONTENT -->
 
 </div>
 
 <!-- FIM LAYOUT -->
+
+</div>
 
 </body>
 
