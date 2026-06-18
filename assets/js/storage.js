@@ -323,3 +323,148 @@ function faturamentoTotal(){
     return total;
 
 }
+/*==================================================
+COMPATIBILIDADE ADMIN + SITE
+SPRINT 6
+==================================================*/
+
+Storage.getProdutos = obterProdutos;
+Storage.salvarProdutos = salvarProdutos;
+
+Storage.getPedidos = obterPedidos;
+Storage.salvarPedidos = salvarPedidos;
+
+Storage.getClientes = obterClientes;
+Storage.salvarClientes = salvarClientes;
+
+Storage.getCarrinho = obterCarrinho;
+Storage.salvarCarrinho = salvarCarrinho;
+
+Storage.getConfiguracoes = obterConfiguracoes;
+Storage.salvarConfiguracoes = salvarConfiguracoes;
+
+/*==================================================
+CLIENTES INTELIGENTES
+==================================================*/
+
+Storage.buscarClientePorTelefone = function(telefone){
+
+    telefone = (telefone || "").replace(/\D/g,"");
+
+    return this.getClientes().find(cliente =>
+
+        (cliente.telefone || "").replace(/\D/g,"") === telefone
+
+    );
+
+};
+
+Storage.buscarClientePorId = function(id){
+
+    return this.getClientes().find(
+
+        cliente => cliente.id === id
+
+    );
+
+};
+
+Storage.salvarCliente = function(dados){
+
+    const clientes = this.getClientes();
+
+    const telefone = (dados.telefone || "").replace(/\D/g,"");
+
+    let cliente = clientes.find(c =>
+
+        (c.telefone || "").replace(/\D/g,"") === telefone
+
+    );
+
+    if(cliente){
+
+        cliente.nome = dados.nome || cliente.nome;
+
+        cliente.email = dados.email || cliente.email;
+
+        cliente.endereco = dados.endereco || cliente.endereco;
+
+        cliente.ativo = true;
+
+    }else{
+
+        cliente = {
+
+            id: Date.now(),
+
+            nome: dados.nome || "",
+
+            telefone,
+
+            email: dados.email || "",
+
+            endereco: dados.endereco || {
+
+                cep:"",
+                rua:"",
+                numero:"",
+                complemento:"",
+                bairro:"",
+                cidade:"",
+                estado:""
+
+            },
+
+            pedidos:0,
+
+            totalGasto:0,
+
+            ticketMedio:0,
+
+            dataCadastro:new Date().toISOString(),
+
+            ultimoPedido:null,
+
+            ativo:true
+
+        };
+
+        clientes.push(cliente);
+
+    }
+
+    this.salvarClientes(clientes);
+
+    return cliente;
+
+};
+
+Storage.atualizarEstatisticasCliente = function(clienteId,pedido){
+
+    const clientes = this.getClientes();
+
+    const cliente = clientes.find(
+
+        c => c.id === clienteId
+
+    );
+
+    if(!cliente) return;
+
+    cliente.pedidos++;
+
+    cliente.totalGasto += Number(pedido.total || 0);
+
+    cliente.ticketMedio =
+
+        cliente.totalGasto /
+
+        cliente.pedidos;
+
+    cliente.ultimoPedido =
+
+        new Date().toISOString();
+
+    this.salvarClientes(clientes);
+
+};
