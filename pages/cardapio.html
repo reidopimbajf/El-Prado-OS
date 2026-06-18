@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
@@ -10,9 +11,8 @@ content="width=device-width, initial-scale=1.0">
 
 <title>Cardápio | El Prado Burguer</title>
 
-<meta
-name="description"
-content="Conheça nosso cardápio completo.">
+<meta name="description"
+content="Cardápio El Prado Burguer">
 
 <link rel="preconnect"
 href="https://fonts.googleapis.com">
@@ -21,20 +21,19 @@ href="https://fonts.googleapis.com">
 href="https://fonts.gstatic.com"
 crossorigin>
 
-<link
-href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
 rel="stylesheet">
 
-<link
-rel="stylesheet"
+<link rel="stylesheet"
 href="../assets/css/cardapio.css">
 
-<script
-defer
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script defer
 src="../assets/js/storage.js"></script>
 
-<script
-defer
+<script defer
 src="../assets/js/cardapio.js"></script>
 
 </head>
@@ -45,8 +44,7 @@ src="../assets/js/cardapio.js"></script>
 
 <div class="container">
 
-<a
-href="../index.html"
+<a href="../index.html"
 class="logo">
 
 <img
@@ -55,7 +53,7 @@ alt="El Prado Burguer">
 
 </a>
 
-<nav class="menu">
+<nav>
 
 <a href="../index.html">
 
@@ -63,43 +61,46 @@ Início
 
 </a>
 
-<a href="#produtos">
+<a href="cliente.html">
 
-Cardápio
-
-</a>
-
-<a href="../index.html#promocoes">
-
-Promoções
+Minha Conta
 
 </a>
 
-<a href="../index.html#contato">
+<a href="checkout.html">
 
-Contato
+Checkout
 
 </a>
 
 </nav>
 
-<div class="header-icons">
+<div class="acoes-header">
+
+<div class="pesquisa">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+
+type="text"
+
+id="pesquisa"
+
+placeholder="Buscar produto...">
+
+</div>
 
 <a
-href="cliente.html"
-class="icon-user">
 
-👤
+href="carrinho.html"
 
-</a>
+class="carrinho">
 
-<a
-href="checkout.html"
-class="icon-cart">
+<i class="fa-solid fa-cart-shopping"></i>
 
-🛒
-
-<span id="contadorCarrinho">
+<span
+id="contadorCarrinho">
 
 0
 
@@ -115,15 +116,9 @@ class="icon-cart">
 
 <main>
 
-<section class="banner-cardapio">
+<section class="banner">
 
 <div class="container">
-
-<span>
-
-🍔 EL PRADO BURGUER
-
-</span>
 
 <h1>
 
@@ -133,27 +128,9 @@ Nosso Cardápio
 
 <p>
 
-Escolha seus favoritos e monte o pedido perfeito.
+Escolha seu hambúrguer favorito e monte seu pedido.
 
 </p>
-
-</div>
-
-</section>
-
-<section class="busca">
-
-<div class="container">
-
-<input
-
-type="text"
-
-id="pesquisa"
-
-placeholder="🔍 Buscar hambúrguer, bebida, combo..."
-
->
 
 </div>
 
@@ -163,10 +140,10 @@ placeholder="🔍 Buscar hambúrguer, bebida, combo..."
 
 <div class="container">
 
-<div class="categorias-scroll">
+<div class="filtros">
 
 <button
-class="categoria ativa"
+class="ativo"
 data-categoria="todos">
 
 Todos
@@ -174,7 +151,6 @@ Todos
 </button>
 
 <button
-class="categoria"
 data-categoria="burger">
 
 🍔 Burgers
@@ -182,15 +158,13 @@ data-categoria="burger">
 </button>
 
 <button
-class="categoria"
 data-categoria="combo">
 
-🌮 Combos
+🍟 Combos
 
 </button>
 
 <button
-class="categoria"
 data-categoria="porcao">
 
 🍟 Porções
@@ -198,7 +172,6 @@ data-categoria="porcao">
 </button>
 
 <button
-class="categoria"
 data-categoria="bebida">
 
 🥤 Bebidas
@@ -206,7 +179,6 @@ data-categoria="bebida">
 </button>
 
 <button
-class="categoria"
 data-categoria="sobremesa">
 
 🍰 Sobremesas
@@ -219,68 +191,166 @@ data-categoria="sobremesa">
 
 </section>
 
-<section
-id="produtos"
-class="produtos">
+<section class="produtos">
 
 <div class="container">
 
 <div
 id="listaProdutos"
-class="produtos-grid">
+class="grid-produtos">
 
 <!-- cardapio.js -->
 
-</div>
 </div>
 
 </div>
 
 </section>
+<!-- ==========================
+MODAL DO PRODUTO
+========================== -->
 
-<!-- ===========================
-CARRINHO FLUTUANTE
-=========================== -->
+<div
+id="modalProduto"
+class="modal">
 
-<aside class="carrinho-lateral">
+<div class="modal-content">
 
-<div class="carrinho-header">
+<button
+class="fechar-modal"
+id="fecharModal">
 
-<h2>
+<i class="fa-solid fa-xmark"></i>
 
-🛒 Meu Pedido
+</button>
 
-</h2>
+<div class="modal-grid">
 
-<span id="quantidadeItens">
+<div class="modal-imagem">
 
-0 itens
+<img
+
+id="modalImagem"
+
+src=""
+
+alt="Produto">
+
+</div>
+
+<div class="modal-info">
+
+<span
+id="modalCategoria"
+class="categoria-badge">
+
+Categoria
 
 </span>
 
-</div>
+<h2
+id="modalNome">
 
-<div
-id="listaCarrinho"
-class="carrinho-itens">
+Nome do Produto
 
-<p class="carrinho-vazio">
+</h2>
 
-Seu carrinho está vazio.
+<p
+id="modalDescricao">
+
+Descrição do produto.
 
 </p>
 
+<h3
+id="modalPreco">
+
+R$ 0,00
+
+</h3>
+
+<!-- ==========================
+QUANTIDADE
+========================== -->
+
+<div class="quantidade">
+
+<label>
+
+Quantidade
+
+</label>
+
+<div class="controle-quantidade">
+
+<button
+type="button"
+id="diminuirQtd">
+
+<i class="fa-solid fa-minus"></i>
+
+</button>
+
+<input
+
+type="number"
+
+id="quantidadeProduto"
+
+value="1"
+
+min="1"
+
+readonly>
+
+<button
+type="button"
+id="aumentarQtd">
+
+<i class="fa-solid fa-plus"></i>
+
+</button>
+
 </div>
 
-<div class="carrinho-footer">
+</div>
 
-<div class="resumo">
+<!-- ==========================
+OBSERVAÇÕES
+========================== -->
 
-<div>
+<div class="campo">
 
-<span>Subtotal</span>
+<label>
 
-<strong id="subtotal">
+Observações
+
+</label>
+
+<textarea
+
+id="observacoes"
+
+placeholder="Ex.: sem cebola, ponto da carne, etc.">
+
+</textarea>
+
+</div>
+
+<!-- ==========================
+TOTAL
+========================== -->
+
+<div class="total-produto">
+
+<span>
+
+Total
+
+</span>
+
+<strong
+id="totalProduto">
 
 R$ 0,00
 
@@ -288,49 +358,80 @@ R$ 0,00
 
 </div>
 
-<div>
+<button
 
-<span>Entrega</span>
+id="btnAdicionarCarrinho"
 
-<strong>
+class="btn-adicionar">
 
-A calcular
+<i class="fa-solid fa-cart-plus"></i>
 
-</strong>
+Adicionar ao Carrinho
 
-</div>
-
-<div class="total">
-
-<span>Total</span>
-
-<strong id="totalPedido">
-
-R$ 0,00
-
-</strong>
+</button>
 
 </div>
 
 </div>
+
+</div>
+
+</div>
+<!-- ==========================
+ESTADO VAZIO
+========================== -->
+
+<section
+id="estadoVazio"
+class="estado-vazio">
+
+<div class="container">
+
+<i class="fa-solid fa-burger"></i>
+
+<h2>
+
+Nenhum produto encontrado
+
+</h2>
+
+<p>
+
+Ainda não existem produtos cadastrados para esta categoria.
+
+</p>
 
 <a
+href="admin.html"
+class="btn-admin">
 
-href="checkout.html"
-
-class="btn-finalizar">
-
-Finalizar Pedido →
+Cadastrar Produtos
 
 </a>
 
 </div>
 
-</aside>
+</section>
 
 </main>
 
-<footer class="footer">
+<!-- ==========================
+LOADING
+========================== -->
+
+<div
+id="loading"
+class="loading hide">
+
+<div class="loader"></div>
+
+</div>
+
+<!-- ==========================
+FOOTER
+========================== -->
+
+<footer>
 
 <div class="container">
 
@@ -346,13 +447,19 @@ alt="El Prado Burguer"
 
 class="footer-logo">
 
+<p>
+
+Hambúrguer Artesanal Premium.
+
+</p>
+
 </div>
 
 <div>
 
 <h3>
 
-Horário
+Funcionamento
 
 </h3>
 
@@ -378,6 +485,10 @@ Contato
 
 WhatsApp
 
+</p>
+
+<p id="telefoneLojaFooter">
+
 (11) 97534-2595
 
 </p>
@@ -388,17 +499,17 @@ WhatsApp
 
 <h3>
 
-Redes Sociais
+Pagamento
 
 </h3>
 
 <p>
 
-Instagram
+Pix
 
-Facebook
+Cartão
 
-TikTok
+Dinheiro
 
 </p>
 
@@ -406,15 +517,11 @@ TikTok
 
 </div>
 
-<div class="footer-copy">
-
-<p>
+<div class="copyright">
 
 © 2026 El Prado Burguer
 
 Todos os direitos reservados.
-
-</p>
 
 </div>
 
