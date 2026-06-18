@@ -387,7 +387,13 @@ Storage.salvarCliente = function(dados){
 
         cliente.email = dados.email || cliente.email;
 
-        cliente.endereco = dados.endereco || cliente.endereco;
+cliente.endereco = {
+
+    ...cliente.endereco,
+
+    ...(dados.endereco || {})
+
+};
 
         cliente.ativo = true;
 
@@ -423,7 +429,7 @@ Storage.salvarCliente = function(dados){
 
             dataCadastro:new Date().toISOString(),
 
-            ultimoPedido:null,
+            ultimoPedido:"",
 
             ativo:true
 
