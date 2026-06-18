@@ -1,77 +1,121 @@
 /*==================================================
- EL PRADO BURGUER
- CARDAPIO.JS
-==================================================*/
-
-document.addEventListener("DOMContentLoaded", iniciarCardapio);
-
-/*==================================================
- INICIAR
+EL PRADO BURGUER
+CARDAPIO.JS
+VERSÃO 2.0
 ==================================================*/
 
 let produtos = [];
-let categoriaAtual = "todos";
+
+let produtosFiltrados = [];
+
+let produtoSelecionado = null;
+
+let quantidadeSelecionada = 1;
+
+/*==================================================
+INICIAR
+==================================================*/
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    iniciarCardapio
+
+);
 
 function iniciarCardapio(){
 
-    produtos = obterProdutos();
-
-    renderizarProdutos(produtos);
-
-    atualizarCarrinho();
+    carregarProdutos();
 
     configurarPesquisa();
 
     configurarCategorias();
 
+    configurarModal();
+
+    atualizarCarrinho();
+
 }
 
 /*==================================================
- RENDERIZAR PRODUTOS
+CARREGAR PRODUTOS
 ==================================================*/
 
-function renderizarProdutos(lista){
+function carregarProdutos(){
 
-    const container = document.getElementById("listaProdutos");
+    produtos = obterProdutos()
 
-    if(!container){
+        .filter(produto => produto.ativo);
+
+    produtos.sort(
+
+        (a,b)=>
+
+        (a.ordem || 999)
+
+        -
+
+        (b.ordem || 999)
+
+    );
+
+    produtosFiltrados = [...produtos];
+
+    renderizarProdutos();
+
+}
+
+/*==================================================
+RENDERIZAR
+==================================================*/
+
+function renderizarProdutos(){
+
+    const lista = document.getElementById(
+
+        "listaProdutos"
+
+    );
+
+    const estado = document.getElementById(
+
+        "estadoVazio"
+
+    );
+
+    if(!lista){
 
         return;
 
     }
 
-    container.innerHTML = "";
+    lista.innerHTML = "";
 
-    if(lista.length === 0){
+    if(produtosFiltrados.length === 0){
 
-        container.innerHTML = `
+        lista.style.display="none";
 
-        <div class="sem-produtos">
-
-            <h2>
-
-            Nenhum produto encontrado.
-
-            </h2>
-
-        </div>
-
-        `;
+        estado.style.display="block";
 
         return;
 
     }
 
-    lista.forEach(produto=>{
+    lista.style.display="grid";
 
-        container.innerHTML += criarCard(produto);
+    estado.style.display="none";
+
+    produtosFiltrados.forEach(produto=>{
+
+        lista.innerHTML += criarCard(produto);
 
     });
 
 }
 
 /*==================================================
- CARD
+CARD
 ==================================================*/
 
 function criarCard(produto){
@@ -86,45 +130,33 @@ function criarCard(produto){
 
 src="${produto.imagem}"
 
-alt="${produto.nome}"
+alt="${produto.nome}">
 
->
+<div class="badges">
 
 ${produto.promocao ?
 
-'<span class="badge-promocao">PROMOÇÃO</span>'
+'<span class="badge promocao">Promoção</span>'
 
-:
-
-''}
+: ''}
 
 ${produto.destaque ?
 
-'<span class="badge-destaque">DESTAQUE</span>'
+'<span class="badge destaque">Destaque</span>'
 
-:
+: ''}
 
-''}
+${produto.lancamento ?
+
+'<span class="badge lancamento">Novo</span>'
+
+: ''}
+
+</div>
 
 </div>
 
 <div class="produto-info">
-
-<div class="produto-avaliacao">
-
-<div class="estrelas">
-
-★★★★★
-
-</div>
-
-<span class="nota">
-
-4.9
-
-</span>
-
-</div>
 
 <h3>
 
@@ -138,39 +170,19 @@ ${produto.descricao}
 
 </p>
 
-<div class="produto-tempo">
-
-⏱️ 20-35 min
-
-</div>
-
-<div class="produto-footer">
-
-<span class="preco">
+<div class="preco">
 
 R$ ${produto.preco.toFixed(2).replace(".",",")}
 
-</span>
-
 </div>
-
-<div class="produto-botoes">
-
-<button
-
-class="btn-detalhes-card"
-
-onclick="verDetalhes(${produto.id})">
-
-Detalhes
-
-</button>
 
 <button
 
 class="btn-adicionar"
 
-onclick="adicionarCarrinho(${produto.id})">
+onclick="abrirModal(${produto.id})">
+
+<i class="fa-solid fa-cart-plus"></i>
 
 Adicionar
 
@@ -180,137 +192,439 @@ Adicionar
 
 </div>
 
-</div>
-
 `;
 
 }
 /*==================================================
- PESQUISA
+PESQUISA
 ==================================================*/
 
 function configurarPesquisa(){
 
-    const campo = document.getElementById("pesquisa");
+    const pesquisa = document.getElementById("pesquisa");
 
-    if(!campo){
+    if(!pesquisa){
 
         return;
 
     }
 
-    campo.addEventListener("input", function(){
+    pesquisa.addEventListener(
 
-        filtrarProdutos();
+        "input",
 
-    });
+        function(){
+
+            const texto = this.value
+
+                .toLowerCase()
+
+                .trim();
+
+            produtosFiltrados = produtos.filter(produto=>{
+
+                return (
+
+                    produto.nome.toLowerCase().includes(texto)
+
+                    ||
+
+                    produto.descricao.toLowerCase().includes(texto)
+
+                );
+
+            });
+
+            renderizarProdutos();
+
+        }
+
+    );
 
 }
 
 /*==================================================
- CATEGORIAS
+CATEGORIAS
 ==================================================*/
 
 function configurarCategorias(){
 
-    const botoes = document.querySelectorAll(".categoria");
+    const botoes = document.querySelectorAll(
+
+        ".filtros button"
+
+    );
 
     botoes.forEach(botao=>{
 
-        botao.addEventListener("click",()=>{
+        botao.addEventListener(
 
-            botoes.forEach(item=>{
+            "click",
 
-                item.classList.remove("ativa");
+            ()=>{
 
-            });
+                botoes.forEach(btn=>
 
-            botao.classList.add("ativa");
+                    btn.classList.remove("ativo")
 
-            categoriaAtual = botao.dataset.categoria;
+                );
 
-            filtrarProdutos();
+                botao.classList.add("ativo");
 
-        });
+                const categoria =
+
+                    botao.dataset.categoria;
+
+                if(categoria==="todos"){
+
+                    produtosFiltrados=[...produtos];
+
+                }else{
+
+                    produtosFiltrados = produtos.filter(
+
+                        produto=>
+
+                        produto.categoria===categoria
+
+                    );
+
+                }
+
+                renderizarProdutos();
+
+            }
+
+        );
 
     });
 
 }
 
 /*==================================================
- FILTRO
+MODAL
 ==================================================*/
 
-function filtrarProdutos(){
+function configurarModal(){
 
-    const texto = document
-        .getElementById("pesquisa")
-        .value
-        .toLowerCase();
+    const fechar = document.getElementById(
 
-    const lista = produtos.filter(produto=>{
+        "fecharModal"
 
-        const categoriaOk =
+    );
 
-            categoriaAtual === "todos"
+    if(fechar){
 
-            ||
+        fechar.addEventListener(
 
-            produto.categoria === categoriaAtual;
+            "click",
 
-        const pesquisaOk =
+            fecharModal
 
-            produto.nome
-                .toLowerCase()
-                .includes(texto)
+        );
 
-            ||
+    }
 
-            produto.descricao
-                .toLowerCase()
-                .includes(texto);
+    const modal = document.getElementById(
 
-        return categoriaOk && pesquisaOk;
+        "modalProduto"
 
-    });
+    );
 
-    renderizarProdutos(lista);
+    if(modal){
+
+        modal.addEventListener(
+
+            "click",
+
+            function(event){
+
+                if(event.target===modal){
+
+                    fecharModal();
+
+                }
+
+            }
+
+        );
+
+    }
 
 }
 
 /*==================================================
- CARRINHO
+ABRIR MODAL
 ==================================================*/
 
-function adicionarCarrinho(id){
+function abrirModal(id){
 
-    const produto = produtos.find(item=>item.id===id);
+    produtoSelecionado = produtos.find(
 
-    if(!produto){
+        produto=>produto.id===id
+
+    );
+
+    if(!produtoSelecionado){
 
         return;
 
     }
 
-    let carrinho = obterCarrinho();
+    quantidadeSelecionada = 1;
 
-    const existente = carrinho.find(
+    document.getElementById("modalImagem").src =
+        produtoSelecionado.imagem;
 
-        item=>item.id===id
+    document.getElementById("modalNome").textContent =
+        produtoSelecionado.nome;
+
+    document.getElementById("modalDescricao").textContent =
+        produtoSelecionado.descricao;
+
+    document.getElementById("modalCategoria").textContent =
+        produtoSelecionado.categoria;
+
+    document.getElementById("modalPreco").textContent =
+
+        produtoSelecionado.preco.toLocaleString(
+
+            "pt-BR",
+
+            {
+
+                style:"currency",
+
+                currency:"BRL"
+
+            }
+
+        );
+
+    document.getElementById(
+
+        "quantidadeProduto"
+
+    ).value = 1;
+
+    document.getElementById(
+
+        "observacoes"
+
+    ).value = "";
+
+    atualizarTotalModal();
+
+    document.getElementById(
+
+        "modalProduto"
+
+    ).classList.add("ativo");
+
+}
+
+/*==================================================
+FECHAR MODAL
+==================================================*/
+
+function fecharModal(){
+
+    document.getElementById(
+
+        "modalProduto"
+
+    ).classList.remove("ativo");
+
+}
+/*==================================================
+QUANTIDADE
+==================================================*/
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    const aumentar=document.getElementById("aumentarQtd");
+
+    const diminuir=document.getElementById("diminuirQtd");
+
+    if(aumentar){
+
+        aumentar.addEventListener(
+
+            "click",
+
+            aumentarQuantidade
+
+        );
+
+    }
+
+    if(diminuir){
+
+        diminuir.addEventListener(
+
+            "click",
+
+            diminuirQuantidade
+
+        );
+
+    }
+
+    const adicionar=document.getElementById(
+
+        "btnAdicionarCarrinho"
+
+    );
+
+    if(adicionar){
+
+        adicionar.addEventListener(
+
+            "click",
+
+            adicionarAoCarrinho
+
+        );
+
+    }
+
+});
+
+function aumentarQuantidade(){
+
+    quantidadeSelecionada++;
+
+    document.getElementById(
+
+        "quantidadeProduto"
+
+    ).value=quantidadeSelecionada;
+
+    atualizarTotalModal();
+
+}
+
+function diminuirQuantidade(){
+
+    if(quantidadeSelecionada<=1){
+
+        return;
+
+    }
+
+    quantidadeSelecionada--;
+
+    document.getElementById(
+
+        "quantidadeProduto"
+
+    ).value=quantidadeSelecionada;
+
+    atualizarTotalModal();
+
+}
+
+/*==================================================
+TOTAL
+==================================================*/
+
+function atualizarTotalModal(){
+
+    if(!produtoSelecionado){
+
+        return;
+
+    }
+
+    const total=
+
+        produtoSelecionado.preco
+
+        *
+
+        quantidadeSelecionada;
+
+    document.getElementById(
+
+        "totalProduto"
+
+    ).textContent=
+
+        total.toLocaleString(
+
+            "pt-BR",
+
+            {
+
+                style:"currency",
+
+                currency:"BRL"
+
+            }
+
+        );
+
+}
+
+/*==================================================
+ADICIONAR AO CARRINHO
+==================================================*/
+
+function adicionarAoCarrinho(){
+
+    if(!produtoSelecionado){
+
+        return;
+
+    }
+
+    const carrinho=obterCarrinho();
+
+    const observacoes=document
+
+        .getElementById(
+
+            "observacoes"
+
+        )
+
+        .value
+
+        .trim();
+
+    const existente=carrinho.find(
+
+        item=>
+
+        item.id===produtoSelecionado.id
+
+        &&
+
+        item.observacoes===observacoes
 
     );
 
     if(existente){
 
-        existente.quantidade++;
+        existente.quantidade+=
+
+            quantidadeSelecionada;
 
     }else{
 
         carrinho.push({
 
-            ...produto,
+            id:produtoSelecionado.id,
 
-            quantidade:1
+            nome:produtoSelecionado.nome,
+
+            preco:produtoSelecionado.preco,
+
+            imagem:produtoSelecionado.imagem,
+
+            quantidade:quantidadeSelecionada,
+
+            observacoes:observacoes
 
         });
 
@@ -320,17 +634,27 @@ function adicionarCarrinho(id){
 
     atualizarCarrinho();
 
-    renderizarCarrinho();
+    fecharModal();
+
+    alert(
+
+        "Produto adicionado ao carrinho!"
+
+    );
 
 }
 
 /*==================================================
- CONTADOR
+CONTADOR
 ==================================================*/
 
 function atualizarCarrinho(){
 
-    const contador = document.getElementById("contadorCarrinho");
+    const contador=document.getElementById(
+
+        "contadorCarrinho"
+
+    );
 
     if(!contador){
 
@@ -338,179 +662,112 @@ function atualizarCarrinho(){
 
     }
 
-    const carrinho = obterCarrinho();
+    const carrinho=obterCarrinho();
 
-    const quantidade = carrinho.reduce(
-
-        (total,item)=>
-
-        total + item.quantidade,
-
-        0
-
-    );
-
-    contador.textContent = quantidade;
-
-}
-
-/*==================================================
- DETALHES
-==================================================*/
-
-function verDetalhes(id){
-
-    const produto = produtos.find(
-
-        item=>item.id===id
-
-    );
-
-    if(!produto){
-
-        return;
-
-    }
-
-    alert(
-
-`${produto.nome}
-
-Preço: R$ ${produto.preco.toFixed(2).replace(".",",")}
-
-${produto.descricao}`
-
-    );
-
-}
-/*==================================================
- RENDERIZAR CARRINHO
-==================================================*/
-
-function renderizarCarrinho(){
-
-    const lista = document.getElementById("listaCarrinho");
-    const subtotal = document.getElementById("subtotal");
-    const total = document.getElementById("totalPedido");
-    const quantidade = document.getElementById("quantidadeItens");
-
-    if(!lista){
-
-        return;
-
-    }
-
-    const carrinho = obterCarrinho();
-
-    lista.innerHTML = "";
-
-    if(carrinho.length === 0){
-
-        lista.innerHTML = `
-
-        <p class="carrinho-vazio">
-
-            Seu carrinho está vazio.
-
-        </p>
-
-        `;
-
-        subtotal.textContent = "R$ 0,00";
-        total.textContent = "R$ 0,00";
-        quantidade.textContent = "0 itens";
-
-        return;
-
-    }
-
-    let valorTotal = 0;
-    let totalItens = 0;
+    let quantidade=0;
 
     carrinho.forEach(item=>{
 
-        const valorItem = item.preco * item.quantidade;
-
-        valorTotal += valorItem;
-
-        totalItens += item.quantidade;
-
-        lista.innerHTML += `
-
-<div class="item-carrinho">
-
-<div class="item-info">
-
-<h4>${item.nome}</h4>
-
-<p>
-
-R$ ${item.preco.toFixed(2).replace(".",",")}
-
-</p>
-
-</div>
-
-<div class="item-acoes">
-
-<button
-
-onclick="diminuirQuantidade(${item.id})">
-
-−
-
-</button>
-
-<span>
-
-${item.quantidade}
-
-</span>
-
-<button
-
-onclick="aumentarQuantidade(${item.id})">
-
-+
-
-</button>
-
-</div>
-
-</div>
-
-`;
+        quantidade+=item.quantidade;
 
     });
 
-    subtotal.textContent =
-    `R$ ${valorTotal.toFixed(2).replace(".",",")}`;
+    contador.textContent=quantidade;
 
-    total.textContent =
-    `R$ ${valorTotal.toFixed(2).replace(".",",")}`;
+}
+/*==================================================
+TOAST
+==================================================*/
 
-    quantidade.textContent =
-    `${totalItens} item(ns)`;
+function mostrarToast(mensagem){
+
+    let toast=document.getElementById("toast");
+
+    if(!toast){
+
+        toast=document.createElement("div");
+
+        toast.id="toast";
+
+        toast.className="toast";
+
+        document.body.appendChild(toast);
+
+    }
+
+    toast.textContent=mensagem;
+
+    toast.classList.add("mostrar");
+
+    clearTimeout(toast.timeout);
+
+    toast.timeout=setTimeout(()=>{
+
+        toast.classList.remove("mostrar");
+
+    },2500);
 
 }
 
 /*==================================================
- AUMENTAR
+ADICIONAR AO CARRINHO (NOVA VERSÃO)
 ==================================================*/
 
-function aumentarQuantidade(id){
+function adicionarAoCarrinho(){
 
-    const carrinho = obterCarrinho();
+    if(!produtoSelecionado){
 
-    const item = carrinho.find(
+        return;
 
-        produto=>produto.id===id
+    }
+
+    const carrinho=obterCarrinho();
+
+    const observacoes=document
+
+        .getElementById("observacoes")
+
+        .value
+
+        .trim();
+
+    const existente=carrinho.find(item=>
+
+        item.id===produtoSelecionado.id &&
+
+        item.observacoes===observacoes
 
     );
 
-    if(item){
+    if(existente){
 
-        item.quantidade++;
+        existente.quantidade+=quantidadeSelecionada;
+
+    }else{
+
+        carrinho.push({
+
+            id:produtoSelecionado.id,
+
+            nome:produtoSelecionado.nome,
+
+            categoria:produtoSelecionado.categoria,
+
+            imagem:produtoSelecionado.imagem,
+
+            preco:produtoSelecionado.preco,
+
+            quantidade:quantidadeSelecionada,
+
+            observacoes,
+
+            total:
+
+                produtoSelecionado.preco *
+
+                quantidadeSelecionada
+
+        });
 
     }
 
@@ -518,108 +775,252 @@ function aumentarQuantidade(id){
 
     atualizarCarrinho();
 
-    renderizarCarrinho();
+    fecharModal();
+
+    mostrarToast("Produto adicionado ao carrinho!");
 
 }
 
 /*==================================================
- DIMINUIR
+ATALHOS
 ==================================================*/
 
-function diminuirQuantidade(id){
+document.addEventListener("keydown",event=>{
 
-    let carrinho = obterCarrinho();
+    const modal=document.getElementById("modalProduto");
 
-    const item = carrinho.find(
+    if(
 
-        produto=>produto.id===id
+        event.key==="Escape"
 
-    );
+        &&
 
-    if(!item){
+        modal.classList.contains("ativo")
 
-        return;
+    ){
+
+        fecharModal();
 
     }
 
-    item.quantidade--;
-
-    carrinho = carrinho.filter(
-
-        produto=>produto.quantidade>0
-
-    );
-
-    salvarCarrinho(carrinho);
-
-    atualizarCarrinho();
-
-    renderizarCarrinho();
-
-}
+});
 
 /*==================================================
- LIMPAR CARRINHO
+LOADING
 ==================================================*/
 
-function limparPedido(){
+function mostrarLoading(){
 
-    if(!confirm(
+    const loading=document.getElementById("loading");
 
-        "Deseja limpar todo o carrinho?"
+    if(loading){
 
-    )){
-
-        return;
+        loading.classList.remove("hide");
 
     }
 
-    limparCarrinho();
+}
 
-    atualizarCarrinho();
+function esconderLoading(){
 
-    renderizarCarrinho();
+    const loading=document.getElementById("loading");
+
+    if(loading){
+
+        loading.classList.add("hide");
+
+    }
 
 }
 
 /*==================================================
- FINALIZAR
+RECARREGAR
 ==================================================*/
 
-function finalizarPedido(){
+function recarregarProdutos(){
 
-    const carrinho = obterCarrinho();
+    mostrarLoading();
 
-    if(carrinho.length===0){
+    carregarProdutos();
 
-        alert(
+    esconderLoading();
 
-        "Seu carrinho está vazio."
+}
+
+/*==================================================
+UTILITÁRIOS
+==================================================*/
+
+function formatarMoeda(valor){
+
+    return valor.toLocaleString(
+
+        "pt-BR",
+
+        {
+
+            style:"currency",
+
+            currency:"BRL"
+
+        }
+
+    );
+
+}
+
+function limparPesquisa(){
+
+    const pesquisa=document.getElementById("pesquisa");
+
+    if(pesquisa){
+
+        pesquisa.value="";
+
+    }
+
+    produtosFiltrados=[...produtos];
+
+    renderizarProdutos();
+
+}
+/*==================================================
+INICIALIZAÇÃO DOS EVENTOS
+==================================================*/
+
+function configurarEventosModal(){
+
+    const btnMais=document.getElementById("aumentarQtd");
+
+    const btnMenos=document.getElementById("diminuirQtd");
+
+    const btnCarrinho=document.getElementById("btnAdicionarCarrinho");
+
+    if(btnMais){
+
+        btnMais.addEventListener(
+
+            "click",
+
+            aumentarQuantidade
 
         );
 
-        return;
+    }
+
+    if(btnMenos){
+
+        btnMenos.addEventListener(
+
+            "click",
+
+            diminuirQuantidade
+
+        );
 
     }
 
-    window.location.href =
+    if(btnCarrinho){
 
-    "checkout.html";
+        btnCarrinho.addEventListener(
+
+            "click",
+
+            adicionarAoCarrinho
+
+        );
+
+    }
 
 }
 
 /*==================================================
- INICIALIZAÇÃO
+ATUALIZAÇÃO COMPLETA
 ==================================================*/
 
-document.addEventListener(
+function atualizarPagina(){
 
-    "DOMContentLoaded",
+    carregarProdutos();
 
-    ()=>{
+    atualizarCarrinho();
 
-        renderizarCarrinho();
+}
+
+/*==================================================
+REDEFINIR MODAL
+==================================================*/
+
+function limparModal(){
+
+    quantidadeSelecionada=1;
+
+    produtoSelecionado=null;
+
+    const quantidade=document.getElementById("quantidadeProduto");
+
+    const observacoes=document.getElementById("observacoes");
+
+    const total=document.getElementById("totalProduto");
+
+    if(quantidade){
+
+        quantidade.value=1;
 
     }
 
-);
+    if(observacoes){
+
+        observacoes.value="";
+
+    }
+
+    if(total){
+
+        total.textContent="R$ 0,00";
+
+    }
+
+}
+
+/*==================================================
+NOVA FUNÇÃO FECHAR MODAL
+==================================================*/
+
+function fecharModal(){
+
+    limparModal();
+
+    const modal=document.getElementById("modalProduto");
+
+    if(modal){
+
+        modal.classList.remove("ativo");
+
+    }
+
+}
+
+/*==================================================
+ALTERAÇÃO DA INICIALIZAÇÃO
+==================================================*/
+
+function iniciarCardapio(){
+
+    configurarEventosModal();
+
+    carregarProdutos();
+
+    configurarPesquisa();
+
+    configurarCategorias();
+
+    configurarModal();
+
+    atualizarCarrinho();
+
+}
+
+/*==================================================
+FIM DO ARQUIVO
+CARDAPIO.JS V2.0
+==================================================*/
