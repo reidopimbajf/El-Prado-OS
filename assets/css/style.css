@@ -443,7 +443,43 @@ HERO CONTENT
     margin-bottom:40px;
 
 }
+/*==================================================
+LOGO HERO
+==================================================*/
 
+.hero-logo{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:flex-start;
+
+    margin-bottom:30px;
+
+}
+
+.hero-logo img{
+
+    width:280px;
+
+    max-width:100%;
+
+    height:auto;
+
+    display:block;
+
+    filter:drop-shadow(0 10px 30px rgba(0,0,0,.45));
+
+    transition:.3s;
+
+}
+
+.hero-logo img:hover{
+
+    transform:scale(1.03);
+
+}
 /*=========================
 BOTÕES
 =========================*/
