@@ -1,1 +1,427 @@
-.
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Cardápio | El Prado Burguer</title>
+
+<meta
+name="description"
+content="Conheça nosso cardápio completo.">
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="../assets/css/cardapio.css">
+
+<script
+defer
+src="../assets/js/storage.js"></script>
+
+<script
+defer
+src="../assets/js/cardapio.js"></script>
+
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="container">
+
+<a
+href="../index.html"
+class="logo">
+
+<img
+src="../assets/img/logo.png"
+alt="El Prado Burguer">
+
+</a>
+
+<nav class="menu">
+
+<a href="../index.html">
+
+Início
+
+</a>
+
+<a href="#produtos">
+
+Cardápio
+
+</a>
+
+<a href="../index.html#promocoes">
+
+Promoções
+
+</a>
+
+<a href="../index.html#contato">
+
+Contato
+
+</a>
+
+</nav>
+
+<div class="header-icons">
+
+<a
+href="cliente.html"
+class="icon-user">
+
+👤
+
+</a>
+
+<a
+href="checkout.html"
+class="icon-cart">
+
+🛒
+
+<span id="contadorCarrinho">
+
+0
+
+</span>
+
+</a>
+
+</div>
+
+</div>
+
+</header>
+
+<main>
+
+<section class="banner-cardapio">
+
+<div class="container">
+
+<span>
+
+🍔 EL PRADO BURGUER
+
+</span>
+
+<h1>
+
+Nosso Cardápio
+
+</h1>
+
+<p>
+
+Escolha seus favoritos e monte o pedido perfeito.
+
+</p>
+
+</div>
+
+</section>
+
+<section class="busca">
+
+<div class="container">
+
+<input
+
+type="text"
+
+id="pesquisa"
+
+placeholder="🔍 Buscar hambúrguer, bebida, combo..."
+
+>
+
+</div>
+
+</section>
+
+<section class="categorias">
+
+<div class="container">
+
+<div class="categorias-scroll">
+
+<button
+class="categoria ativa"
+data-categoria="todos">
+
+Todos
+
+</button>
+
+<button
+class="categoria"
+data-categoria="burger">
+
+🍔 Burgers
+
+</button>
+
+<button
+class="categoria"
+data-categoria="combo">
+
+🌮 Combos
+
+</button>
+
+<button
+class="categoria"
+data-categoria="porcao">
+
+🍟 Porções
+
+</button>
+
+<button
+class="categoria"
+data-categoria="bebida">
+
+🥤 Bebidas
+
+</button>
+
+<button
+class="categoria"
+data-categoria="sobremesa">
+
+🍰 Sobremesas
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<section
+id="produtos"
+class="produtos">
+
+<div class="container">
+
+<div
+id="listaProdutos"
+class="produtos-grid">
+
+<!-- cardapio.js -->
+
+</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- ===========================
+CARRINHO FLUTUANTE
+=========================== -->
+
+<aside class="carrinho-lateral">
+
+<div class="carrinho-header">
+
+<h2>
+
+🛒 Meu Pedido
+
+</h2>
+
+<span id="quantidadeItens">
+
+0 itens
+
+</span>
+
+</div>
+
+<div
+id="listaCarrinho"
+class="carrinho-itens">
+
+<p class="carrinho-vazio">
+
+Seu carrinho está vazio.
+
+</p>
+
+</div>
+
+<div class="carrinho-footer">
+
+<div class="resumo">
+
+<div>
+
+<span>Subtotal</span>
+
+<strong id="subtotal">
+
+R$ 0,00
+
+</strong>
+
+</div>
+
+<div>
+
+<span>Entrega</span>
+
+<strong>
+
+A calcular
+
+</strong>
+
+</div>
+
+<div class="total">
+
+<span>Total</span>
+
+<strong id="totalPedido">
+
+R$ 0,00
+
+</strong>
+
+</div>
+
+</div>
+
+<a
+
+href="checkout.html"
+
+class="btn-finalizar">
+
+Finalizar Pedido →
+
+</a>
+
+</div>
+
+</aside>
+
+</main>
+
+<footer class="footer">
+
+<div class="container">
+
+<div class="footer-grid">
+
+<div>
+
+<img
+
+src="../assets/img/logo.png"
+
+alt="El Prado Burguer"
+
+class="footer-logo">
+
+</div>
+
+<div>
+
+<h3>
+
+Horário
+
+</h3>
+
+<p>
+
+Terça a Domingo
+
+18h às 23h
+
+</p>
+
+</div>
+
+<div>
+
+<h3>
+
+Contato
+
+</h3>
+
+<p>
+
+WhatsApp
+
+(11) 97534-2595
+
+</p>
+
+</div>
+
+<div>
+
+<h3>
+
+Redes Sociais
+
+</h3>
+
+<p>
+
+Instagram
+
+Facebook
+
+TikTok
+
+</p>
+
+</div>
+
+</div>
+
+<div class="footer-copy">
+
+<p>
+
+© 2026 El Prado Burguer
+
+Todos os direitos reservados.
+
+</p>
+
+</div>
+
+</div>
+
+</footer>
+
+</body>
+
+</html>
