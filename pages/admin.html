@@ -8,7 +8,10 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Painel Administrativo | El Prado Burguer</title>
+<title>Admin | El Prado OS</title>
+
+<meta name="description"
+content="Painel administrativo El Prado Burguer">
 
 <link rel="preconnect"
 href="https://fonts.googleapis.com">
@@ -21,10 +24,10 @@ crossorigin>
 rel="stylesheet">
 
 <link rel="stylesheet"
-href="../assets/css/admin.css">
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+href="../assets/css/admin.css">
 
 <script defer
 src="../assets/js/storage.js"></script>
@@ -47,14 +50,12 @@ SIDEBAR
 <div class="logo">
 
 <img
-
 src="../assets/img/logo.png"
-
 alt="El Prado Burguer">
 
 <h2>
 
-El Prado OS
+EL PRADO OS
 
 </h2>
 
@@ -62,11 +63,12 @@ El Prado OS
 
 <nav>
 
-<a href="#" class="ativo">
+<a href="#dashboard"
+class="ativo">
 
 <i class="fa-solid fa-chart-line"></i>
 
-Dashboard
+<span>Dashboard</span>
 
 </a>
 
@@ -74,7 +76,7 @@ Dashboard
 
 <i class="fa-solid fa-burger"></i>
 
-Produtos
+<span>Produtos</span>
 
 </a>
 
@@ -82,7 +84,7 @@ Produtos
 
 <i class="fa-solid fa-receipt"></i>
 
-Pedidos
+<span>Pedidos</span>
 
 </a>
 
@@ -90,15 +92,7 @@ Pedidos
 
 <i class="fa-solid fa-users"></i>
 
-Clientes
-
-</a>
-
-<a href="#promocoes">
-
-<i class="fa-solid fa-tags"></i>
-
-Promoções
+<span>Clientes</span>
 
 </a>
 
@@ -106,7 +100,7 @@ Promoções
 
 <i class="fa-solid fa-sack-dollar"></i>
 
-Financeiro
+<span>Financeiro</span>
 
 </a>
 
@@ -114,7 +108,7 @@ Financeiro
 
 <i class="fa-solid fa-gear"></i>
 
-Configurações
+<span>Configurações</span>
 
 </a>
 
@@ -150,27 +144,34 @@ Gerencie toda a operação do El Prado Burguer.
 
 <i class="fa-solid fa-user-shield"></i>
 
+<span>
+
 Administrador
+
+</span>
 
 </div>
 
 </header>
 
 <!-- ==========================
-CARDS
+DASHBOARD
 ========================== -->
 
-<section class="dashboard">
+<section
+id="dashboard">
+
+<div class="dashboard">
 
 <div class="card-indicador">
 
 <h3>
 
-Pedidos Hoje
+Produtos
 
 </h3>
 
-<h2 id="totalPedidos">
+<h2 id="totalProdutos">
 
 0
 
@@ -182,11 +183,11 @@ Pedidos Hoje
 
 <h3>
 
-Produtos
+Pedidos
 
 </h3>
 
-<h2 id="totalProdutos">
+<h2 id="totalPedidos">
 
 0
 
@@ -226,7 +227,10 @@ R$ 0,00
 
 </div>
 
+</div>
+
 </section>
+
 <!-- ==========================
 CADASTRO DE PRODUTOS
 ========================== -->
@@ -239,19 +243,20 @@ class="painel">
 
 <h2>
 
-Cadastro de Produtos
+Cadastrar Produto
 
 </h2>
 
 <p>
 
-Cadastre, edite e gerencie os produtos do cardápio.
+Os produtos cadastrados aparecerão automaticamente na Home e no Cardápio.
 
 </p>
 
 </div>
 
-<form id="formProduto">
+<form
+id="formProduto">
 
 <div class="grid-form">
 
@@ -264,13 +269,8 @@ Nome
 </label>
 
 <input
-
 type="text"
-
 id="nomeProduto"
-
-placeholder="Ex.: El Mexicano"
-
 required>
 
 </div>
@@ -283,7 +283,8 @@ Categoria
 
 </label>
 
-<select id="categoriaProduto">
+<select
+id="categoriaProduto">
 
 <option value="burger">
 
@@ -330,12 +331,8 @@ Descrição
 </label>
 
 <textarea
-
 id="descricaoProduto"
-
-rows="4"
-
-placeholder="Descrição do produto">
+required>
 
 </textarea>
 
@@ -352,14 +349,10 @@ Preço
 </label>
 
 <input
-
 type="number"
-
-id="precoProduto"
-
 step="0.01"
-
-placeholder="39.90">
+id="precoProduto"
+required>
 
 </div>
 
@@ -372,54 +365,130 @@ URL da Imagem
 </label>
 
 <input
-
 type="url"
-
 id="imagemProduto"
-
-placeholder="https://...">
-
-</div>
+required>
 
 </div>
 
-<div class="grid-form">
+</div>
+
+<div class="campo">
+
+<label>
+
+Ordem de Exibição
+
+</label>
+
+<input
+type="number"
+id="ordemProduto"
+value="1">
+
+</div>
+<!-- ==========================
+OPÇÕES DO PRODUTO
+========================== -->
+
+<div class="grid-checks">
 
 <label class="check">
 
 <input
-
 type="checkbox"
+id="produtoAtivo"
+checked>
 
+<span>
+
+Produto Ativo
+
+</span>
+
+</label>
+
+<label class="check">
+
+<input
+type="checkbox"
 id="produtoDestaque">
 
-Produto em destaque
+<span>
+
+Produto em Destaque
+
+</span>
 
 </label>
 
 <label class="check">
 
 <input
-
 type="checkbox"
-
 id="produtoPromocao">
 
-Produto em promoção
+<span>
+
+Produto em Promoção
+
+</span>
+
+</label>
+
+<label class="check">
+
+<input
+type="checkbox"
+id="produtoMaisVendido">
+
+<span>
+
+Mais Vendido
+
+</span>
+
+</label>
+
+<label class="check">
+
+<input
+type="checkbox"
+id="produtoLancamento">
+
+<span>
+
+Lançamento
+
+</span>
 
 </label>
 
 </div>
 
+<div class="acoes-form">
+
 <button
-
 type="submit"
-
 class="btn-salvar">
+
+<i class="fa-solid fa-floppy-disk"></i>
 
 Salvar Produto
 
 </button>
+
+<button
+type="reset"
+class="btn-limpar">
+
+<i class="fa-solid fa-broom"></i>
+
+Limpar
+
+</button>
+
+</div>
 
 </form>
 
@@ -429,7 +498,8 @@ Salvar Produto
 LISTA DE PRODUTOS
 ========================== -->
 
-<section class="painel">
+<section
+class="painel">
 
 <div class="painel-header">
 
@@ -438,6 +508,12 @@ LISTA DE PRODUTOS
 Produtos Cadastrados
 
 </h2>
+
+<p>
+
+Todos os produtos cadastrados são utilizados automaticamente na Home, Cardápio e Carrinho.
+
+</p>
 
 </div>
 
@@ -457,9 +533,7 @@ Produtos Cadastrados
 
 <th>Preço</th>
 
-<th>Destaque</th>
-
-<th>Promoção</th>
+<th>Status</th>
 
 <th>Ações</th>
 
@@ -467,9 +541,10 @@ Produtos Cadastrados
 
 </thead>
 
-<tbody id="listaProdutos">
+<tbody
+id="listaProdutos">
 
-<!-- admin.js -->
+<!-- admin.js renderiza aqui -->
 
 </tbody>
 
@@ -478,6 +553,7 @@ Produtos Cadastrados
 </div>
 
 </section>
+
 <!-- ==========================
 PEDIDOS
 ========================== -->
@@ -490,13 +566,13 @@ class="painel">
 
 <h2>
 
-Pedidos Recebidos
+Pedidos
 
 </h2>
 
 <p>
 
-Acompanhe todos os pedidos realizados.
+Pedidos realizados pelos clientes.
 
 </p>
 
@@ -526,7 +602,8 @@ Acompanhe todos os pedidos realizados.
 
 </thead>
 
-<tbody id="listaPedidos">
+<tbody
+id="listaPedidos">
 
 <!-- admin.js -->
 
@@ -537,7 +614,6 @@ Acompanhe todos os pedidos realizados.
 </div>
 
 </section>
-
 <!-- ==========================
 CLIENTES
 ========================== -->
@@ -554,6 +630,12 @@ Clientes
 
 </h2>
 
+<p>
+
+Clientes cadastrados no sistema.
+
+</p>
+
 </div>
 
 <div class="tabela">
@@ -568,6 +650,8 @@ Clientes
 
 <th>Telefone</th>
 
+<th>E-mail</th>
+
 <th>Pedidos</th>
 
 <th>Total Gasto</th>
@@ -576,7 +660,8 @@ Clientes
 
 </thead>
 
-<tbody id="listaClientes">
+<tbody
+id="listaClientes">
 
 <!-- admin.js -->
 
@@ -603,6 +688,12 @@ class="painel">
 Financeiro
 
 </h2>
+
+<p>
+
+Resumo financeiro da hamburgueria.
+
+</p>
 
 </div>
 
@@ -656,6 +747,22 @@ R$ 0,00
 
 </div>
 
+<div class="card-indicador">
+
+<h3>
+
+Produto Mais Vendido
+
+</h3>
+
+<h2 id="produtoMaisVendido">
+
+—
+
+</h2>
+
+</div>
+
 </div>
 
 </section>
@@ -676,9 +783,18 @@ Configurações da Loja
 
 </h2>
 
+<p>
+
+Informações utilizadas em todo o sistema.
+
+</p>
+
 </div>
 
-<form id="formConfiguracoes">
+<form
+id="formConfiguracoes">
+
+<div class="grid-form">
 
 <div class="campo">
 
@@ -690,8 +806,7 @@ Nome da Loja
 
 <input
 type="text"
-id="nomeLoja"
-value="El Prado Burguer">
+id="nomeLoja">
 
 </div>
 
@@ -705,25 +820,13 @@ WhatsApp
 
 <input
 type="text"
-id="telefoneLoja"
-placeholder="5511999999999">
+id="telefoneLoja">
 
 </div>
 
-<div class="campo">
-
-<label>
-
-Taxa de Entrega
-
-</label>
-
-<input
-type="number"
-id="taxaEntrega"
-step="0.01">
-
 </div>
+
+<div class="grid-form">
 
 <div class="campo">
 
@@ -739,13 +842,36 @@ id="pixLoja">
 
 </div>
 
+<div class="campo">
+
+<label>
+
+Taxa de Entrega
+
+</label>
+
+<input
+type="number"
+step="0.01"
+id="taxaEntrega">
+
+</div>
+
+</div>
+
+<div class="acoes-form">
+
 <button
 type="submit"
 class="btn-salvar">
 
+<i class="fa-solid fa-floppy-disk"></i>
+
 Salvar Configurações
 
 </button>
+
+</div>
 
 </form>
 
