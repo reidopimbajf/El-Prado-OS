@@ -1,12 +1,7 @@
 /*==================================================
- EL PRADO BURGUER
- ADMIN.JS
-==================================================*/
-
-document.addEventListener("DOMContentLoaded", iniciarAdmin);
-
-/*==================================================
- VARIÁVEIS
+EL PRADO OS
+ADMIN.JS
+VERSÃO 2.0
 ==================================================*/
 
 let produtos = [];
@@ -14,137 +9,128 @@ let produtos = [];
 let produtoEditando = null;
 
 /*==================================================
- INICIAR
+INICIAR
 ==================================================*/
+
+document.addEventListener("DOMContentLoaded", iniciarAdmin);
 
 function iniciarAdmin(){
 
-    produtos = obterProdutos();
+    carregarProdutos();
 
     atualizarDashboard();
 
-    listarProdutos();
-
-    configurarFormulario();
+    renderizarProdutos();
 
     carregarConfiguracoes();
+
+    configurarFormulario();
 
 }
 
 /*==================================================
- FORMULÁRIO
+FORMULÁRIO
 ==================================================*/
 
 function configurarFormulario(){
 
-    const formulario = document.getElementById("formProduto");
+    const form = document.getElementById("formProduto");
 
-    if(!formulario){
+    if(!form){
 
         return;
 
     }
 
-    formulario.addEventListener(
-
-        "submit",
-
-        salvarProduto
-
-    );
+    form.addEventListener("submit", salvarProduto);
 
 }
 
 /*==================================================
- DASHBOARD
+CARREGAR PRODUTOS
 ==================================================*/
 
-function atualizarDashboard(){
+function carregarProdutos(){
 
-    document.getElementById("totalProdutos").textContent =
-
-    obterProdutos().length;
-
-    document.getElementById("totalPedidos").textContent =
-
-    obterPedidos().length;
-
-    document.getElementById("totalClientes").textContent =
-
-    obterClientes().length;
-
-    document.getElementById("faturamento").textContent =
-
-    "R$ " +
-
-    faturamentoTotal()
-
-    .toFixed(2)
-
-    .replace(".",",");
+    produtos = obterProdutos();
 
 }
+
 /*==================================================
- SALVAR PRODUTO
+SALVAR PRODUTO
 ==================================================*/
 
-function salvarProduto(evento){
+function salvarProduto(event){
 
-    evento.preventDefault();
+    event.preventDefault();
 
     const produto = {
 
-        id: produtoEditando ? produtoEditando.id : Date.now(),
+        id:
 
-        nome: document.getElementById("nomeProduto").value.trim(),
+            produtoEditando
 
-        categoria: document.getElementById("categoriaProduto").value,
+            ? produtoEditando.id
 
-        descricao: document.getElementById("descricaoProduto").value.trim(),
+            : Date.now(),
 
-        preco: Number(
+        nome:
 
-            document.getElementById("precoProduto").value
+            document.getElementById("nomeProduto").value,
 
-        ),
+        categoria:
 
-        imagem: document.getElementById("imagemProduto").value.trim(),
+            document.getElementById("categoriaProduto").value,
 
-        destaque: document.getElementById("produtoDestaque").checked,
+        descricao:
 
-        promocao: document.getElementById("produtoPromocao").checked
+            document.getElementById("descricaoProduto").value,
+
+        preco:
+
+            Number(
+
+                document.getElementById("precoProduto").value
+
+            ),
+
+        imagem:
+
+            document.getElementById("imagemProduto").value,
+
+        ordem:
+
+            Number(
+
+                document.getElementById("ordemProduto").value
+
+            ),
+
+        ativo:
+
+            document.getElementById("produtoAtivo").checked,
+
+        destaque:
+
+            document.getElementById("produtoDestaque").checked,
+
+        promocao:
+
+            document.getElementById("produtoPromocao").checked,
+
+        maisVendido:
+
+            document.getElementById("produtoMaisVendido").checked,
+
+        lancamento:
+
+            document.getElementById("produtoLancamento").checked
 
     };
 
-    if(
-
-        produto.nome === "" ||
-
-        produto.descricao === "" ||
-
-        produto.imagem === "" ||
-
-        produto.preco <= 0
-
-    ){
-
-        alert("Preencha todos os campos obrigatórios.");
-
-        return;
-
-    }
-
     if(produtoEditando){
 
-        const indice = produtos.findIndex(
-
-            item => item.id === produto.id
-
-        );
-
-        produtos[indice] = produto;
-
-        produtoEditando = null;
+        atualizarProduto(produto);
 
     }else{
 
@@ -154,74 +140,161 @@ function salvarProduto(evento){
 
     salvarProdutos(produtos);
 
-    listarProdutos();
-
-    atualizarDashboard();
-
-    limparFormulario();
-
-}
-
-/*==================================================
- LIMPAR FORMULÁRIO
-==================================================*/
-
-function limparFormulario(){
+    produtoEditando = null;
 
     document.getElementById("formProduto").reset();
 
-    produtoEditando = null;
+    document.getElementById("produtoAtivo").checked = true;
 
-    const botao = document.querySelector(".btn-salvar");
+    renderizarProdutos();
 
-    if(botao){
-
-        botao.textContent = "Salvar Produto";
-
-        botao.classList.remove("btn-atualizar");
-
-    }
+    atualizarDashboard();
 
 }
 /*==================================================
- LISTAR PRODUTOS
+ATUALIZAR PRODUTO
 ==================================================*/
 
-function listarProdutos(){
+function atualizarProduto(produtoAtualizado){
 
-    const tabela = document.getElementById("listaProdutos");
+    produtos = produtos.map(produto =>
 
-    if(!tabela){
+        produto.id === produtoAtualizado.id
+
+            ? produtoAtualizado
+
+            : produto
+
+    );
+
+}
+
+/*==================================================
+EDITAR PRODUTO
+==================================================*/
+
+function editarProduto(id){
+
+    produtoEditando = produtos.find(
+
+        produto => produto.id === id
+
+    );
+
+    if(!produtoEditando){
 
         return;
 
     }
 
-    produtos = obterProdutos();
+    document.getElementById("nomeProduto").value =
+        produtoEditando.nome;
 
-    tabela.innerHTML = "";
+    document.getElementById("categoriaProduto").value =
+        produtoEditando.categoria;
+
+    document.getElementById("descricaoProduto").value =
+        produtoEditando.descricao;
+
+    document.getElementById("precoProduto").value =
+        produtoEditando.preco;
+
+    document.getElementById("imagemProduto").value =
+        produtoEditando.imagem;
+
+    document.getElementById("ordemProduto").value =
+        produtoEditando.ordem || 1;
+
+    document.getElementById("produtoAtivo").checked =
+        produtoEditando.ativo;
+
+    document.getElementById("produtoDestaque").checked =
+        produtoEditando.destaque;
+
+    document.getElementById("produtoPromocao").checked =
+        produtoEditando.promocao;
+
+    document.getElementById("produtoMaisVendido").checked =
+        produtoEditando.maisVendido;
+
+    document.getElementById("produtoLancamento").checked =
+        produtoEditando.lancamento;
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+
+    });
+
+}
+
+/*==================================================
+EXCLUIR PRODUTO
+==================================================*/
+
+function excluirProduto(id){
+
+    const confirmar = confirm(
+
+        "Deseja realmente excluir este produto?"
+
+    );
+
+    if(!confirmar){
+
+        return;
+
+    }
+
+    produtos = produtos.filter(
+
+        produto => produto.id !== id
+
+    );
+
+    salvarProdutos(produtos);
+
+    renderizarProdutos();
+
+    atualizarDashboard();
+
+}
+
+/*==================================================
+RENDERIZAR PRODUTOS
+==================================================*/
+
+function renderizarProdutos(){
+
+    const tbody = document.getElementById("listaProdutos");
+
+    if(!tbody){
+
+        return;
+
+    }
 
     if(produtos.length === 0){
 
-        tabela.innerHTML = `
+        tbody.innerHTML = `
 
 <tr>
 
-<td colspan="7">
+<td colspan="6">
 
 <div class="sem-registros">
 
-<i class="fa-solid fa-burger"></i>
-
 <h3>
 
-Nenhum produto cadastrado.
+Nenhum produto cadastrado
 
 </h3>
 
 <p>
 
-Cadastre seu primeiro produto.
+Cadastre o primeiro produto para que ele apareça automaticamente na Home e no Cardápio.
 
 </p>
 
@@ -237,27 +310,29 @@ Cadastre seu primeiro produto.
 
     }
 
+    produtos.sort((a,b)=>
+
+        (a.ordem || 999) - (b.ordem || 999)
+
+    );
+
+    tbody.innerHTML = "";
+
     produtos.forEach(produto=>{
 
-        tabela.innerHTML += `
+        tbody.innerHTML += `
 
 <tr>
 
 <td>
 
-<img
-
-src="${produto.imagem}"
-
-alt="${produto.nome}"
-
->
+<img src="${produto.imagem}" alt="${produto.nome}">
 
 </td>
 
 <td>
 
-${produto.nome}
+<strong>${produto.nome}</strong>
 
 </td>
 
@@ -275,21 +350,17 @@ R$ ${produto.preco.toFixed(2).replace(".",",")}
 
 <td>
 
-${produto.destaque
-
-? '<span class="status ativo">Sim</span>'
-
-: '<span class="status inativo">Não</span>'}
-
-</td>
-
-<td>
+${produto.ativo
+? '<span class="badge ativo">Ativo</span>'
+: '<span class="badge inativo">Inativo</span>'}
 
 ${produto.promocao
+? '<span class="badge promocao">Promoção</span>'
+: ''}
 
-? '<span class="status promocao">Sim</span>'
-
-: '<span class="status inativo">Não</span>'}
+${produto.destaque
+? '<span class="badge destaque">Destaque</span>'
+: ''}
 
 </td>
 
@@ -298,19 +369,7 @@ ${produto.promocao
 <div class="acoes">
 
 <button
-
-class="btn-acao btn-visualizar"
-
-onclick="visualizarProduto(${produto.id})">
-
-<i class="fa-solid fa-eye"></i>
-
-</button>
-
-<button
-
 class="btn-acao btn-editar"
-
 onclick="editarProduto(${produto.id})">
 
 <i class="fa-solid fa-pen"></i>
@@ -318,9 +377,7 @@ onclick="editarProduto(${produto.id})">
 </button>
 
 <button
-
 class="btn-acao btn-excluir"
-
 onclick="excluirProduto(${produto.id})">
 
 <i class="fa-solid fa-trash"></i>
@@ -338,129 +395,51 @@ onclick="excluirProduto(${produto.id})">
     });
 
 }
-
 /*==================================================
- VISUALIZAR
+DASHBOARD
 ==================================================*/
 
-function visualizarProduto(id){
+function atualizarDashboard(){
 
-    const produto = produtos.find(
+    atualizarTotalProdutos();
 
-        item => item.id === id
+    atualizarTotalPedidos();
 
-    );
+    atualizarTotalClientes();
 
-    if(!produto){
+    atualizarFaturamento();
+
+    atualizarFinanceiro();
+
+}
+
+/*==================================================
+PRODUTOS
+==================================================*/
+
+function atualizarTotalProdutos(){
+
+    const elemento = document.getElementById("totalProdutos");
+
+    if(!elemento){
 
         return;
 
     }
 
-    alert(
-
-`${produto.nome}
-
-Categoria: ${produto.categoria}
-
-Preço: R$ ${produto.preco.toFixed(2).replace(".",",")}
-
-Descrição:
-
-${produto.descricao}`
-
-    );
+    elemento.textContent = produtos.length;
 
 }
 
 /*==================================================
- EDITAR
+PEDIDOS
 ==================================================*/
 
-function editarProduto(id){
+function atualizarTotalPedidos(){
 
-    const produto = produtos.find(
+    const elemento = document.getElementById("totalPedidos");
 
-        item => item.id === id
-
-    );
-
-    if(!produto){
-
-        return;
-
-    }
-
-    produtoEditando = produto;
-
-    document.getElementById("nomeProduto").value = produto.nome;
-
-    document.getElementById("categoriaProduto").value = produto.categoria;
-
-    document.getElementById("descricaoProduto").value = produto.descricao;
-
-    document.getElementById("precoProduto").value = produto.preco;
-
-    document.getElementById("imagemProduto").value = produto.imagem;
-
-    document.getElementById("produtoDestaque").checked = produto.destaque;
-
-    document.getElementById("produtoPromocao").checked = produto.promocao;
-
-    const botao = document.querySelector(".btn-salvar");
-
-    botao.textContent = "Atualizar Produto";
-
-    botao.classList.add("btn-atualizar");
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
-
-}
-
-/*==================================================
- EXCLUIR
-==================================================*/
-
-function excluirProduto(id){
-
-    if(!confirm(
-
-        "Deseja excluir este produto?"
-
-    )){
-
-        return;
-
-    }
-
-    produtos = produtos.filter(
-
-        item => item.id !== id
-
-    );
-
-    salvarProdutos(produtos);
-
-    listarProdutos();
-
-    atualizarDashboard();
-
-}
-/*==================================================
- PEDIDOS
-==================================================*/
-
-function listarPedidos(){
-
-    const tabela = document.getElementById("listaPedidos");
-
-    if(!tabela){
+    if(!elemento){
 
         return;
 
@@ -468,154 +447,39 @@ function listarPedidos(){
 
     const pedidos = obterPedidos();
 
-    tabela.innerHTML = "";
+    elemento.textContent = pedidos.length;
 
-    if(pedidos.length === 0){
+}
 
-        tabela.innerHTML = `
+/*==================================================
+CLIENTES
+==================================================*/
 
-<tr>
+function atualizarTotalClientes(){
 
-<td colspan="6">
+    const elemento = document.getElementById("totalClientes");
 
-<div class="sem-registros">
-
-<i class="fa-solid fa-receipt"></i>
-
-<h3>
-
-Nenhum pedido encontrado.
-
-</h3>
-
-</div>
-
-</td>
-
-</tr>
-
-`;
+    if(!elemento){
 
         return;
 
     }
 
-    pedidos.forEach(pedido=>{
+    const clientes = obterClientes();
 
-        tabela.innerHTML += `
-
-<tr>
-
-<td>#${pedido.id}</td>
-
-<td>${pedido.cliente.nome}</td>
-
-<td>
-
-R$ ${Number(pedido.total).toFixed(2).replace(".",",")}
-
-</td>
-
-<td>${pedido.pagamento}</td>
-
-<td>
-
-<span class="status ativo">
-
-Novo
-
-</span>
-
-</td>
-
-<td>
-
-<div class="acoes">
-
-<button
-
-class="btn-acao btn-visualizar"
-
-onclick="visualizarPedido(${pedido.id})">
-
-<i class="fa-solid fa-eye"></i>
-
-</button>
-
-</div>
-
-</td>
-
-</tr>
-
-`;
-
-    });
+    elemento.textContent = clientes.length;
 
 }
 
 /*==================================================
- VISUALIZAR PEDIDO
+FATURAMENTO
 ==================================================*/
 
-function visualizarPedido(id){
+function atualizarFaturamento(){
 
-    const pedido = obterPedidos().find(
+    const elemento = document.getElementById("faturamento");
 
-        item=>item.id===id
-
-    );
-
-    if(!pedido){
-
-        return;
-
-    }
-
-    let itens = "";
-
-    pedido.itens.forEach(item=>{
-
-        itens +=
-
-`${item.quantidade}x ${item.nome}
-`;
-
-    });
-
-    alert(
-
-`PEDIDO #${pedido.id}
-
-Cliente:
-${pedido.cliente.nome}
-
-Pagamento:
-${pedido.pagamento}
-
-Entrega:
-${pedido.entrega}
-
-Itens:
-
-${itens}
-
-Total:
-R$ ${Number(pedido.total).toFixed(2).replace(".",",")}`
-
-    );
-
-}
-
-/*==================================================
- CLIENTES
-==================================================*/
-
-function listarClientes(){
-
-    const tabela = document.getElementById("listaClientes");
-
-    if(!tabela){
+    if(!elemento){
 
         return;
 
@@ -623,67 +487,61 @@ function listarClientes(){
 
     const pedidos = obterPedidos();
 
-    const clientes = {};
+    let total = 0;
 
     pedidos.forEach(pedido=>{
 
-        const telefone = pedido.cliente.telefone;
-
-        if(!clientes[telefone]){
-
-            clientes[telefone]={
-
-                nome:pedido.cliente.nome,
-
-                telefone,
-
-                pedidos:0,
-
-                total:0
-
-            };
-
-        }
-
-        clientes[telefone].pedidos++;
-
-        clientes[telefone].total += Number(pedido.total);
+        total += Number(pedido.total || 0);
 
     });
 
-    tabela.innerHTML="";
+    elemento.textContent =
 
-    Object.values(clientes).forEach(cliente=>{
+        total.toLocaleString(
 
-        tabela.innerHTML += `
+            "pt-BR",
 
-<tr>
+            {
 
-<td>${cliente.nome}</td>
+                style:"currency",
 
-<td>${cliente.telefone}</td>
+                currency:"BRL"
 
-<td>${cliente.pedidos}</td>
+            }
 
-<td>
-
-R$ ${cliente.total.toFixed(2).replace(".",",")}
-
-</td>
-
-</tr>
-
-`;
-
-    });
+        );
 
 }
 
 /*==================================================
- FINANCEIRO
+FINANCEIRO
 ==================================================*/
 
 function atualizarFinanceiro(){
+
+    atualizarReceita();
+
+    atualizarPedidosFinalizados();
+
+    atualizarTicketMedio();
+
+    atualizarProdutoMaisVendido();
+
+}
+
+/*==================================================
+RECEITA TOTAL
+==================================================*/
+
+function atualizarReceita(){
+
+    const elemento = document.getElementById("receitaTotal");
+
+    if(!elemento){
+
+        return;
+
+    }
 
     const pedidos = obterPedidos();
 
@@ -691,137 +549,518 @@ function atualizarFinanceiro(){
 
     pedidos.forEach(pedido=>{
 
-        receita += Number(pedido.total);
+        receita += Number(pedido.total || 0);
 
     });
 
-    const ticket =
+    elemento.textContent =
 
-    pedidos.length
+        receita.toLocaleString(
 
-    ?
+            "pt-BR",
 
-    receita / pedidos.length
+            {
 
-    :
+                style:"currency",
 
-    0;
+                currency:"BRL"
 
-    document.getElementById("receitaTotal").textContent =
+            }
 
-    "R$ " +
+        );
 
-    receita.toFixed(2).replace(".",",");
+}
 
-    document.getElementById("pedidosFinalizados").textContent =
+/*==================================================
+PEDIDOS FINALIZADOS
+==================================================*/
 
-    pedidos.length;
+function atualizarPedidosFinalizados(){
 
-    document.getElementById("ticketMedio").textContent =
+    const elemento = document.getElementById("pedidosFinalizados");
 
-    "R$ " +
+    if(!elemento){
 
-    ticket.toFixed(2).replace(".",",");
+        return;
+
+    }
+
+    const pedidos = obterPedidos();
+
+    elemento.textContent = pedidos.filter(
+
+        pedido => pedido.status === "Finalizado"
+
+    ).length;
 
 }
 /*==================================================
- CONFIGURAÇÕES
+TICKET MÉDIO
+==================================================*/
+
+function atualizarTicketMedio(){
+
+    const elemento = document.getElementById("ticketMedio");
+
+    if(!elemento){
+
+        return;
+
+    }
+
+    const pedidos = obterPedidos();
+
+    if(pedidos.length === 0){
+
+        elemento.textContent = "R$ 0,00";
+
+        return;
+
+    }
+
+    let total = 0;
+
+    pedidos.forEach(pedido=>{
+
+        total += Number(pedido.total || 0);
+
+    });
+
+    const ticket = total / pedidos.length;
+
+    elemento.textContent =
+
+        ticket.toLocaleString(
+
+            "pt-BR",
+
+            {
+
+                style:"currency",
+
+                currency:"BRL"
+
+            }
+
+        );
+
+}
+
+/*==================================================
+PRODUTO MAIS VENDIDO
+==================================================*/
+
+function atualizarProdutoMaisVendido(){
+
+    const elemento = document.getElementById("produtoMaisVendido");
+
+    if(!elemento){
+
+        return;
+
+    }
+
+    const pedidos = obterPedidos();
+
+    const ranking = {};
+
+    pedidos.forEach(pedido=>{
+
+        if(!pedido.itens){
+
+            return;
+
+        }
+
+        pedido.itens.forEach(item=>{
+
+            if(!ranking[item.nome]){
+
+                ranking[item.nome]=0;
+
+            }
+
+            ranking[item.nome]+=item.quantidade || 1;
+
+        });
+
+    });
+
+    let produto="—";
+
+    let maior=0;
+
+    Object.keys(ranking).forEach(nome=>{
+
+        if(ranking[nome]>maior){
+
+            maior=ranking[nome];
+
+            produto=nome;
+
+        }
+
+    });
+
+    elemento.textContent=produto;
+
+}
+
+/*==================================================
+CLIENTES
+==================================================*/
+
+function renderizarClientes(){
+
+    const tbody=document.getElementById("listaClientes");
+
+    if(!tbody){
+
+        return;
+
+    }
+
+    const clientes=obterClientes();
+
+    if(clientes.length===0){
+
+        tbody.innerHTML=`
+
+<tr>
+
+<td colspan="5">
+
+<div class="sem-registros">
+
+<h3>Nenhum cliente cadastrado.</h3>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+        return;
+
+    }
+
+    tbody.innerHTML="";
+
+    clientes.forEach(cliente=>{
+
+        tbody.innerHTML+=`
+
+<tr>
+
+<td>${cliente.nome}</td>
+
+<td>${cliente.telefone || "-"}</td>
+
+<td>${cliente.email || "-"}</td>
+
+<td>${cliente.pedidos || 0}</td>
+
+<td>
+
+${Number(cliente.totalGasto || 0).toLocaleString(
+
+"pt-BR",
+
+{
+
+style:"currency",
+
+currency:"BRL"
+
+}
+
+)}
+
+</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+
+/*==================================================
+PEDIDOS
+==================================================*/
+
+function renderizarPedidos(){
+
+    const tbody=document.getElementById("listaPedidos");
+
+    if(!tbody){
+
+        return;
+
+    }
+
+    const pedidos=obterPedidos();
+
+    if(pedidos.length===0){
+
+        tbody.innerHTML=`
+
+<tr>
+
+<td colspan="6">
+
+<div class="sem-registros">
+
+<h3>Nenhum pedido realizado.</h3>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+        return;
+
+    }
+
+    tbody.innerHTML="";
+
+    pedidos.forEach((pedido,index)=>{
+
+        tbody.innerHTML+=`
+
+<tr>
+
+<td>#${index+1}</td>
+
+<td>${pedido.cliente || "-"}</td>
+
+<td>
+
+${Number(pedido.total || 0).toLocaleString(
+
+"pt-BR",
+
+{
+
+style:"currency",
+
+currency:"BRL"
+
+}
+
+)}
+
+</td>
+
+<td>${pedido.pagamento || "-"}</td>
+
+<td>${pedido.status || "Recebido"}</td>
+
+<td>
+
+<button
+
+class="btn-acao btn-visualizar">
+
+<i class="fa-solid fa-eye"></i>
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+
+/*==================================================
+CONFIGURAÇÕES
 ==================================================*/
 
 function carregarConfiguracoes(){
 
-    const config = obterConfiguracoes();
+    const config=obterConfiguracoes();
 
-    document.getElementById("nomeLoja").value =
-        config.nomeLoja || "El Prado Burguer";
+    if(document.getElementById("nomeLoja"))
 
-    document.getElementById("telefoneLoja").value =
-        config.telefone || "";
+        document.getElementById("nomeLoja").value=config.nomeLoja || "";
 
-    document.getElementById("taxaEntrega").value =
-        config.taxaEntrega || "";
+    if(document.getElementById("telefoneLoja"))
 
-    document.getElementById("pixLoja").value =
-        config.pix || "";
+        document.getElementById("telefoneLoja").value=config.telefoneLoja || "";
 
-    const formulario = document.getElementById("formConfiguracoes");
+    if(document.getElementById("pixLoja"))
 
-    if(formulario){
+        document.getElementById("pixLoja").value=config.pixLoja || "";
 
-        formulario.addEventListener(
+    if(document.getElementById("taxaEntrega"))
 
-            "submit",
+        document.getElementById("taxaEntrega").value=config.taxaEntrega || "";
 
-            salvarConfiguracoesLoja
+}
+/*==================================================
+SALVAR CONFIGURAÇÕES
+==================================================*/
 
-        );
+const formConfiguracoes = document.getElementById("formConfiguracoes");
 
-    }
+if(formConfiguracoes){
+
+    formConfiguracoes.addEventListener(
+
+        "submit",
+
+        salvarConfiguracoesLoja
+
+    );
 
 }
 
-/*==================================================
- SALVAR CONFIGURAÇÕES
-==================================================*/
+function salvarConfiguracoesLoja(event){
 
-function salvarConfiguracoesLoja(evento){
+    event.preventDefault();
 
-    evento.preventDefault();
-
-    const configuracoes = {
+    const configuracoes={
 
         nomeLoja:
 
-        document.getElementById("nomeLoja").value,
+            document.getElementById("nomeLoja").value,
 
-        telefone:
+        telefoneLoja:
 
-        document.getElementById("telefoneLoja").value,
+            document.getElementById("telefoneLoja").value,
+
+        pixLoja:
+
+            document.getElementById("pixLoja").value,
 
         taxaEntrega:
 
-        Number(
+            Number(
 
-        document.getElementById("taxaEntrega").value
+                document.getElementById("taxaEntrega").value
 
-        ),
-
-        pix:
-
-        document.getElementById("pixLoja").value
+            ) || 0
 
     };
 
     salvarConfiguracoes(configuracoes);
 
-    alert(
+    mostrarMensagem(
 
-        "Configurações salvas com sucesso!"
+        "Configurações salvas com sucesso!",
+
+        "success"
 
     );
 
 }
 
 /*==================================================
- ATUALIZAÇÃO GERAL
+MENSAGENS
 ==================================================*/
 
-function atualizarPainel(){
+function mostrarMensagem(texto,tipo){
 
-    atualizarDashboard();
+    const mensagem=document.createElement("div");
 
-    listarProdutos();
+    mensagem.className=`alert alert-${tipo}`;
 
-    listarPedidos();
+    mensagem.textContent=texto;
 
-    listarClientes();
+    document.body.appendChild(mensagem);
 
-    atualizarFinanceiro();
+    mensagem.style.position="fixed";
+
+    mensagem.style.top="20px";
+
+    mensagem.style.right="20px";
+
+    mensagem.style.zIndex="99999";
+
+    setTimeout(()=>{
+
+        mensagem.remove();
+
+    },3000);
 
 }
 
 /*==================================================
- INICIALIZAÇÃO
+ATUALIZAÇÃO GERAL
+==================================================*/
+
+function atualizarPainel(){
+
+    carregarProdutos();
+
+    renderizarProdutos();
+
+    renderizarPedidos();
+
+    renderizarClientes();
+
+    atualizarDashboard();
+
+}
+
+/*==================================================
+RESET FORMULÁRIO
+==================================================*/
+
+function limparFormulario(){
+
+    document.getElementById(
+
+        "formProduto"
+
+    ).reset();
+
+    document.getElementById(
+
+        "produtoAtivo"
+
+    ).checked=true;
+
+    produtoEditando=null;
+
+}
+
+/*==================================================
+SOBRESCREVER SALVAR
+==================================================*/
+
+const salvarProdutoOriginal=salvarProduto;
+
+salvarProduto=function(event){
+
+    salvarProdutoOriginal(event);
+
+    limparFormulario();
+
+    atualizarPainel();
+
+    mostrarMensagem(
+
+        "Produto salvo com sucesso!",
+
+        "success"
+
+    );
+
+}
+
+/*==================================================
+INICIALIZAÇÃO
 ==================================================*/
 
 document.addEventListener(
@@ -835,3 +1074,11 @@ document.addEventListener(
     }
 
 );
+
+/*==================================================
+VERSÃO
+
+Admin.js 2.0
+
+Fim do Arquivo
+==================================================*/
