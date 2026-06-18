@@ -22,71 +22,43 @@ rel="stylesheet">
 <script defer src="assets/js/storage.js"></script>
 <script defer src="assets/js/home.js"></script>
 
-</head>
-
-<body>
-
 <header class="header">
 
-<div class="container">
+    <div class="container">
 
-<a href="index.html" class="logo">
-    <img
-        src="assets/img/logo.png"
-        alt="El Prado Burguer"
-        class="logo-img">
+        <nav class="menu">
 
-    <div class="logo-texto">
-        <span class="logo-titulo">
-            EL PRADO
-        </span>
+            <a href="#inicio">Início</a>
 
-        <span class="logo-subtitulo">
-            BURGUER
-        </span>
+            <a href="#cardapio">Cardápio</a>
+
+            <a href="#promocoes">Promoções</a>
+
+            <a href="#contato">Contato</a>
+
+        </nav>
+
+        <div class="header-icons">
+
+            <a href="pages/login.html" class="icon-user">
+
+                <i class="fa-solid fa-user"></i>
+
+            </a>
+
+            <a href="pages/carrinho.html" class="icon-cart">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                <span id="contadorCarrinho">0</span>
+
+            </a>
+
+        </div>
+
     </div>
-</a>
-
-<nav class="menu">
-
-<a href="#inicio">Início</a>
-
-<a href="#categorias">Cardápio</a>
-
-<a href="#promocoes">Promoções</a>
-
-<a href="#sobre">Sobre</a>
-
-<a href="#contato">Contato</a>
-
-</nav>
-
-<div class="header-icons">
-
-<a href="pages/cliente.html" class="icon-user">
-
-👤
-
-</a>
-
-<a href="pages/checkout.html" class="icon-cart">
-
-🛒
-
-<span id="contadorCarrinho">
-
-0
-
-</span>
-
-</a>
-
-</div>
-
-</div>
 
 </header>
-
 <main>
 
 <section
@@ -98,7 +70,13 @@ class="hero">
 <div class="hero-content">
 
 <span class="hero-tag">
+<div class="hero-logo">
 
+    <img
+        src="assets/img/logo.png"
+        alt="El Prado Burguer">
+
+</div>
 ⭐ O MELHOR BURGUER DA CIDADE
 
 </span>
