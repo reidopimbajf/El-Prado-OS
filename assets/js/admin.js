@@ -1,129 +1,376 @@
 /*==================================================
-EL PRADO OS
+EL PRADO CONTROL
 ADMIN.JS
-VERSÃO 3.0
+VERSÃO 5.0
+Autor: Joaquim Prado
 ==================================================*/
 
 /*==================================================
-ESTADO DA APLICAÇÃO
+VARIÁVEIS GLOBAIS
 ==================================================*/
 
-const Admin = {
+let produtos = [];
+let pedidos = [];
+let clientes = [];
+let configuracoes = {};
 
-    produtos: [],
+let produtoEditando = null;
 
-    produtoEditando: null
+/*==================================================
+ELEMENTOS
+==================================================*/
 
-};
+const tituloPagina =
+document.getElementById("tituloPagina");
+
+const modalProduto =
+document.getElementById("modalProduto");
+
+const formProduto =
+document.getElementById("formProduto");
+
+const previewProduto =
+document.getElementById("previewProduto");
+
+const campoImagem =
+document.getElementById("imagemProduto");
 
 /*==================================================
 INICIALIZAÇÃO
 ==================================================*/
 
 document.addEventListener(
-
     "DOMContentLoaded",
-
-    iniciarAdmin
-
+    iniciarSistema
 );
 
-function iniciarAdmin(){
+function iniciarSistema(){
 
-    carregarProdutos();
+    carregarDados();
 
-    configurarFormulario();
+    configurarEventos();
 
-    carregarConfiguracoes();
-
-    atualizarPainel();
+    atualizarSistema();
 
 }
-
 /*==================================================
-CARREGAR PRODUTOS
+CARREGAR DADOS
 ==================================================*/
 
-function carregarProdutos(){
+function carregarDados(){
 
-    Admin.produtos = obterProdutos();
+    produtos =
+    Storage.getProdutos() || [];
 
-    Admin.produtos.sort(
+    pedidos =
+    Storage.getPedidos() || [];
 
-        (a,b)=>
+    clientes =
+    Storage.getClientes() || [];
 
-        (a.ordem || 999)
+    configuracoes =
+    Storage.getConfiguracoes() || {};
 
-        -
+    clientes.forEach(cliente=>{
 
-        (b.ordem || 999)
+        const listaPedidos =
+        pedidos.filter(
+            pedido=>pedido.cliente===cliente.nome
+        );
 
-    );
+        cliente.pedidos =
+        listaPedidos.length;
 
-}
+        cliente.totalGasto =
+        listaPedidos.reduce(
 
-/*==================================================
-FORMULÁRIO
-==================================================*/
+            (total,pedido)=>
 
-function configurarFormulario(){
+            total+Number(
+                pedido.total || 0
+            ),
 
-    const form = document.getElementById(
-
-        "formProduto"
-
-    );
-
-    if(form){
-
-        form.addEventListener(
-
-            "submit",
-
-            salvarProduto
+            0
 
         );
+
+    });
+
+}
+/*==================================================
+EVENTOS
+==================================================*/
+
+function configurarEventos(){
+
+    const btnNovo =
+    document.getElementById("btnNovoProduto");
+
+    if(btnNovo){
+
+        btnNovo.onclick =
+        abrirNovoProduto;
 
     }
 
-    const formConfiguracoes =
+    const fechar =
+    document.getElementById(
+        "fecharModalProduto"
+    );
 
-        document.getElementById(
+    if(fechar){
 
-            "formConfiguracoes"
-
-        );
-
-    if(formConfiguracoes){
-
-        formConfiguracoes.addEventListener(
-
-            "submit",
-
-            salvarConfiguracoesLoja
-
-        );
+        fechar.onclick =
+        fecharModalProduto;
 
     }
 
+    const cancelar =
+    document.getElementById(
+        "cancelarProduto"
+    );
+
+    if(cancelar){
+
+        cancelar.onclick =
+        fecharModalProduto;
+
+    }
+
+    if(formProduto){
+
+        formProduto.onsubmit =
+        salvarProduto;
+
+    }
+
+    if(campoImagem){
+
+        campoImagem.oninput =
+        atualizarPreviewImagem;
+
+    }
+
+    document
+    .getElementById(
+        "pesquisaProduto"
+    )
+    ?.addEventListener(
+        "input",
+        renderizarProdutos
+    );
+
+    document
+    .getElementById(
+        "filtroCategoria"
+    )
+    ?.addEventListener(
+        "change",
+        renderizarProdutos
+    );
+
+    document
+    .getElementById(
+        "filtroStatusProduto"
+    )
+    ?.addEventListener(
+        "change",
+        renderizarProdutos
+    );
+
+    document
+    .getElementById(
+        "pesquisaPedido"
+    )
+    ?.addEventListener(
+        "input",
+        renderizarPedidos
+    );
+
+    document
+    .getElementById(
+        "filtroStatus"
+    )
+    ?.addEventListener(
+        "change",
+        renderizarPedidos
+    );
+
+    document
+    .getElementById(
+        "pesquisaCliente"
+    )
+    ?.addEventListener(
+        "input",
+        renderizarClientes
+    );
+
 }
 /*==================================================
-CADASTRO DE PRODUTOS
+MODAL PRODUTO
+==================================================*/
+
+function abrirNovoProduto(){
+
+    produtoEditando = null;
+
+    if(formProduto){
+        formProduto.reset();
+    }
+
+    if(previewProduto){
+        previewProduto.src =
+        "../assets/img/sem-imagem.png";
+    }
+
+    document.getElementById(
+        "produtoAtivo"
+    ).checked = true;
+
+    document.getElementById(
+        "ordemProduto"
+    ).value = produtos.length + 1;
+
+    modalProduto.classList.add("ativo");
+
+}
+
+function fecharModalProduto(){
+
+    modalProduto.classList.remove("ativo");
+
+}
+
+/*==================================================
+PREVIEW DA IMAGEM
+==================================================*/
+
+function atualizarPreviewImagem(){
+
+    const url =
+    campoImagem.value.trim();
+
+    if(url===""){
+
+        previewProduto.src =
+        "../assets/img/sem-imagem.png";
+
+        return;
+
+    }
+
+    previewProduto.src = url;
+
+    previewProduto.onerror = function(){
+
+        previewProduto.src =
+        "../assets/img/sem-imagem.png";
+
+    };
+
+}
+/*==================================================
+SALVAR PRODUTO
 ==================================================*/
 
 function salvarProduto(event){
 
     event.preventDefault();
 
-    const produto = obterDadosFormulario();
+    const produto={
 
-    if(Admin.produtoEditando){
+        id:
 
-        atualizarProduto(produto);
+        produtoEditando ||
 
-        mostrarMensagem(
+        Date.now(),
 
-            "Produto atualizado com sucesso!",
+        nome:
+
+        document.getElementById(
+        "nomeProduto"
+        ).value.trim(),
+
+        categoria:
+
+        document.getElementById(
+        "categoriaProduto"
+        ).value,
+
+        descricao:
+
+        document.getElementById(
+        "descricaoProduto"
+        ).value.trim(),
+
+        preco:Number(
+
+            document.getElementById(
+            "precoProduto"
+            ).value
+
+        ),
+
+        ordem:Number(
+
+            document.getElementById(
+            "ordemProduto"
+            ).value
+
+        ),
+
+        imagem:
+
+        document.getElementById(
+        "imagemProduto"
+        ).value.trim(),
+
+        ativo:
+
+        document.getElementById(
+        "produtoAtivo"
+        ).checked,
+
+        promocao:
+
+        document.getElementById(
+        "produtoPromocao"
+        ).checked,
+
+        destaque:
+
+        document.getElementById(
+        "produtoDestaque"
+        ).checked,
+
+        maisVendido:
+
+        document.getElementById(
+        "produtoMaisVendido"
+        ).checked,
+
+        lancamento:
+
+        document.getElementById(
+        "produtoLancamento"
+        ).checked
+
+    };
+
+    if(produtoEditando){
+
+        const indice =
+        produtos.findIndex(
+
+            p=>p.id===produtoEditando
+
+        );
+
+        produtos[indice] = produto;
+
+        mostrarAlerta(
+
+            "Produto atualizado!",
 
             "success"
 
@@ -131,11 +378,11 @@ function salvarProduto(event){
 
     }else{
 
-        Admin.produtos.push(produto);
+        produtos.push(produto);
 
-        mostrarMensagem(
+        mostrarAlerta(
 
-            "Produto cadastrado com sucesso!",
+            "Produto cadastrado!",
 
             "success"
 
@@ -143,216 +390,137 @@ function salvarProduto(event){
 
     }
 
-    salvarProdutos(Admin.produtos);
+    produtos.sort(
 
-    limparFormulario();
+        (a,b)=>
 
-    atualizarPainel();
-
-}
-
-/*==================================================
-OBTER DADOS DO FORMULÁRIO
-==================================================*/
-
-function obterDadosFormulario(){
-
-    return{
-
-        id:
-
-            Admin.produtoEditando
-
-            ?
-
-            Admin.produtoEditando.id
-
-            :
-
-            Date.now(),
-
-        nome:
-
-            document.getElementById("nomeProduto").value.trim(),
-
-        categoria:
-
-            document.getElementById("categoriaProduto").value,
-
-        descricao:
-
-            document.getElementById("descricaoProduto").value.trim(),
-
-        preco:
-
-            Number(
-
-                document.getElementById("precoProduto").value
-
-            ),
-
-        imagem:
-
-            document.getElementById("imagemProduto").value.trim(),
-
-        ordem:
-
-            Number(
-
-                document.getElementById("ordemProduto").value
-
-            ) || 999,
-
-        ativo:
-
-            document.getElementById("produtoAtivo").checked,
-
-        destaque:
-
-            document.getElementById("produtoDestaque").checked,
-
-        promocao:
-
-            document.getElementById("produtoPromocao").checked,
-
-        lancamento:
-
-            document.getElementById("produtoLancamento").checked,
-
-        maisVendido:
-
-            document.getElementById("produtoMaisVendido").checked
-
-    };
-
-}
-
-/*==================================================
-ATUALIZAR PRODUTO
-==================================================*/
-
-function atualizarProduto(produtoAtualizado){
-
-    Admin.produtos =
-
-        Admin.produtos.map(produto=>
-
-            produto.id===produtoAtualizado.id
-
-                ?
-
-                produtoAtualizado
-
-                :
-
-                produto
-
-        );
-
-}
-
-/*==================================================
-EDITAR PRODUTO
-==================================================*/
-
-function editarProduto(id){
-
-    Admin.produtoEditando =
-
-        Admin.produtos.find(
-
-            produto=>produto.id===id
-
-        );
-
-    if(!Admin.produtoEditando){
-
-        return;
-
-    }
-
-    const produto = Admin.produtoEditando;
-
-    document.getElementById("nomeProduto").value = produto.nome;
-
-    document.getElementById("categoriaProduto").value = produto.categoria;
-
-    document.getElementById("descricaoProduto").value = produto.descricao;
-
-    document.getElementById("precoProduto").value = produto.preco;
-
-    document.getElementById("imagemProduto").value = produto.imagem;
-
-    document.getElementById("ordemProduto").value = produto.ordem;
-
-    document.getElementById("produtoAtivo").checked = produto.ativo;
-
-    document.getElementById("produtoDestaque").checked = produto.destaque;
-
-    document.getElementById("produtoPromocao").checked = produto.promocao;
-
-    document.getElementById("produtoLancamento").checked = produto.lancamento;
-
-    document.getElementById("produtoMaisVendido").checked = produto.maisVendido;
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
-
-}
-
-/*==================================================
-EXCLUIR PRODUTO
-==================================================*/
-
-function excluirProduto(id){
-
-    if(!confirmarExclusao()){
-
-        return;
-
-    }
-
-    Admin.produtos =
-
-        Admin.produtos.filter(
-
-            produto=>produto.id!==id
-
-        );
-
-    salvarProdutos(
-
-        Admin.produtos
+        a.ordem-b.ordem
 
     );
 
-    atualizarPainel();
+    Storage.salvarProdutos(produtos);
+
+    fecharModalProduto();
+
+    atualizarSistema();
 
 }
 /*==================================================
-RENDERIZAÇÃO
+ATUALIZAÇÃO GERAL
+==================================================*/
+
+function atualizarSistema(){
+
+    carregarDados();
+
+    atualizarPainel();
+
+    renderizarProdutos();
+
+    renderizarPedidos();
+
+    renderizarClientes();
+
+    atualizarFinanceiro();
+
+}
+/*==================================================
+RENDERIZAR PRODUTOS
 ==================================================*/
 
 function renderizarProdutos(){
 
-    const tbody = document.getElementById(
+    const tbody =
+    document.getElementById("listaProdutos");
 
-        "listaProdutos"
+    if(!tbody) return;
 
-    );
+    let lista = [...produtos];
 
-    if(!tbody){
+    const pesquisa =
+    document.getElementById("pesquisaProduto")
+    ?.value
+    .toLowerCase() || "";
 
-        return;
+    const categoria =
+    document.getElementById("filtroCategoria")
+    ?.value || "";
+
+    const status =
+    document.getElementById("filtroStatusProduto")
+    ?.value || "";
+
+    /*==============================
+    FILTRO NOME
+    ==============================*/
+
+    if(pesquisa){
+
+        lista = lista.filter(produto=>
+
+            produto.nome
+            .toLowerCase()
+            .includes(pesquisa)
+
+        );
 
     }
 
-    if(Admin.produtos.length===0){
+    /*==============================
+    FILTRO CATEGORIA
+    ==============================*/
+
+    if(categoria){
+
+        lista = lista.filter(
+
+            produto=>
+
+            produto.categoria===categoria
+
+        );
+
+    }
+
+    /*==============================
+    FILTRO STATUS
+    ==============================*/
+
+    if(status==="ativos"){
+
+        lista = lista.filter(
+
+            produto=>produto.ativo
+
+        );
+
+    }
+
+    if(status==="inativos"){
+
+        lista = lista.filter(
+
+            produto=>!produto.ativo
+
+        );
+
+    }
+
+    /*==============================
+    ORDENAÇÃO
+    ==============================*/
+
+    lista.sort(
+
+        (a,b)=>a.ordem-b.ordem
+
+    );
+
+    /*==============================
+    SEM PRODUTOS
+    ==============================*/
+
+    if(lista.length===0){
 
         tbody.innerHTML=`
 
@@ -364,13 +532,13 @@ function renderizarProdutos(){
 
 <h3>
 
-Nenhum produto cadastrado
+Nenhum produto encontrado.
 
 </h3>
 
 <p>
 
-Cadastre seu primeiro produto para que ele apareça automaticamente na Home e no Cardápio.
+Cadastre um novo produto.
 
 </p>
 
@@ -388,21 +556,9 @@ Cadastre seu primeiro produto para que ele apareça automaticamente na Home e no
 
     tbody.innerHTML="";
 
-    Admin.produtos.forEach(produto=>{
+    lista.forEach(produto=>{
 
-        tbody.innerHTML += criarLinhaProduto(produto);
-
-    });
-
-}
-
-/*==================================================
-LINHA DA TABELA
-==================================================*/
-
-function criarLinhaProduto(produto){
-
-    return `
+        tbody.innerHTML += `
 
 <tr>
 
@@ -410,11 +566,17 @@ function criarLinhaProduto(produto){
 
 <img
 
-src="${produto.imagem}"
+class="produto-thumb"
 
-alt="${produto.nome}"
+src="${
 
-class="produto-thumb">
+produto.imagem ||
+
+'../assets/img/sem-imagem.png'
+
+}"
+
+alt="${produto.nome}">
 
 </td>
 
@@ -426,23 +588,43 @@ ${produto.nome}
 
 </strong>
 
-</td>
+<br>
 
-<td>
+<small>
 
-${produto.categoria}
+${produto.descricao}
 
-</td>
-
-<td>
-
-${formatarMoeda(produto.preco)}
+</small>
 
 </td>
 
 <td>
 
-${criarBadges(produto)}
+${traduzCategoria(
+
+produto.categoria
+
+)}
+
+</td>
+
+<td>
+
+${formatarMoeda(
+
+produto.preco
+
+)}
+
+</td>
+
+<td>
+
+${gerarBadges(
+
+produto
+
+)}
 
 </td>
 
@@ -454,11 +636,9 @@ ${criarBadges(produto)}
 
 class="btn-acao btn-editar"
 
-onclick="editarProduto(${produto.id})"
+onclick="editarProduto(${produto.id})">
 
-title="Editar">
-
-✏️
+<i class="fa-solid fa-pen"></i>
 
 </button>
 
@@ -466,11 +646,9 @@ title="Editar">
 
 class="btn-acao btn-excluir"
 
-onclick="excluirProduto(${produto.id})"
+onclick="excluirProduto(${produto.id})">
 
-title="Excluir">
-
-🗑️
+<i class="fa-solid fa-trash"></i>
 
 </button>
 
@@ -481,6 +659,109 @@ title="Excluir">
 </tr>
 
 `;
+
+    });
+
+}
+/*==================================================
+EDITAR PRODUTO
+==================================================*/
+
+function editarProduto(id){
+
+    const produto = produtos.find(
+
+        p => p.id === id
+
+    );
+
+    if(!produto) return;
+
+    produtoEditando = id;
+
+    document.getElementById(
+        "nomeProduto"
+    ).value = produto.nome;
+
+    document.getElementById(
+        "categoriaProduto"
+    ).value = produto.categoria;
+
+    document.getElementById(
+        "descricaoProduto"
+    ).value = produto.descricao;
+
+    document.getElementById(
+        "precoProduto"
+    ).value = produto.preco;
+
+    document.getElementById(
+        "ordemProduto"
+    ).value = produto.ordem;
+
+    document.getElementById(
+        "imagemProduto"
+    ).value = produto.imagem || "";
+
+    document.getElementById(
+        "produtoAtivo"
+    ).checked = produto.ativo;
+
+    document.getElementById(
+        "produtoPromocao"
+    ).checked = produto.promocao;
+
+    document.getElementById(
+        "produtoDestaque"
+    ).checked = produto.destaque;
+
+    document.getElementById(
+        "produtoMaisVendido"
+    ).checked = produto.maisVendido;
+
+    document.getElementById(
+        "produtoLancamento"
+    ).checked = produto.lancamento;
+
+    atualizarPreviewImagem();
+
+    modalProduto.classList.add("ativo");
+
+}
+
+/*==================================================
+EXCLUIR PRODUTO
+==================================================*/
+
+function excluirProduto(id){
+
+    if(!confirm(
+        "Deseja realmente excluir este produto?"
+    )) return;
+
+    produtos = produtos.filter(
+
+        produto => produto.id !== id
+
+    );
+
+    produtos.sort(
+
+        (a,b)=>a.ordem-b.ordem
+
+    );
+
+    Storage.salvarProdutos(produtos);
+
+    atualizarSistema();
+
+    mostrarAlerta(
+
+        "Produto removido com sucesso!",
+
+        "warning"
+
+    );
 
 }
 
@@ -488,521 +769,355 @@ title="Excluir">
 BADGES
 ==================================================*/
 
-function criarBadges(produto){
+function gerarBadges(produto){
 
-    let badges="";
+    let html = "";
 
-    badges += produto.ativo
+    html += produto.ativo
 
-        ? '<span class="badge ativo">Ativo</span>'
+    ? '<span class="badge ativo">Ativo</span>'
 
-        : '<span class="badge inativo">Inativo</span>';
+    : '<span class="badge inativo">Inativo</span>';
 
     if(produto.promocao){
 
-        badges +=
-
+        html +=
         '<span class="badge promocao">Promoção</span>';
 
     }
 
     if(produto.destaque){
 
-        badges +=
-
+        html +=
         '<span class="badge destaque">Destaque</span>';
-
-    }
-
-    if(produto.lancamento){
-
-        badges +=
-
-        '<span class="badge lancamento">Novo</span>';
 
     }
 
     if(produto.maisVendido){
 
-        badges +=
-
+        html +=
         '<span class="badge vendido">Mais Vendido</span>';
 
     }
 
-    return badges;
+    if(produto.lancamento){
+
+        html +=
+        '<span class="badge lancamento">Lançamento</span>';
+
+    }
+
+    return html;
+
+}
+
+/*==================================================
+TRADUZIR CATEGORIA
+==================================================*/
+
+function traduzCategoria(categoria){
+
+    const categorias = {
+
+        burger : "Hambúrguer",
+
+        combo : "Combo",
+
+        porcao : "Porção",
+
+        bebida : "Bebida",
+
+        sobremesa : "Sobremesa"
+
+    };
+
+    return categorias[categoria] || categoria;
 
 }
 /*==================================================
 DASHBOARD
 ==================================================*/
 
-function atualizarDashboard(){
+function atualizarPainel(){
 
-    atualizarCard(
+    atualizarCardsDashboard();
 
-        "totalProdutos",
+    atualizarUltimosPedidos();
 
-        Admin.produtos.length
-
-    );
-
-    atualizarCard(
-
-        "totalPedidos",
-
-        obterPedidos().length
-
-    );
-
-    atualizarCard(
-
-        "totalClientes",
-
-        obterClientes().length
-
-    );
-
-    atualizarCard(
-
-        "faturamento",
-
-        formatarMoeda(calcularFaturamento())
-
-    );
-
-    atualizarFinanceiro();
+    atualizarResumoDashboard();
 
 }
 
-/*==================================================
-CARDS
-==================================================*/
+function atualizarCardsDashboard(){
 
-function atualizarCard(id,valor){
+    const totalProdutos =
+    document.getElementById("totalProdutos");
 
-    const elemento = document.getElementById(id);
+    const totalPedidos =
+    document.getElementById("totalPedidos");
 
-    if(!elemento){
+    const totalClientes =
+    document.getElementById("totalClientes");
+
+    const receitaTotal =
+    document.getElementById("receitaTotalDashboard");
+
+    if(totalProdutos)
+        totalProdutos.textContent = produtos.length;
+
+    if(totalPedidos)
+        totalPedidos.textContent = pedidos.length;
+
+    if(totalClientes)
+        totalClientes.textContent = clientes.length;
+
+    const receita = pedidos
+
+        .filter(
+            pedido=>pedido.status==="Finalizado"
+        )
+
+        .reduce(
+            (total,pedido)=>
+            total+Number(pedido.total||0),
+            0
+        );
+
+    if(receitaTotal){
+
+        receitaTotal.textContent =
+        formatarMoeda(receita);
+
+    }
+
+}
+function atualizarUltimosPedidos(){
+
+    const tbody =
+    document.getElementById("ultimosPedidos");
+
+    if(!tbody) return;
+
+    if(pedidos.length===0){
+
+        tbody.innerHTML=`
+
+<tr>
+
+<td colspan="4">
+
+Nenhum pedido encontrado.
+
+</td>
+
+</tr>
+
+`;
 
         return;
 
     }
 
-    elemento.textContent = valor;
+    tbody.innerHTML="";
+
+    [...pedidos]
+
+    .sort((a,b)=>b.id-a.id)
+
+    .slice(0,5)
+
+    .forEach(pedido=>{
+
+        tbody.innerHTML+=`
+
+<tr>
+
+<td>#${pedido.id}</td>
+
+<td>${pedido.cliente}</td>
+
+<td>${formatarMoeda(pedido.total)}</td>
+
+<td>
+
+<span class="badge ${classeStatus(pedido.status)}">
+
+${pedido.status}
+
+</span>
+
+</td>
+
+</tr>
+
+`;
+
+    });
 
 }
+function atualizarResumoDashboard(){
 
-/*==================================================
-FINANCEIRO
-==================================================*/
+    const finalizados =
 
-function atualizarFinanceiro(){
+    pedidos.filter(
 
-    atualizarReceita();
+        pedido=>
 
-    atualizarPedidosFinalizados();
+        pedido.status==="Finalizado"
 
-    atualizarTicketMedio();
+    );
 
-    atualizarProdutoMaisVendido();
+    const receita =
 
-}
+    finalizados.reduce(
 
-/*==================================================
-FATURAMENTO
-==================================================*/
+        (soma,pedido)=>
 
-function calcularFaturamento(){
-
-    return obterPedidos().reduce(
-
-        (total,pedido)=>{
-
-            return total +
-
-            Number(
-
-                pedido.totalPedido ||
-
-                pedido.total ||
-
-                0
-
-            );
-
-        },
+        soma+Number(pedido.total||0),
 
         0
 
     );
 
-}
-
-function atualizarReceita(){
-
-    atualizarCard(
-
-        "receitaTotal",
-
-        formatarMoeda(
-
-            calcularFaturamento()
-
-        )
-
-    );
-
-}
-
-/*==================================================
-PEDIDOS FINALIZADOS
-==================================================*/
-
-function atualizarPedidosFinalizados(){
-
-    const total = obterPedidos()
-
-        .filter(
-
-            pedido=>
-
-            pedido.status==="Finalizado"
-
-        )
-
-        .length;
-
-    atualizarCard(
-
-        "pedidosFinalizados",
-
-        total
-
-    );
-
-}
-
-/*==================================================
-TICKET MÉDIO
-==================================================*/
-
-function atualizarTicketMedio(){
-
-    const pedidos = obterPedidos();
-
-    if(pedidos.length===0){
-
-        atualizarCard(
-
-            "ticketMedio",
-
-            "R$ 0,00"
-
-        );
-
-        return;
-
-    }
-
     const ticket =
 
-        calcularFaturamento()
+    finalizados.length
 
-        /
+    ? receita/finalizados.length
 
-        pedidos.length;
+    :0;
 
-    atualizarCard(
+    document.getElementById(
 
-        "ticketMedio",
+        "receitaResumoDashboard"
 
-        formatarMoeda(ticket)
+    ).textContent =
 
-    );
+    formatarMoeda(receita);
+
+    document.getElementById(
+
+        "ticketMedioDashboard"
+
+    ).textContent =
+
+    formatarMoeda(ticket);
+
+    document.getElementById(
+
+        "pedidosFinalizadosDashboard"
+
+    ).textContent =
+
+    finalizados.length;
+
+    document.getElementById(
+
+        "produtoMaisVendidoDashboard"
+
+    ).textContent =
+
+    calcularProdutoMaisVendido();
 
 }
-
 /*==================================================
 PRODUTO MAIS VENDIDO
 ==================================================*/
 
-function atualizarProdutoMaisVendido(){
+function calcularProdutoMaisVendido(){
 
-    const ranking = {};
+    if(!pedidos.length){
 
-    obterPedidos().forEach(pedido=>{
+        return "—";
 
-        if(!pedido.itens){
+    }
 
-            return;
+    const ranking={};
 
-        }
+    pedidos.forEach(pedido=>{
+
+        if(!pedido.itens) return;
 
         pedido.itens.forEach(item=>{
 
-            ranking[item.nome] =
+            ranking[item.nome]=
 
-                (ranking[item.nome] || 0)
+            (ranking[item.nome]||0)
 
-                +
+            +
 
-                item.quantidade;
+            Number(item.quantidade||1);
 
         });
 
     });
 
-    let nome = "—";
+    let maior=0;
 
-    let maior = 0;
+    let nome="—";
 
     Object.entries(ranking)
 
-        .forEach(([produto,qtd])=>{
+    .forEach(([produto,total])=>{
 
-            if(qtd>maior){
+        if(total>maior){
 
-                maior=qtd;
+            maior=total;
 
-                nome=produto;
-
-            }
-
-        });
-
-    atualizarCard(
-
-        "produtoMaisVendido",
-
-        nome
-
-    );
-
-}
-/*==================================================
-CLIENTES
-==================================================*/
-
-function renderizarClientes(){
-
-    const tbody = document.getElementById("listaClientes");
-
-    if(!tbody){
-
-        return;
-
-    }
-
-    const clientes = obterClientes();
-
-    if(clientes.length===0){
-
-        tbody.innerHTML=`
-
-<tr>
-
-<td colspan="5">
-
-<div class="sem-registros">
-
-<h3>Nenhum cliente cadastrado.</h3>
-
-</div>
-
-</td>
-
-</tr>
-
-`;
-
-        return;
-
-    }
-
-    tbody.innerHTML="";
-
-    clientes.forEach(cliente=>{
-
-        tbody.innerHTML += `
-
-<tr>
-
-<td>${cliente.nome}</td>
-
-<td>${cliente.telefone || "-"}</td>
-
-<td>${cliente.email || "-"}</td>
-
-<td>${cliente.pedidos || 0}</td>
-
-<td>${formatarMoeda(cliente.totalGasto || 0)}</td>
-
-</tr>
-
-`;
-
-    });
-
-}
-
-/*==================================================
-PEDIDOS
-==================================================*/
-
-function renderizarPedidos(){
-
-    const tbody = document.getElementById("listaPedidos");
-
-    if(!tbody){
-
-        return;
-
-    }
-
-    const pedidos = obterPedidos();
-
-    if(pedidos.length===0){
-
-        tbody.innerHTML=`
-
-<tr>
-
-<td colspan="6">
-
-<div class="sem-registros">
-
-<h3>Nenhum pedido realizado.</h3>
-
-</div>
-
-</td>
-
-</tr>
-
-`;
-
-        return;
-
-    }
-
-    tbody.innerHTML="";
-
-    pedidos.forEach((pedido,index)=>{
-
-        tbody.innerHTML += `
-
-<tr>
-
-<td>#${index+1}</td>
-
-<td>${pedido.cliente || "-"}</td>
-
-<td>${formatarMoeda(pedido.totalPedido || pedido.total || 0)}</td>
-
-<td>${pedido.pagamento || "-"}</td>
-
-<td>${pedido.status || "Recebido"}</td>
-
-<td>
-
-<button
-
-class="btn-acao btn-visualizar"
-
-title="Visualizar">
-
-👁️
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-    });
-
-}
-
-/*==================================================
-CONFIGURAÇÕES
-==================================================*/
-
-function carregarConfiguracoes(){
-
-    const config = obterConfiguracoes();
-
-    const campos = {
-
-        nomeLoja:"nomeLoja",
-
-        telefoneLoja:"telefoneLoja",
-
-        pixLoja:"pixLoja",
-
-        taxaEntrega:"taxaEntrega"
-
-    };
-
-    Object.entries(campos).forEach(([campo,id])=>{
-
-        const elemento=document.getElementById(id);
-
-        if(elemento){
-
-            elemento.value=config[campo] || "";
+            nome=produto;
 
         }
 
     });
 
-}
-
-function salvarConfiguracoesLoja(event){
-
-    event.preventDefault();
-
-    salvarConfiguracoes({
-
-        nomeLoja:
-
-            document.getElementById("nomeLoja").value,
-
-        telefoneLoja:
-
-            document.getElementById("telefoneLoja").value,
-
-        pixLoja:
-
-            document.getElementById("pixLoja").value,
-
-        taxaEntrega:Number(
-
-            document.getElementById("taxaEntrega").value
-
-        ) || 0
-
-    });
-
-    mostrarMensagem(
-
-        "Configurações salvas com sucesso!",
-
-        "success"
-
-    );
+    return nome;
 
 }
 
+/*==================================================
+STATUS
+==================================================*/
+
+function classeStatus(status){
+
+    switch(status){
+
+        case "Recebido":
+
+            return "info";
+
+        case "Em preparo":
+
+            return "warning";
+
+        case "Saiu para entrega":
+
+            return "destaque";
+
+        case "Finalizado":
+
+            return "ativo";
+
+        case "Cancelado":
+
+            return "inativo";
+
+        default:
+
+            return "";
+
+    }
+
+}
 /*==================================================
 UTILITÁRIOS
 ==================================================*/
 
 function formatarMoeda(valor){
 
-    return Number(valor).toLocaleString(
+    return Number(valor||0)
+
+    .toLocaleString(
 
         "pt-BR",
 
@@ -1018,51 +1133,49 @@ function formatarMoeda(valor){
 
 }
 
-function confirmarExclusao(){
+function gerarId(){
 
-    return confirm(
-
-        "Deseja realmente excluir este produto?"
-
-    );
+    return Date.now();
 
 }
 
-function limparFormulario(){
+function salvarTudo(){
 
-    const form=document.getElementById("formProduto");
+    Storage.salvarProdutos(produtos);
 
-    if(form){
+    Storage.salvarPedidos(pedidos);
 
-        form.reset();
+    Storage.salvarClientes(clientes);
 
-    }
-
-    const ativo=document.getElementById("produtoAtivo");
-
-    if(ativo){
-
-        ativo.checked=true;
-
-    }
-
-    Admin.produtoEditando=null;
+    Storage.salvarConfiguracoes(configuracoes);
 
 }
 
-function mostrarMensagem(texto,tipo){
+function mostrarAlerta(
 
-    const alerta=document.createElement("div");
+    mensagem,
 
-    alerta.className=`alert alert-${tipo}`;
+    tipo="success"
 
-    alerta.textContent=texto;
+){
+
+    const alerta =
+
+    document.createElement("div");
+
+    alerta.className =
+
+    `alert alert-${tipo}`;
+
+    alerta.textContent =
+
+    mensagem;
 
     alerta.style.position="fixed";
 
-    alerta.style.top="20px";
+    alerta.style.top="25px";
 
-    alerta.style.right="20px";
+    alerta.style.right="25px";
 
     alerta.style.zIndex="99999";
 
@@ -1070,19 +1183,679 @@ function mostrarMensagem(texto,tipo){
 
     setTimeout(()=>{
 
-        alerta.remove();
+        alerta.style.opacity="0";
 
-    },3000);
+        alerta.style.transition=".3s";
+
+        setTimeout(()=>{
+
+            alerta.remove();
+
+        },300);
+
+    },2500);
+
+}
+/*==================================================
+PEDIDOS
+==================================================*/
+
+function renderizarPedidos(){
+
+    const tbody =
+    document.getElementById("listaPedidos");
+
+    if(!tbody) return;
+
+    let lista = [...pedidos];
+
+    const pesquisa =
+    document.getElementById("pesquisaPedido")
+    ?.value
+    .toLowerCase() || "";
+
+    const status =
+    document.getElementById("filtroStatus")
+    ?.value || "";
+
+    /*==============================
+    PESQUISA
+    ==============================*/
+
+    if(pesquisa){
+
+        lista = lista.filter(pedido=>
+
+            (pedido.cliente||"")
+
+            .toLowerCase()
+
+            .includes(pesquisa)
+
+        );
+
+    }
+
+    /*==============================
+    STATUS
+    ==============================*/
+
+    if(status){
+
+        lista = lista.filter(
+
+            pedido=>
+
+            pedido.status===status
+
+        );
+
+    }
+
+    lista.sort(
+
+        (a,b)=>b.id-a.id
+
+    );
+
+    /*==============================
+    SEM PEDIDOS
+    ==============================*/
+
+    if(lista.length===0){
+
+        tbody.innerHTML=`
+
+<tr>
+
+<td colspan="6">
+
+<div class="sem-registros">
+
+<h3>
+
+Nenhum pedido encontrado.
+
+</h3>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+        return;
+
+    }
+
+    tbody.innerHTML="";
+
+    lista.forEach(pedido=>{
+
+        tbody.innerHTML += `
+
+<tr>
+
+<td>
+
+#${pedido.id}
+
+</td>
+
+<td>
+
+<strong>
+
+${pedido.cliente}
+
+</strong>
+
+<br>
+
+<small>
+
+${pedido.telefone||"-"}
+
+</small>
+
+</td>
+
+<td>
+
+${formatarMoeda(pedido.total)}
+
+</td>
+
+<td>
+
+${pedido.pagamento||"-"}
+
+</td>
+
+<td>
+
+<select
+
+class="status-select"
+
+onchange="alterarStatusPedido(${pedido.id},this.value)"
+
+>
+
+${gerarOpcoesStatus(pedido.status)}
+
+</select>
+
+</td>
+
+<td>
+
+<div class="acoes">
+
+<button
+
+class="btn-acao btn-visualizar"
+
+onclick="visualizarPedido(${pedido.id})">
+
+<i class="fa-solid fa-eye"></i>
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+/*==================================================
+ALTERAR STATUS
+==================================================*/
+
+function alterarStatusPedido(id,status){
+
+    const pedido = pedidos.find(
+
+        pedido=>pedido.id===id
+
+    );
+
+    if(!pedido) return;
+
+    pedido.status = status;
+
+    Storage.salvarPedidos(pedidos);
+
+    atualizarSistema();
+
+    mostrarAlerta(
+
+        "Status atualizado com sucesso!",
+
+        "success"
+
+    );
+
+}
+/*==================================================
+OPÇÕES STATUS
+==================================================*/
+
+function gerarOpcoesStatus(statusAtual){
+
+    const lista=[
+
+        "Recebido",
+
+        "Em preparo",
+
+        "Saiu para entrega",
+
+        "Finalizado",
+
+        "Cancelado"
+
+    ];
+
+    return lista.map(status=>`
+
+<option
+
+value="${status}"
+
+${status===statusAtual?"selected":""}
+
+>
+
+${status}
+
+</option>
+
+`).join("");
+
+}
+/*==================================================
+VISUALIZAR PEDIDO
+==================================================*/
+
+function visualizarPedido(id){
+
+    const pedido = pedidos.find(
+
+        pedido=>pedido.id===id
+
+    );
+
+    if(!pedido) return;
+
+    let itens="";
+
+    if(pedido.itens){
+
+        pedido.itens.forEach(item=>{
+
+            itens +=
+
+`${item.quantidade}x ${item.nome}\n`;
+
+        });
+
+    }
+
+    alert(
+
+`Pedido #${pedido.id}
+
+Cliente:
+${pedido.cliente}
+
+Telefone:
+${pedido.telefone||"-"}
+
+Pagamento:
+${pedido.pagamento||"-"}
+
+Status:
+${pedido.status}
+
+Itens:
+
+${itens}
+
+Total:
+${formatarMoeda(pedido.total)}`
+
+    );
+
+}
+/*==================================================
+CLIENTES
+==================================================*/
+
+function renderizarClientes(){
+
+    const tbody =
+    document.getElementById("listaClientes");
+
+    if(!tbody) return;
+
+    let lista = [...clientes];
+
+    const pesquisa =
+    document.getElementById("pesquisaCliente")
+    ?.value
+    .toLowerCase() || "";
+
+    if(pesquisa){
+
+        lista = lista.filter(cliente=>
+
+            (cliente.nome || "")
+
+            .toLowerCase()
+
+            .includes(pesquisa)
+
+        );
+
+    }
+
+    lista.sort((a,b)=>
+
+        a.nome.localeCompare(b.nome)
+
+    );
+
+    if(lista.length===0){
+
+        tbody.innerHTML=`
+
+<tr>
+
+<td colspan="5">
+
+<div class="sem-registros">
+
+<h3>
+
+Nenhum cliente encontrado.
+
+</h3>
+
+<p>
+
+Os clientes aparecerão automaticamente
+após o primeiro pedido.
+
+</p>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+        return;
+
+    }
+
+    tbody.innerHTML="";
+
+    lista.forEach(cliente=>{
+
+        tbody.innerHTML += `
+
+<tr>
+
+<td>
+
+${cliente.nome}
+
+</td>
+
+<td>
+
+${cliente.telefone || "-"}
+
+</td>
+
+<td>
+
+${cliente.email || "-"}
+
+</td>
+
+<td>
+
+${cliente.pedidos || 0}
+
+</td>
+
+<td>
+
+${formatarMoeda(
+
+cliente.totalGasto
+
+)}
+
+</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+/*==================================================
+FINANCEIRO
+==================================================*/
+
+function atualizarFinanceiro(){
+
+    const pedidosFinalizados =
+
+    pedidos.filter(
+
+        pedido=>
+
+        pedido.status==="Finalizado"
+
+    );
+
+    const receita =
+
+    pedidosFinalizados.reduce(
+
+        (total,pedido)=>
+
+        total+Number(
+
+            pedido.total || 0
+
+        ),
+
+        0
+
+    );
+
+    const ticket =
+
+    pedidosFinalizados.length
+
+    ?
+
+    receita /
+
+    pedidosFinalizados.length
+
+    :
+
+    0;
+
+    const receitaEl =
+    document.getElementById(
+    "financeiroReceitaTotal"
+    );
+
+    const ticketEl =
+    document.getElementById(
+    "financeiroTicketMedio"
+    );
+
+    const pedidosEl =
+    document.getElementById(
+    "financeiroPedidosFinalizados"
+    );
+
+    const vendidoEl =
+    document.getElementById(
+    "financeiroProdutoMaisVendido"
+    );
+
+    if(receitaEl){
+
+        receitaEl.textContent =
+
+        formatarMoeda(receita);
+
+    }
+
+    if(ticketEl){
+
+        ticketEl.textContent =
+
+        formatarMoeda(ticket);
+
+    }
+
+    if(pedidosEl){
+
+        pedidosEl.textContent =
+
+        pedidosFinalizados.length;
+
+    }
+
+    if(vendidoEl){
+
+        vendidoEl.textContent =
+
+        calcularProdutoMaisVendido();
+
+    }
+
+}
+/*==================================================
+CONFIGURAÇÕES
+==================================================*/
+
+function carregarConfiguracoes(){
+
+    if(!configuracoes){
+
+        configuracoes = {};
+
+    }
+
+    const campos = {
+
+        nomeLoja: "nome",
+
+        telefoneLoja: "telefone",
+
+        pixLoja: "pix",
+
+        taxaEntrega: "taxaEntrega",
+
+        enderecoLoja: "endereco",
+
+        horarioLoja: "horario",
+
+        tempoEntrega: "tempoEntrega"
+
+    };
+
+    Object.entries(campos).forEach(([id,chave])=>{
+
+        const elemento =
+        document.getElementById(id);
+
+        if(elemento){
+
+            elemento.value =
+            configuracoes[chave] || "";
+
+        }
+
+    });
+
+}
+/*==================================================
+SALVAR CONFIGURAÇÕES
+==================================================*/
+
+const formConfiguracoes =
+document.getElementById("formConfiguracoes");
+
+if(formConfiguracoes){
+
+    formConfiguracoes.addEventListener(
+
+        "submit",
+
+        salvarConfiguracoes
+
+    );
 
 }
 
+function salvarConfiguracoes(event){
+
+    event.preventDefault();
+
+    configuracoes = {
+
+        nome:
+
+        document.getElementById(
+        "nomeLoja"
+        ).value,
+
+        telefone:
+
+        document.getElementById(
+        "telefoneLoja"
+        ).value,
+
+        pix:
+
+        document.getElementById(
+        "pixLoja"
+        ).value,
+
+        taxaEntrega:Number(
+
+            document.getElementById(
+            "taxaEntrega"
+            ).value
+
+        ),
+
+        endereco:
+
+        document.getElementById(
+        "enderecoLoja"
+        ).value,
+
+        horario:
+
+        document.getElementById(
+        "horarioLoja"
+        ).value,
+
+        tempoEntrega:
+
+        document.getElementById(
+        "tempoEntrega"
+        ).value
+
+    };
+
+    Storage.salvarConfiguracoes(
+
+        configuracoes
+
+    );
+
+    mostrarAlerta(
+
+        "Configurações salvas com sucesso!",
+
+        "success"
+
+    );
+
+}
 /*==================================================
 ATUALIZAÇÃO GERAL
 ==================================================*/
 
-function atualizarPainel(){
+function atualizarSistema(){
 
-    carregarProdutos();
+    carregarDados();
+
+    atualizarPainel();
 
     renderizarProdutos();
 
@@ -1090,19 +1863,12 @@ function atualizarPainel(){
 
     renderizarClientes();
 
-    atualizarDashboard();
+    atualizarFinanceiro();
 
 }
 
 /*==================================================
-API PÚBLICA
+FIM DO ADMIN.JS V5
 ==================================================*/
 
-window.editarProduto = editarProduto;
 
-window.excluirProduto = excluirProduto;
-
-/*==================================================
-FIM DO ARQUIVO
-ADMIN.JS V3.0
-==================================================*/
