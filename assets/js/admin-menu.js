@@ -11,22 +11,12 @@ ELEMENTOS
 
 let paginas = [];
 let menus = [];
+let tituloPagina;
+let sidebar;
+let overlay;
+let btnMenu;
+let modalProduto;
 
-
-const tituloPagina =
-document.getElementById("tituloPagina");
-
-const sidebar =
-document.querySelector(".sidebar");
-
-const overlay =
-document.getElementById("overlayMenu");
-
-const btnMenu =
-document.getElementById("btnMenu");
-
-const modalProduto =
-document.getElementById("modalProduto");
 
 /*==================================================
 INICIALIZAÇÃO
@@ -39,9 +29,26 @@ document.addEventListener(
 
 function iniciarMenu(){
 
-    paginas = document.querySelectorAll(".pagina");
+    tituloPagina =
+    document.getElementById("tituloPagina");
 
-    menus = document.querySelectorAll(".menu-item");
+    sidebar =
+    document.querySelector(".sidebar");
+
+    overlay =
+    document.getElementById("overlayMenu");
+
+    btnMenu =
+    document.getElementById("btnMenu");
+
+    modalProduto =
+    document.getElementById("modalProduto");
+
+    paginas =
+    document.querySelectorAll(".pagina");
+
+    menus =
+    document.querySelectorAll(".menu-item");
 
     configurarMenuLateral();
 
@@ -49,10 +56,7 @@ function iniciarMenu(){
 
     configurarModal();
 
-    abrirPagina("dashboard");
-
 }
-
 /*==================================================
 MENU LATERAL
 ==================================================*/
