@@ -9,15 +9,20 @@ Responsável apenas pela interface
 ELEMENTOS
 ==================================================*/
 
-const sidebar = document.querySelector(".sidebar");
-const overlay = document.getElementById("overlayMenu");
-const btnMenu = document.getElementById("btnMenu");
-
 const paginas = document.querySelectorAll(".pagina");
 const menus = document.querySelectorAll(".menu-item");
 
 const tituloPagina =
 document.getElementById("tituloPagina");
+
+const sidebar =
+document.querySelector(".sidebar");
+
+const overlay =
+document.getElementById("overlayMenu");
+
+const btnMenu =
+document.getElementById("btnMenu");
 
 const modalProduto =
 document.getElementById("modalProduto");
@@ -27,15 +32,15 @@ INICIALIZAÇÃO
 ==================================================*/
 
 document.addEventListener(
-"DOMContentLoaded",
-iniciarMenu
+    "DOMContentLoaded",
+    iniciarMenu
 );
 
 function iniciarMenu(){
 
-    configurarMenu();
+    configurarMenuLateral();
 
-    configurarMobile();
+    configurarMenuMobile();
 
     configurarModal();
 
@@ -45,7 +50,7 @@ function iniciarMenu(){
 MENU LATERAL
 ==================================================*/
 
-function configurarMenu(){
+function configurarMenuLateral(){
 
     menus.forEach(menu=>{
 
@@ -59,22 +64,30 @@ function configurarMenu(){
 
 }
 
+/*==================================================
+ABRIR PÁGINA
+==================================================*/
+
 function abrirPagina(nome){
 
-    paginas.forEach(pagina=>
-        pagina.classList.remove("ativa")
-    );
+    paginas.forEach(pagina=>{
 
-    menus.forEach(menu=>
-        menu.classList.remove("ativo")
-    );
+        pagina.classList.remove("ativa");
+
+    });
+
+    menus.forEach(menu=>{
+
+        menu.classList.remove("ativo");
+
+    });
 
     const pagina =
     document.getElementById(nome);
 
     const menu =
     document.querySelector(
-        `[data-page="${nome}"]`
+        `.menu-item[data-page="${nome}"]`
     );
 
     if(pagina){
@@ -111,7 +124,7 @@ function abrirPagina(nome){
 MENU MOBILE
 ==================================================*/
 
-function configurarMobile(){
+function configurarMenuMobile(){
 
     if(btnMenu){
 
@@ -157,67 +170,45 @@ function configurarModal(){
 
     if(!modalProduto) return;
 
-    modalProduto.addEventListener(
-        "click",
-        function(event){
+    modalProduto.addEventListener("click",(event)=>{
 
-            if(event.target===modalProduto){
+        if(event.target===modalProduto){
 
-                fecharModalProduto();
-
-            }
-
-        }
-    );
-
-    document.addEventListener(
-        "keydown",
-        function(event){
-
-            if(
-                event.key==="Escape"
-                &&
-                modalProduto.classList.contains("ativo")
-            ){
+            if(typeof fecharModalProduto==="function"){
 
                 fecharModalProduto();
 
             }
 
         }
-    );
 
-}
+    });
 
-function abrirModalProduto(){
+    document.addEventListener("keydown",(event)=>{
 
-    if(modalProduto){
+        if(event.key==="Escape"){
 
-        modalProduto.classList.add("ativo");
+            if(modalProduto.classList.contains("ativo")){
 
-    }
+                if(typeof fecharModalProduto==="function"){
 
-}
+                    fecharModalProduto();
 
-function fecharModalProduto(){
+                }
 
-    if(modalProduto){
+            }
 
-        modalProduto.classList.remove("ativo");
+        }
 
-    }
+    });
 
 }
 
 /*==================================================
-API GLOBAL
+API PÚBLICA
 ==================================================*/
 
 window.abrirPagina = abrirPagina;
-
-window.abrirModalProduto = abrirModalProduto;
-
-window.fecharModalProduto = fecharModalProduto;
 
 /*==================================================
 FIM
