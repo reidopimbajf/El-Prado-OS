@@ -1,75 +1,101 @@
 /*==================================================
-EL PRADO CONTROL
+EL PRADO OS
 ADMIN-MENU.JS
-VERSÃO 2.0
+VERSÃO 3.0
 Responsável apenas pela interface
 ==================================================*/
+
+"use strict";
 
 /*==================================================
 ELEMENTOS
 ==================================================*/
 
-let paginas = [];
-let menus = [];
-let tituloPagina;
-let sidebar;
-let overlay;
-let btnMenu;
-let modalProduto;
+const Menu = {
 
+    paginas: [],
+
+    itens: [],
+
+    sidebar: null,
+
+    overlay: null,
+
+    btnMenu: null,
+
+    titulo: null,
+
+    modalProduto: null
+
+};
 
 /*==================================================
 INICIALIZAÇÃO
 ==================================================*/
 
 document.addEventListener(
+
     "DOMContentLoaded",
+
     iniciarMenu
+
 );
 
 function iniciarMenu(){
 
-    tituloPagina =
-    document.getElementById("tituloPagina");
-
-    sidebar =
-    document.querySelector(".sidebar");
-
-    overlay =
-    document.getElementById("overlayMenu");
-
-    btnMenu =
-    document.getElementById("btnMenu");
-
-    modalProduto =
-    document.getElementById("modalProduto");
-
-    paginas =
+    Menu.paginas =
     document.querySelectorAll(".pagina");
 
-    menus =
+    Menu.itens =
     document.querySelectorAll(".menu-item");
 
-    configurarMenuLateral();
+    Menu.sidebar =
+    document.querySelector(".sidebar");
 
-    configurarMenuMobile();
+    Menu.overlay =
+    document.getElementById("overlayMenu");
+
+    Menu.btnMenu =
+    document.getElementById("btnMenu");
+
+    Menu.titulo =
+    document.getElementById("tituloPagina");
+
+    Menu.modalProduto =
+    document.getElementById("modalProduto");
+
+    configurarMenu();
+
+    configurarMobile();
 
     configurarModal();
+
+    abrirPagina("dashboard");
 
 }
 /*==================================================
 MENU LATERAL
 ==================================================*/
 
-function configurarMenuLateral(){
+function configurarMenu(){
 
-    menus.forEach(menu=>{
+    Menu.itens.forEach(item=>{
 
-        menu.onclick = function(){
+        item.addEventListener(
 
-            abrirPagina(menu.dataset.page);
+            "click",
 
-        };
+            function(){
+
+                abrirPagina(
+
+                    this.dataset.page
+
+                );
+
+            }
+
+        );
 
     });
 
@@ -81,25 +107,29 @@ ABRIR PÁGINA
 
 function abrirPagina(nome){
 
-    paginas.forEach(pagina=>{
+    Menu.paginas.forEach(pagina=>{
 
         pagina.classList.remove("ativa");
 
     });
 
-    menus.forEach(menu=>{
+    Menu.itens.forEach(item=>{
 
-        menu.classList.remove("ativo");
+        item.classList.remove("ativo");
 
     });
 
     const pagina =
-    document.getElementById(nome);
 
-    const menu =
-    document.querySelector(
-        `.menu-item[data-page="${nome}"]`
-    );
+        document.getElementById(nome);
+
+    const item =
+
+        document.querySelector(
+
+            `.menu-item[data-page="${nome}"]`
+
+        );
 
     if(pagina){
 
@@ -107,27 +137,46 @@ function abrirPagina(nome){
 
     }
 
-    if(menu){
+    if(item){
 
-        menu.classList.add("ativo");
-
-    }
-
-    if(tituloPagina && pagina){
-
-        const titulo =
-        pagina.querySelector("h2");
-
-        if(titulo){
-
-            tituloPagina.textContent =
-            titulo.textContent;
-
-        }
+        item.classList.add("ativo");
 
     }
+
+    atualizarTitulo(nome);
 
     fecharMenuMobile();
+
+}
+/*==================================================
+TÍTULO DA PÁGINA
+==================================================*/
+
+function atualizarTitulo(nome){
+
+    if(!Menu.titulo){
+
+        return;
+
+    }
+
+    const pagina = document.getElementById(nome);
+
+    if(!pagina){
+
+        return;
+
+    }
+
+    const titulo = pagina.querySelector("h2");
+
+    if(titulo){
+
+        Menu.titulo.textContent =
+
+        titulo.textContent;
+
+    }
 
 }
 
@@ -135,22 +184,28 @@ function abrirPagina(nome){
 MENU MOBILE
 ==================================================*/
 
-function configurarMenuMobile(){
+function configurarMobile(){
 
-    if(btnMenu){
+    if(Menu.btnMenu){
 
-        btnMenu.addEventListener(
+        Menu.btnMenu.addEventListener(
+
             "click",
+
             alternarMenuMobile
+
         );
 
     }
 
-    if(overlay){
+    if(Menu.overlay){
 
-        overlay.addEventListener(
+        Menu.overlay.addEventListener(
+
             "click",
+
             fecharMenuMobile
+
         );
 
     }
@@ -159,47 +214,69 @@ function configurarMenuMobile(){
 
 function alternarMenuMobile(){
 
-    sidebar.classList.toggle("ativo");
+    if(Menu.sidebar){
 
-    overlay.classList.toggle("ativo");
+        Menu.sidebar.classList.toggle(
+
+            "ativo"
+
+        );
+
+    }
+
+    if(Menu.overlay){
+
+        Menu.overlay.classList.toggle(
+
+            "ativo"
+
+        );
+
+    }
 
 }
 
 function fecharMenuMobile(){
 
-    sidebar.classList.remove("ativo");
+    if(Menu.sidebar){
 
-    overlay.classList.remove("ativo");
+        Menu.sidebar.classList.remove(
 
-}
+            "ativo"
 
-/*==================================================
+        );
+
+    }
+
+    if(Menu.overlay){
+
+        Menu.overlay.classList.remove(
+
+            "ativo"
+
+        );
+
+    }
+
+}/*==================================================
 MODAL PRODUTO
 ==================================================*/
 
 function configurarModal(){
 
-    if(!modalProduto) return;
+    if(!Menu.modalProduto){
 
-    modalProduto.addEventListener("click",(event)=>{
+        return;
 
-        if(event.target===modalProduto){
+    }
 
-            if(typeof fecharModalProduto==="function"){
+    Menu.modalProduto.addEventListener(
 
-                fecharModalProduto();
+        "click",
 
-            }
+        function(event){
 
-        }
-
-    });
-
-    document.addEventListener("keydown",(event)=>{
-
-        if(event.key==="Escape"){
-
-            if(modalProduto.classList.contains("ativo")){
+            if(event.target===Menu.modalProduto){
 
                 if(typeof fecharModalProduto==="function"){
 
@@ -211,7 +288,35 @@ function configurarModal(){
 
         }
 
-    });
+    );
+
+    document.addEventListener(
+
+        "keydown",
+
+        function(event){
+
+            if(
+
+                event.key==="Escape"
+
+                &&
+
+                Menu.modalProduto.classList.contains("ativo")
+
+            ){
+
+                if(typeof fecharModalProduto==="function"){
+
+                    fecharModalProduto();
+
+                }
+
+            }
+
+        }
+
+    );
 
 }
 
@@ -221,6 +326,29 @@ API PÚBLICA
 
 window.abrirPagina = abrirPagina;
 
+window.fecharMenuMobile = fecharMenuMobile;
+
+window.alternarMenuMobile = alternarMenuMobile;
+
 /*==================================================
-FIM
+LOG
+==================================================*/
+
+console.log(
+
+    "%cEL PRADO OS",
+
+    "color:#D4AF37;font-size:15px;font-weight:bold;"
+
+);
+
+console.log(
+
+    "Admin Menu V3 carregado."
+
+);
+
+/*==================================================
+FIM DO ARQUIVO
+ADMIN-MENU.JS V3.0
 ==================================================*/
