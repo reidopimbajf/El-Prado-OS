@@ -122,11 +122,7 @@ function abrirPagina(nome){
         }
 
     }
-if(typeof atualizarSistema === "function"){
 
-    atualizarSistema();
-
-}
     fecharMenuMobile();
 
 }
