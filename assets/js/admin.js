@@ -1851,21 +1851,6 @@ function salvarConfiguracoes(event){
 ATUALIZAÇÃO GERAL
 ==================================================*/
 
-function atualizarSistema(){
-
-    carregarDados();
-
-    atualizarPainel();
-
-    renderizarProdutos();
-
-    renderizarPedidos();
-
-    renderizarClientes();
-
-    atualizarFinanceiro();
-
-}
 
 /*==================================================
 FIM DO ADMIN.JS V5
