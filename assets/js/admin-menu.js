@@ -9,8 +9,9 @@ Responsável apenas pela interface
 ELEMENTOS
 ==================================================*/
 
-const paginas = document.querySelectorAll(".pagina");
-const menus = document.querySelectorAll(".menu-item");
+let paginas = [];
+let menus = [];
+
 
 const tituloPagina =
 document.getElementById("tituloPagina");
@@ -38,11 +39,17 @@ document.addEventListener(
 
 function iniciarMenu(){
 
+    paginas = document.querySelectorAll(".pagina");
+
+    menus = document.querySelectorAll(".menu-item");
+
     configurarMenuLateral();
 
     configurarMenuMobile();
 
     configurarModal();
+
+    abrirPagina("dashboard");
 
 }
 
@@ -54,11 +61,11 @@ function configurarMenuLateral(){
 
     menus.forEach(menu=>{
 
-        menu.addEventListener("click",()=>{
+        menu.onclick = function(){
 
             abrirPagina(menu.dataset.page);
 
-        });
+        };
 
     });
 
@@ -115,7 +122,11 @@ function abrirPagina(nome){
         }
 
     }
+if(typeof atualizarSistema === "function"){
 
+    atualizarSistema();
+
+}
     fecharMenuMobile();
 
 }
