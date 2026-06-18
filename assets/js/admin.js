@@ -1,47 +1,40 @@
 /*==================================================
-EL PRADO CONTROL
+EL PRADO OS
 ADMIN.JS
-VERSÃO 5.0
-Autor: Joaquim Prado
+VERSÃO 6.0
+Responsável pelas regras de negócio
 ==================================================*/
+
+"use strict";
 
 /*==================================================
-VARIÁVEIS GLOBAIS
+ESTADO DA APLICAÇÃO
 ==================================================*/
 
-let produtos = [];
-let pedidos = [];
-let clientes = [];
-let configuracoes = {};
+const Admin = {
 
-let produtoEditando = null;
+    produtos: [],
 
-/*==================================================
-ELEMENTOS
-==================================================*/
+    pedidos: [],
 
-const tituloPagina =
-document.getElementById("tituloPagina");
+    clientes: [],
 
-const modalProduto =
-document.getElementById("modalProduto");
+    configuracoes: {},
 
-const formProduto =
-document.getElementById("formProduto");
+    produtoEditando: null
 
-const previewProduto =
-document.getElementById("previewProduto");
-
-const campoImagem =
-document.getElementById("imagemProduto");
+};
 
 /*==================================================
 INICIALIZAÇÃO
 ==================================================*/
 
 document.addEventListener(
+
     "DOMContentLoaded",
+
     iniciarSistema
+
 );
 
 function iniciarSistema(){
@@ -53,191 +46,533 @@ function iniciarSistema(){
     atualizarSistema();
 
 }
+
 /*==================================================
 CARREGAR DADOS
 ==================================================*/
 
 function carregarDados(){
 
-    produtos =
+    Admin.produtos =
     Storage.getProdutos() || [];
 
-    pedidos =
+    Admin.pedidos =
     Storage.getPedidos() || [];
 
-    clientes =
+    Admin.clientes =
     Storage.getClientes() || [];
 
-    configuracoes =
+    Admin.configuracoes =
     Storage.getConfiguracoes() || {};
 
-    clientes.forEach(cliente=>{
+}
 
-        const listaPedidos =
-        pedidos.filter(
-            pedido=>pedido.cliente===cliente.nome
-        );
+/*==================================================
+ATUALIZAÇÃO GERAL
+==================================================*/
 
-        cliente.pedidos =
-        listaPedidos.length;
+function atualizarSistema(){
 
-        cliente.totalGasto =
-        listaPedidos.reduce(
+    carregarDados();
+
+    atualizarDashboard();
+
+    renderizarProdutos();
+
+    renderizarPedidos();
+
+    renderizarClientes();
+
+    atualizarFinanceiro();
+
+    carregarConfiguracoes();
+
+}
+/*==================================================
+DASHBOARD
+==================================================*/
+
+function atualizarDashboard(){
+
+    atualizarCardsDashboard();
+
+    atualizarUltimosPedidos();
+
+    atualizarResumoDashboard();
+
+}
+
+/*==================================================
+CARDS
+==================================================*/
+
+function atualizarCardsDashboard(){
+
+    atualizarCard(
+
+        "totalProdutos",
+
+        Admin.produtos.length
+
+    );
+
+    atualizarCard(
+
+        "totalPedidos",
+
+        Admin.pedidos.length
+
+    );
+
+    atualizarCard(
+
+        "totalClientes",
+
+        Admin.clientes.length
+
+    );
+
+    const receita =
+
+        Admin.pedidos
+
+        .filter(
+
+            pedido=>pedido.status==="Finalizado"
+
+        )
+
+        .reduce(
 
             (total,pedido)=>
 
-            total+Number(
+            total +
+
+            Number(
+
                 pedido.total || 0
+
             ),
 
             0
 
         );
 
+    atualizarCard(
+
+        "receitaTotalDashboard",
+
+        formatarMoeda(receita)
+
+    );
+
+}
+
+/*==================================================
+ÚLTIMOS PEDIDOS
+==================================================*/
+
+function atualizarUltimosPedidos(){
+
+    const tbody =
+
+    document.getElementById(
+
+        "ultimosPedidos"
+
+    );
+
+    if(!tbody){
+
+        return;
+
+    }
+
+    if(Admin.pedidos.length===0){
+
+        tbody.innerHTML = `
+
+<tr>
+
+<td colspan="4">
+
+Nenhum pedido encontrado.
+
+</td>
+
+</tr>
+
+`;
+
+        return;
+
+    }
+
+    tbody.innerHTML = "";
+
+    [...Admin.pedidos]
+
+    .sort(
+
+        (a,b)=>b.id-a.id
+
+    )
+
+    .slice(0,5)
+
+    .forEach(pedido=>{
+
+        tbody.innerHTML += `
+
+<tr>
+
+<td>#${pedido.id}</td>
+
+<td>${pedido.cliente}</td>
+
+<td>${formatarMoeda(pedido.total)}</td>
+
+<td>
+
+<span class="badge ${classeStatus(pedido.status)}">
+
+${pedido.status}
+
+</span>
+
+</td>
+
+</tr>
+
+`;
+
     });
 
 }
+
 /*==================================================
-EVENTOS
+RESUMO
+==================================================*/
+
+function atualizarResumoDashboard(){
+
+    const finalizados =
+
+    Admin.pedidos.filter(
+
+        pedido=>
+
+        pedido.status==="Finalizado"
+
+    );
+
+    const receita =
+
+        finalizados.reduce(
+
+            (total,pedido)=>
+
+            total +
+
+            Number(
+
+                pedido.total || 0
+
+            ),
+
+            0
+
+        );
+
+    const ticket =
+
+        finalizados.length
+
+        ?
+
+        receita /
+
+        finalizados.length
+
+        :
+
+        0;
+
+    atualizarCard(
+
+        "receitaResumoDashboard",
+
+        formatarMoeda(receita)
+
+    );
+
+    atualizarCard(
+
+        "ticketMedioDashboard",
+
+        formatarMoeda(ticket)
+
+    );
+
+    atualizarCard(
+
+        "pedidosFinalizadosDashboard",
+
+        finalizados.length
+
+    );
+
+    atualizarCard(
+
+        "produtoMaisVendidoDashboard",
+
+        calcularProdutoMaisVendido()
+
+    );
+
+}
+
+/*==================================================
+CARD GENÉRICO
+==================================================*/
+
+function atualizarCard(id,valor){
+
+    const elemento =
+
+    document.getElementById(id);
+
+    if(!elemento){
+
+        return;
+
+    }
+
+    elemento.textContent = valor;
+
+}
+
+/*==================================================
+PRODUTO MAIS VENDIDO
+==================================================*/
+
+function calcularProdutoMaisVendido(){
+
+    if(!Admin.pedidos.length){
+
+        return "—";
+
+    }
+
+    const ranking = {};
+
+    Admin.pedidos.forEach(pedido=>{
+
+        if(!pedido.itens){
+
+            return;
+
+        }
+
+        pedido.itens.forEach(item=>{
+
+            ranking[item.nome] =
+
+            (ranking[item.nome] || 0)
+
+            +
+
+            Number(
+
+                item.quantidade || 1
+
+            );
+
+        });
+
+    });
+
+    let maior = 0;
+
+    let produto = "—";
+
+    Object.entries(ranking)
+
+    .forEach(([nome,total])=>{
+
+        if(total>maior){
+
+            maior = total;
+
+            produto = nome;
+
+        }
+
+    });
+
+    return produto;
+
+}
+/*==================================================
+PRODUTOS
+CONFIGURAÇÃO DOS EVENTOS
 ==================================================*/
 
 function configurarEventos(){
 
-    const btnNovo =
-    document.getElementById("btnNovoProduto");
+    document
 
-    if(btnNovo){
+        .getElementById("btnNovoProduto")
 
-        btnNovo.onclick =
-        abrirNovoProduto;
+        ?.addEventListener(
 
-    }
+            "click",
 
-    const fechar =
-    document.getElementById(
-        "fecharModalProduto"
-    );
+            abrirNovoProduto
 
-    if(fechar){
-
-        fechar.onclick =
-        fecharModalProduto;
-
-    }
-
-    const cancelar =
-    document.getElementById(
-        "cancelarProduto"
-    );
-
-    if(cancelar){
-
-        cancelar.onclick =
-        fecharModalProduto;
-
-    }
-
-    if(formProduto){
-
-        formProduto.onsubmit =
-        salvarProduto;
-
-    }
-
-    if(campoImagem){
-
-        campoImagem.oninput =
-        atualizarPreviewImagem;
-
-    }
+        );
 
     document
-    .getElementById(
-        "pesquisaProduto"
-    )
-    ?.addEventListener(
-        "input",
-        renderizarProdutos
-    );
+
+        .getElementById("formProduto")
+
+        ?.addEventListener(
+
+            "submit",
+
+            salvarProduto
+
+        );
 
     document
-    .getElementById(
-        "filtroCategoria"
-    )
-    ?.addEventListener(
-        "change",
-        renderizarProdutos
-    );
+
+        .getElementById("fecharModalProduto")
+
+        ?.addEventListener(
+
+            "click",
+
+            fecharModalProduto
+
+        );
 
     document
-    .getElementById(
-        "filtroStatusProduto"
-    )
-    ?.addEventListener(
-        "change",
-        renderizarProdutos
-    );
+
+        .getElementById("cancelarProduto")
+
+        ?.addEventListener(
+
+            "click",
+
+            fecharModalProduto
+
+        );
 
     document
-    .getElementById(
-        "pesquisaPedido"
-    )
-    ?.addEventListener(
-        "input",
-        renderizarPedidos
-    );
+
+        .getElementById("imagemProduto")
+
+        ?.addEventListener(
+
+            "input",
+
+            atualizarPreviewImagem
+
+        );
 
     document
-    .getElementById(
-        "filtroStatus"
-    )
-    ?.addEventListener(
-        "change",
-        renderizarPedidos
-    );
+
+        .getElementById("pesquisaProduto")
+
+        ?.addEventListener(
+
+            "input",
+
+            renderizarProdutos
+
+        );
 
     document
-    .getElementById(
-        "pesquisaCliente"
-    )
-    ?.addEventListener(
-        "input",
-        renderizarClientes
-    );
+
+        .getElementById("filtroCategoria")
+
+        ?.addEventListener(
+
+            "change",
+
+            renderizarProdutos
+
+        );
+
+    document
+
+        .getElementById("filtroStatusProduto")
+
+        ?.addEventListener(
+
+            "change",
+
+            renderizarProdutos
+
+        );
 
 }
+
 /*==================================================
-MODAL PRODUTO
+NOVO PRODUTO
 ==================================================*/
 
 function abrirNovoProduto(){
 
-    produtoEditando = null;
+    Admin.produtoEditando = null;
 
-    if(formProduto){
-        formProduto.reset();
-    }
+    document
 
-    if(previewProduto){
-        previewProduto.src =
+        .getElementById("formProduto")
+
+        ?.reset();
+
+    document
+
+        .getElementById("produtoAtivo")
+
+        .checked = true;
+
+    document
+
+        .getElementById("ordemProduto")
+
+        .value =
+
+        Admin.produtos.length + 1;
+
+    document
+
+        .getElementById("previewProduto")
+
+        .src =
+
         "../assets/img/sem-imagem.png";
-    }
 
-    document.getElementById(
-        "produtoAtivo"
-    ).checked = true;
+    document
 
-    document.getElementById(
-        "ordemProduto"
-    ).value = produtos.length + 1;
+        .getElementById("modalProduto")
 
-    modalProduto.classList.add("ativo");
+        .classList.add("ativo");
 
 }
 
+/*==================================================
+FECHAR MODAL
+==================================================*/
+
 function fecharModalProduto(){
 
-    modalProduto.classList.remove("ativo");
+    document
+
+        .getElementById("modalProduto")
+
+        ?.classList.remove("ativo");
 
 }
 
@@ -247,28 +582,46 @@ PREVIEW DA IMAGEM
 
 function atualizarPreviewImagem(){
 
-    const url =
-    campoImagem.value.trim();
+    const campo =
 
-    if(url===""){
+        document.getElementById(
 
-        previewProduto.src =
-        "../assets/img/sem-imagem.png";
+            "imagemProduto"
+
+        );
+
+    const preview =
+
+        document.getElementById(
+
+            "previewProduto"
+
+        );
+
+    if(!campo || !preview){
 
         return;
 
     }
 
-    previewProduto.src = url;
+    const url = campo.value.trim();
 
-    previewProduto.onerror = function(){
+    preview.src =
 
-        previewProduto.src =
+        url ||
+
+        "../assets/img/sem-imagem.png";
+
+    preview.onerror = ()=>{
+
+        preview.src =
+
         "../assets/img/sem-imagem.png";
 
     };
 
 }
+
 /*==================================================
 SALVAR PRODUTO
 ==================================================*/
@@ -281,32 +634,42 @@ function salvarProduto(event){
 
         id:
 
-        produtoEditando ||
+        Admin.produtoEditando
+
+        ||
 
         Date.now(),
 
         nome:
 
         document.getElementById(
-        "nomeProduto"
+
+            "nomeProduto"
+
         ).value.trim(),
 
         categoria:
 
         document.getElementById(
-        "categoriaProduto"
+
+            "categoriaProduto"
+
         ).value,
 
         descricao:
 
         document.getElementById(
-        "descricaoProduto"
+
+            "descricaoProduto"
+
         ).value.trim(),
 
         preco:Number(
 
             document.getElementById(
-            "precoProduto"
+
+                "precoProduto"
+
             ).value
 
         ),
@@ -314,7 +677,9 @@ function salvarProduto(event){
         ordem:Number(
 
             document.getElementById(
-            "ordemProduto"
+
+                "ordemProduto"
+
             ).value
 
         ),
@@ -322,75 +687,74 @@ function salvarProduto(event){
         imagem:
 
         document.getElementById(
-        "imagemProduto"
+
+            "imagemProduto"
+
         ).value.trim(),
 
         ativo:
 
         document.getElementById(
-        "produtoAtivo"
+
+            "produtoAtivo"
+
         ).checked,
 
         promocao:
 
         document.getElementById(
-        "produtoPromocao"
+
+            "produtoPromocao"
+
         ).checked,
 
         destaque:
 
         document.getElementById(
-        "produtoDestaque"
+
+            "produtoDestaque"
+
         ).checked,
 
         maisVendido:
 
         document.getElementById(
-        "produtoMaisVendido"
+
+            "produtoMaisVendido"
+
         ).checked,
 
         lancamento:
 
         document.getElementById(
-        "produtoLancamento"
+
+            "produtoLancamento"
+
         ).checked
 
     };
 
-    if(produtoEditando){
+    if(Admin.produtoEditando){
 
         const indice =
-        produtos.findIndex(
 
-            p=>p.id===produtoEditando
+        Admin.produtos.findIndex(
 
-        );
-
-        produtos[indice] = produto;
-
-        mostrarAlerta(
-
-            "Produto atualizado!",
-
-            "success"
+            p=>p.id===produto.id
 
         );
 
-    }else{
-
-        produtos.push(produto);
-
-        mostrarAlerta(
-
-            "Produto cadastrado!",
-
-            "success"
-
-        );
+        Admin.produtos[indice]=produto;
 
     }
 
-    produtos.sort(
+    else{
+
+        Admin.produtos.push(produto);
+
+    }
+
+    Admin.produtos.sort(
 
         (a,b)=>
 
@@ -398,30 +762,21 @@ function salvarProduto(event){
 
     );
 
-    Storage.salvarProdutos(produtos);
+    Storage.salvarProdutos(
+
+        Admin.produtos
+
+    );
 
     fecharModalProduto();
 
     atualizarSistema();
 
-}
-/*==================================================
-ATUALIZAÇÃO GERAL
-==================================================*/
+    mostrarAlerta(
 
-function atualizarSistema(){
+        "Produto salvo com sucesso."
 
-    carregarDados();
-
-    atualizarPainel();
-
-    renderizarProdutos();
-
-    renderizarPedidos();
-
-    renderizarClientes();
-
-    atualizarFinanceiro();
+    );
 
 }
 /*==================================================
@@ -433,14 +788,19 @@ function renderizarProdutos(){
     const tbody =
     document.getElementById("listaProdutos");
 
-    if(!tbody) return;
+    if(!tbody){
 
-    let lista = [...produtos];
+        return;
+
+    }
+
+    let lista = [...Admin.produtos];
 
     const pesquisa =
     document.getElementById("pesquisaProduto")
     ?.value
-    .toLowerCase() || "";
+    .toLowerCase()
+    .trim() || "";
 
     const categoria =
     document.getElementById("filtroCategoria")
@@ -450,10 +810,6 @@ function renderizarProdutos(){
     document.getElementById("filtroStatusProduto")
     ?.value || "";
 
-    /*==============================
-    FILTRO NOME
-    ==============================*/
-
     if(pesquisa){
 
         lista = lista.filter(produto=>
@@ -462,13 +818,15 @@ function renderizarProdutos(){
             .toLowerCase()
             .includes(pesquisa)
 
+            ||
+
+            produto.descricao
+            .toLowerCase()
+            .includes(pesquisa)
+
         );
 
     }
-
-    /*==============================
-    FILTRO CATEGORIA
-    ==============================*/
 
     if(categoria){
 
@@ -481,10 +839,6 @@ function renderizarProdutos(){
         );
 
     }
-
-    /*==============================
-    FILTRO STATUS
-    ==============================*/
 
     if(status==="ativos"){
 
@@ -506,19 +860,11 @@ function renderizarProdutos(){
 
     }
 
-    /*==============================
-    ORDENAÇÃO
-    ==============================*/
-
     lista.sort(
 
         (a,b)=>a.ordem-b.ordem
 
     );
-
-    /*==============================
-    SEM PRODUTOS
-    ==============================*/
 
     if(lista.length===0){
 
@@ -568,13 +914,7 @@ Cadastre um novo produto.
 
 class="produto-thumb"
 
-src="${
-
-produto.imagem ||
-
-'../assets/img/sem-imagem.png'
-
-}"
+src="${produto.imagem || "../assets/img/sem-imagem.png"}"
 
 alt="${produto.nome}">
 
@@ -582,49 +922,29 @@ alt="${produto.nome}">
 
 <td>
 
-<strong>
-
-${produto.nome}
-
-</strong>
+<strong>${produto.nome}</strong>
 
 <br>
 
-<small>
-
-${produto.descricao}
-
-</small>
+<small>${produto.descricao}</small>
 
 </td>
 
 <td>
 
-${traduzCategoria(
-
-produto.categoria
-
-)}
+${traduzCategoria(produto.categoria)}
 
 </td>
 
 <td>
 
-${formatarMoeda(
-
-produto.preco
-
-)}
+${formatarMoeda(produto.preco)}
 
 </td>
 
 <td>
 
-${gerarBadges(
-
-produto
-
-)}
+${gerarBadges(produto)}
 
 </td>
 
@@ -663,69 +983,47 @@ onclick="excluirProduto(${produto.id})">
     });
 
 }
+
 /*==================================================
 EDITAR PRODUTO
 ==================================================*/
 
 function editarProduto(id){
 
-    const produto = produtos.find(
+    const produto =
 
-        p => p.id === id
+    Admin.produtos.find(
+
+        produto=>produto.id===id
 
     );
 
-    if(!produto) return;
+    if(!produto){
 
-    produtoEditando = id;
+        return;
 
-    document.getElementById(
-        "nomeProduto"
-    ).value = produto.nome;
+    }
 
-    document.getElementById(
-        "categoriaProduto"
-    ).value = produto.categoria;
+    Admin.produtoEditando = produto.id;
 
-    document.getElementById(
-        "descricaoProduto"
-    ).value = produto.descricao;
+    document.getElementById("nomeProduto").value = produto.nome;
+    document.getElementById("categoriaProduto").value = produto.categoria;
+    document.getElementById("descricaoProduto").value = produto.descricao;
+    document.getElementById("precoProduto").value = produto.preco;
+    document.getElementById("ordemProduto").value = produto.ordem;
+    document.getElementById("imagemProduto").value = produto.imagem || "";
 
-    document.getElementById(
-        "precoProduto"
-    ).value = produto.preco;
-
-    document.getElementById(
-        "ordemProduto"
-    ).value = produto.ordem;
-
-    document.getElementById(
-        "imagemProduto"
-    ).value = produto.imagem || "";
-
-    document.getElementById(
-        "produtoAtivo"
-    ).checked = produto.ativo;
-
-    document.getElementById(
-        "produtoPromocao"
-    ).checked = produto.promocao;
-
-    document.getElementById(
-        "produtoDestaque"
-    ).checked = produto.destaque;
-
-    document.getElementById(
-        "produtoMaisVendido"
-    ).checked = produto.maisVendido;
-
-    document.getElementById(
-        "produtoLancamento"
-    ).checked = produto.lancamento;
+    document.getElementById("produtoAtivo").checked = produto.ativo;
+    document.getElementById("produtoPromocao").checked = produto.promocao;
+    document.getElementById("produtoDestaque").checked = produto.destaque;
+    document.getElementById("produtoMaisVendido").checked = produto.maisVendido;
+    document.getElementById("produtoLancamento").checked = produto.lancamento;
 
     atualizarPreviewImagem();
 
-    modalProduto.classList.add("ativo");
+    document
+    .getElementById("modalProduto")
+    .classList.add("ativo");
 
 }
 
@@ -735,29 +1033,39 @@ EXCLUIR PRODUTO
 
 function excluirProduto(id){
 
-    if(!confirm(
-        "Deseja realmente excluir este produto?"
-    )) return;
+    if(
 
-    produtos = produtos.filter(
+        !confirm(
 
-        produto => produto.id !== id
+            "Deseja realmente excluir este produto?"
+
+        )
+
+    ){
+
+        return;
+
+    }
+
+    Admin.produtos =
+
+    Admin.produtos.filter(
+
+        produto=>produto.id!==id
 
     );
 
-    produtos.sort(
+    Storage.salvarProdutos(
 
-        (a,b)=>a.ordem-b.ordem
+        Admin.produtos
 
     );
-
-    Storage.salvarProdutos(produtos);
 
     atualizarSistema();
 
     mostrarAlerta(
 
-        "Produto removido com sucesso!",
+        "Produto removido com sucesso.",
 
         "warning"
 
@@ -782,6 +1090,7 @@ function gerarBadges(produto){
     if(produto.promocao){
 
         html +=
+
         '<span class="badge promocao">Promoção</span>';
 
     }
@@ -789,6 +1098,7 @@ function gerarBadges(produto){
     if(produto.destaque){
 
         html +=
+
         '<span class="badge destaque">Destaque</span>';
 
     }
@@ -796,6 +1106,7 @@ function gerarBadges(produto){
     if(produto.maisVendido){
 
         html +=
+
         '<span class="badge vendido">Mais Vendido</span>';
 
     }
@@ -803,7 +1114,8 @@ function gerarBadges(produto){
     if(produto.lancamento){
 
         html +=
-        '<span class="badge lancamento">Lançamento</span>';
+
+        '<span class="badge lancamento">Novo</span>';
 
     }
 
@@ -817,385 +1129,31 @@ TRADUZIR CATEGORIA
 
 function traduzCategoria(categoria){
 
-    const categorias = {
+    const categorias={
 
-        burger : "Hambúrguer",
+        burger:"Hambúrguer",
 
-        combo : "Combo",
+        combo:"Combo",
 
-        porcao : "Porção",
+        porcao:"Porção",
 
-        bebida : "Bebida",
+        bebida:"Bebida",
 
-        sobremesa : "Sobremesa"
+        sobremesa:"Sobremesa"
 
     };
 
     return categorias[categoria] || categoria;
 
 }
-/*==================================================
-DASHBOARD
-==================================================*/
-
-function atualizarPainel(){
-
-    atualizarCardsDashboard();
-
-    atualizarUltimosPedidos();
-
-    atualizarResumoDashboard();
-
-}
-
-function atualizarCardsDashboard(){
-
-    const totalProdutos =
-    document.getElementById("totalProdutos");
-
-    const totalPedidos =
-    document.getElementById("totalPedidos");
-
-    const totalClientes =
-    document.getElementById("totalClientes");
-
-    const receitaTotal =
-    document.getElementById("receitaTotalDashboard");
-
-    if(totalProdutos)
-        totalProdutos.textContent = produtos.length;
-
-    if(totalPedidos)
-        totalPedidos.textContent = pedidos.length;
-
-    if(totalClientes)
-        totalClientes.textContent = clientes.length;
-
-    const receita = pedidos
-
-        .filter(
-            pedido=>pedido.status==="Finalizado"
-        )
-
-        .reduce(
-            (total,pedido)=>
-            total+Number(pedido.total||0),
-            0
-        );
-
-    if(receitaTotal){
-
-        receitaTotal.textContent =
-        formatarMoeda(receita);
-
-    }
-
-}
-function atualizarUltimosPedidos(){
-
-    const tbody =
-    document.getElementById("ultimosPedidos");
-
-    if(!tbody) return;
-
-    if(pedidos.length===0){
-
-        tbody.innerHTML=`
-
-<tr>
-
-<td colspan="4">
-
-Nenhum pedido encontrado.
-
-</td>
-
-</tr>
-
-`;
-
-        return;
-
-    }
-
-    tbody.innerHTML="";
-
-    [...pedidos]
-
-    .sort((a,b)=>b.id-a.id)
-
-    .slice(0,5)
-
-    .forEach(pedido=>{
-
-        tbody.innerHTML+=`
-
-<tr>
-
-<td>#${pedido.id}</td>
-
-<td>${pedido.cliente}</td>
-
-<td>${formatarMoeda(pedido.total)}</td>
-
-<td>
-
-<span class="badge ${classeStatus(pedido.status)}">
-
-${pedido.status}
-
-</span>
-
-</td>
-
-</tr>
-
-`;
-
-    });
-
-}
-function atualizarResumoDashboard(){
-
-    const finalizados =
-
-    pedidos.filter(
-
-        pedido=>
-
-        pedido.status==="Finalizado"
-
-    );
-
-    const receita =
-
-    finalizados.reduce(
-
-        (soma,pedido)=>
-
-        soma+Number(pedido.total||0),
-
-        0
-
-    );
-
-    const ticket =
-
-    finalizados.length
-
-    ? receita/finalizados.length
-
-    :0;
-
-    document.getElementById(
-
-        "receitaResumoDashboard"
-
-    ).textContent =
-
-    formatarMoeda(receita);
-
-    document.getElementById(
-
-        "ticketMedioDashboard"
-
-    ).textContent =
-
-    formatarMoeda(ticket);
-
-    document.getElementById(
-
-        "pedidosFinalizadosDashboard"
-
-    ).textContent =
-
-    finalizados.length;
-
-    document.getElementById(
-
-        "produtoMaisVendidoDashboard"
-
-    ).textContent =
-
-    calcularProdutoMaisVendido();
-
-}
-/*==================================================
-PRODUTO MAIS VENDIDO
-==================================================*/
-
-function calcularProdutoMaisVendido(){
-
-    if(!pedidos.length){
-
-        return "—";
-
-    }
-
-    const ranking={};
-
-    pedidos.forEach(pedido=>{
-
-        if(!pedido.itens) return;
-
-        pedido.itens.forEach(item=>{
-
-            ranking[item.nome]=
-
-            (ranking[item.nome]||0)
-
-            +
-
-            Number(item.quantidade||1);
-
-        });
-
-    });
-
-    let maior=0;
-
-    let nome="—";
-
-    Object.entries(ranking)
-
-    .forEach(([produto,total])=>{
-
-        if(total>maior){
-
-            maior=total;
-
-            nome=produto;
-
-        }
-
-    });
-
-    return nome;
-
-}
 
 /*==================================================
-STATUS
+API PRODUTOS
 ==================================================*/
 
-function classeStatus(status){
+window.editarProduto = editarProduto;
 
-    switch(status){
-
-        case "Recebido":
-
-            return "info";
-
-        case "Em preparo":
-
-            return "warning";
-
-        case "Saiu para entrega":
-
-            return "destaque";
-
-        case "Finalizado":
-
-            return "ativo";
-
-        case "Cancelado":
-
-            return "inativo";
-
-        default:
-
-            return "";
-
-    }
-
-}
-/*==================================================
-UTILITÁRIOS
-==================================================*/
-
-function formatarMoeda(valor){
-
-    return Number(valor||0)
-
-    .toLocaleString(
-
-        "pt-BR",
-
-        {
-
-            style:"currency",
-
-            currency:"BRL"
-
-        }
-
-    );
-
-}
-
-function gerarId(){
-
-    return Date.now();
-
-}
-
-function salvarTudo(){
-
-    Storage.salvarProdutos(produtos);
-
-    Storage.salvarPedidos(pedidos);
-
-    Storage.salvarClientes(clientes);
-
-    Storage.salvarConfiguracoes(configuracoes);
-
-}
-
-function mostrarAlerta(
-
-    mensagem,
-
-    tipo="success"
-
-){
-
-    const alerta =
-
-    document.createElement("div");
-
-    alerta.className =
-
-    `alert alert-${tipo}`;
-
-    alerta.textContent =
-
-    mensagem;
-
-    alerta.style.position="fixed";
-
-    alerta.style.top="25px";
-
-    alerta.style.right="25px";
-
-    alerta.style.zIndex="99999";
-
-    document.body.appendChild(alerta);
-
-    setTimeout(()=>{
-
-        alerta.style.opacity="0";
-
-        alerta.style.transition=".3s";
-
-        setTimeout(()=>{
-
-            alerta.remove();
-
-        },300);
-
-    },2500);
-
-}
+window.excluirProduto = excluirProduto;
 /*==================================================
 PEDIDOS
 ==================================================*/
@@ -1205,40 +1163,40 @@ function renderizarPedidos(){
     const tbody =
     document.getElementById("listaPedidos");
 
-    if(!tbody) return;
+    if(!tbody){
 
-    let lista = [...pedidos];
+        return;
+
+    }
+
+    let lista = [...Admin.pedidos];
 
     const pesquisa =
     document.getElementById("pesquisaPedido")
     ?.value
-    .toLowerCase() || "";
+    .toLowerCase()
+    .trim() || "";
 
     const status =
     document.getElementById("filtroStatus")
     ?.value || "";
 
-    /*==============================
-    PESQUISA
-    ==============================*/
-
     if(pesquisa){
 
         lista = lista.filter(pedido=>
 
-            (pedido.cliente||"")
-
+            (pedido.cliente || "")
             .toLowerCase()
+            .includes(pesquisa)
 
+            ||
+
+            (pedido.telefone || "")
             .includes(pesquisa)
 
         );
 
     }
-
-    /*==============================
-    STATUS
-    ==============================*/
 
     if(status){
 
@@ -1258,13 +1216,9 @@ function renderizarPedidos(){
 
     );
 
-    /*==============================
-    SEM PEDIDOS
-    ==============================*/
-
     if(lista.length===0){
 
-        tbody.innerHTML=`
+        tbody.innerHTML = `
 
 <tr>
 
@@ -1272,11 +1226,7 @@ function renderizarPedidos(){
 
 <div class="sem-registros">
 
-<h3>
-
-Nenhum pedido encontrado.
-
-</h3>
+<h3>Nenhum pedido encontrado.</h3>
 
 </div>
 
@@ -1290,7 +1240,7 @@ Nenhum pedido encontrado.
 
     }
 
-    tbody.innerHTML="";
+    tbody.innerHTML = "";
 
     lista.forEach(pedido=>{
 
@@ -1298,41 +1248,21 @@ Nenhum pedido encontrado.
 
 <tr>
 
-<td>
-
-#${pedido.id}
-
-</td>
+<td>#${pedido.id}</td>
 
 <td>
 
-<strong>
-
-${pedido.cliente}
-
-</strong>
+<strong>${pedido.cliente}</strong>
 
 <br>
 
-<small>
-
-${pedido.telefone||"-"}
-
-</small>
+<small>${pedido.telefone || "-"}</small>
 
 </td>
 
-<td>
+<td>${formatarMoeda(pedido.total)}</td>
 
-${formatarMoeda(pedido.total)}
-
-</td>
-
-<td>
-
-${pedido.pagamento||"-"}
-
-</td>
+<td>${pedido.pagamento || "-"}</td>
 
 <td>
 
@@ -1352,8 +1282,6 @@ ${gerarOpcoesStatus(pedido.status)}
 
 <td>
 
-<div class="acoes">
-
 <button
 
 class="btn-acao btn-visualizar"
@@ -1364,8 +1292,6 @@ onclick="visualizarPedido(${pedido.id})">
 
 </button>
 
-</div>
-
 </td>
 
 </tr>
@@ -1375,37 +1301,49 @@ onclick="visualizarPedido(${pedido.id})">
     });
 
 }
+
 /*==================================================
 ALTERAR STATUS
 ==================================================*/
 
 function alterarStatusPedido(id,status){
 
-    const pedido = pedidos.find(
+    const pedido =
+
+    Admin.pedidos.find(
 
         pedido=>pedido.id===id
 
     );
 
-    if(!pedido) return;
+    if(!pedido){
+
+        return;
+
+    }
 
     pedido.status = status;
 
-    Storage.salvarPedidos(pedidos);
+    Storage.salvarPedidos(
 
-    atualizarSistema();
+        Admin.pedidos
+
+    );
+
+    atualizarDashboard();
+
+    atualizarFinanceiro();
 
     mostrarAlerta(
 
-        "Status atualizado com sucesso!",
-
-        "success"
+        "Status atualizado com sucesso."
 
     );
 
 }
+
 /*==================================================
-OPÇÕES STATUS
+STATUS
 ==================================================*/
 
 function gerarOpcoesStatus(statusAtual){
@@ -1441,60 +1379,85 @@ ${status}
 `).join("");
 
 }
+
 /*==================================================
 VISUALIZAR PEDIDO
 ==================================================*/
 
 function visualizarPedido(id){
 
-    const pedido = pedidos.find(
+    const pedido =
+
+    Admin.pedidos.find(
 
         pedido=>pedido.id===id
 
     );
 
-    if(!pedido) return;
+    if(!pedido){
 
-    let itens="";
-
-    if(pedido.itens){
-
-        pedido.itens.forEach(item=>{
-
-            itens +=
-
-`${item.quantidade}x ${item.nome}\n`;
-
-        });
+        return;
 
     }
 
+    let itens = "";
+
+    (pedido.itens || []).forEach(item=>{
+
+        itens +=
+
+`${item.quantidade}x ${item.nome}
+
+${formatarMoeda(item.subtotal || (item.precoUnitario * item.quantidade))}
+
+`;
+
+    });
+
     alert(
 
-`Pedido #${pedido.id}
+`PEDIDO #${pedido.id}
 
 Cliente:
 ${pedido.cliente}
 
 Telefone:
-${pedido.telefone||"-"}
+${pedido.telefone}
 
 Pagamento:
-${pedido.pagamento||"-"}
+${pedido.pagamento}
+
+Entrega:
+${pedido.entrega}
 
 Status:
 ${pedido.status}
 
-Itens:
+-------------------------
 
 ${itens}
 
-Total:
-${formatarMoeda(pedido.total)}`
+-------------------------
+
+TOTAL:
+${formatarMoeda(pedido.total)}
+
+Observações:
+${pedido.observacoes || "Nenhuma"}`
 
     );
 
 }
+
+/*==================================================
+API
+==================================================*/
+
+window.visualizarPedido =
+visualizarPedido;
+
+window.alterarStatusPedido =
+alterarStatusPedido;
 /*==================================================
 CLIENTES
 ==================================================*/
@@ -1504,14 +1467,25 @@ function renderizarClientes(){
     const tbody =
     document.getElementById("listaClientes");
 
-    if(!tbody) return;
+    if(!tbody){
 
-    let lista = [...clientes];
+        return;
+
+    }
+
+    let lista = [...Admin.clientes];
 
     const pesquisa =
-    document.getElementById("pesquisaCliente")
-    ?.value
-    .toLowerCase() || "";
+
+    document.getElementById(
+
+        "pesquisaCliente"
+
+    )?.value
+
+    .toLowerCase()
+
+    .trim() || "";
 
     if(pesquisa){
 
@@ -1523,11 +1497,27 @@ function renderizarClientes(){
 
             .includes(pesquisa)
 
+            ||
+
+            (cliente.telefone || "")
+
+            .includes(pesquisa)
+
+            ||
+
+            (cliente.email || "")
+
+            .toLowerCase()
+
+            .includes(pesquisa)
+
         );
 
     }
 
-    lista.sort((a,b)=>
+    lista.sort(
+
+        (a,b)=>
 
         a.nome.localeCompare(b.nome)
 
@@ -1535,11 +1525,11 @@ function renderizarClientes(){
 
     if(lista.length===0){
 
-        tbody.innerHTML=`
+        tbody.innerHTML = `
 
 <tr>
 
-<td colspan="5">
+<td colspan="7">
 
 <div class="sem-registros">
 
@@ -1551,8 +1541,7 @@ Nenhum cliente encontrado.
 
 <p>
 
-Os clientes aparecerão automaticamente
-após o primeiro pedido.
+Os clientes aparecerão automaticamente após o primeiro pedido.
 
 </p>
 
@@ -1568,7 +1557,7 @@ após o primeiro pedido.
 
     }
 
-    tbody.innerHTML="";
+    tbody.innerHTML = "";
 
     lista.forEach(cliente=>{
 
@@ -1578,7 +1567,7 @@ após o primeiro pedido.
 
 <td>
 
-${cliente.nome}
+<strong>${cliente.nome}</strong>
 
 </td>
 
@@ -1602,11 +1591,27 @@ ${cliente.pedidos || 0}
 
 <td>
 
-${formatarMoeda(
+${formatarMoeda(cliente.totalGasto || 0)}
 
-cliente.totalGasto
+</td>
 
-)}
+<td>
+
+${formatarMoeda(cliente.ticketMedio || 0)}
+
+</td>
+
+<td>
+
+<button
+
+class="btn-acao btn-visualizar"
+
+onclick="visualizarCliente(${cliente.id})">
+
+<i class="fa-solid fa-user"></i>
+
+</button>
 
 </td>
 
@@ -1617,6 +1622,120 @@ cliente.totalGasto
     });
 
 }
+
+/*==================================================
+VISUALIZAR CLIENTE
+==================================================*/
+
+function visualizarCliente(id){
+
+    const cliente =
+
+    Admin.clientes.find(
+
+        cliente=>cliente.id===id
+
+    );
+
+    if(!cliente){
+
+        return;
+
+    }
+
+    const pedidos =
+
+    Admin.pedidos.filter(
+
+        pedido=>
+
+        pedido.clienteId===cliente.id
+
+    );
+
+    let historico = "";
+
+    pedidos.forEach(pedido=>{
+
+        historico +=
+
+`#${pedido.id}
+
+${pedido.data}
+
+${pedido.status}
+
+${formatarMoeda(pedido.total)}
+
+-------------------
+
+`;
+
+    });
+
+    if(historico===""){
+
+        historico =
+
+        "Nenhum pedido encontrado.";
+
+    }
+
+    alert(
+
+`CLIENTE
+
+Nome:
+${cliente.nome}
+
+Telefone:
+${cliente.telefone}
+
+Email:
+${cliente.email || "-"}
+
+Pedidos:
+${cliente.pedidos}
+
+Total gasto:
+${formatarMoeda(cliente.totalGasto)}
+
+Ticket médio:
+${formatarMoeda(cliente.ticketMedio)}
+
+Último pedido:
+${cliente.ultimoPedido || "-"}
+
+==================
+
+HISTÓRICO
+
+${historico}`
+
+    );
+
+}
+
+/*==================================================
+ATUALIZAR CLIENTES
+==================================================*/
+
+function atualizarClientes(){
+
+    Admin.clientes =
+
+    Storage.getClientes();
+
+    renderizarClientes();
+
+}
+
+/*==================================================
+API
+==================================================*/
+
+window.visualizarCliente =
+visualizarCliente;
 /*==================================================
 FINANCEIRO
 ==================================================*/
@@ -1625,11 +1744,11 @@ function atualizarFinanceiro(){
 
     const pedidosFinalizados =
 
-    pedidos.filter(
+    Admin.pedidos.filter(
 
-        pedido=>
+        pedido =>
 
-        pedido.status==="Finalizado"
+        pedido.status === "Finalizado"
 
     );
 
@@ -1639,7 +1758,7 @@ function atualizarFinanceiro(){
 
         (total,pedido)=>
 
-        total+Number(
+        total + Number(
 
             pedido.total || 0
 
@@ -1649,7 +1768,7 @@ function atualizarFinanceiro(){
 
     );
 
-    const ticket =
+    const ticketMedio =
 
     pedidosFinalizados.length
 
@@ -1663,114 +1782,282 @@ function atualizarFinanceiro(){
 
     0;
 
-    const receitaEl =
-    document.getElementById(
-    "financeiroReceitaTotal"
+    atualizarCard(
+
+        "financeiroReceitaTotal",
+
+        formatarMoeda(receita)
+
     );
 
-    const ticketEl =
-    document.getElementById(
-    "financeiroTicketMedio"
+    atualizarCard(
+
+        "financeiroTicketMedio",
+
+        formatarMoeda(ticketMedio)
+
     );
 
-    const pedidosEl =
-    document.getElementById(
-    "financeiroPedidosFinalizados"
+    atualizarCard(
+
+        "financeiroPedidosFinalizados",
+
+        pedidosFinalizados.length
+
     );
 
-    const vendidoEl =
-    document.getElementById(
-    "financeiroProdutoMaisVendido"
+    atualizarCard(
+
+        "financeiroProdutoMaisVendido",
+
+        calcularProdutoMaisVendido()
+
     );
 
-    if(receitaEl){
+    atualizarCard(
 
-        receitaEl.textContent =
+        "financeiroClientes",
 
-        formatarMoeda(receita);
+        Admin.clientes.length
 
-    }
-
-    if(ticketEl){
-
-        ticketEl.textContent =
-
-        formatarMoeda(ticket);
-
-    }
-
-    if(pedidosEl){
-
-        pedidosEl.textContent =
-
-        pedidosFinalizados.length;
-
-    }
-
-    if(vendidoEl){
-
-        vendidoEl.textContent =
-
-        calcularProdutoMaisVendido();
-
-    }
+    );
 
 }
+
+/*==================================================
+RELATÓRIO FINANCEIRO
+==================================================*/
+
+function gerarRelatorioFinanceiro(){
+
+    const pedidos =
+
+    Admin.pedidos.filter(
+
+        pedido=>
+
+        pedido.status==="Finalizado"
+
+    );
+
+    const receita = pedidos.reduce(
+
+        (total,pedido)=>
+
+        total +
+
+        Number(
+
+            pedido.total || 0
+
+        ),
+
+        0
+
+    );
+
+    const ticket =
+
+        pedidos.length
+
+        ?
+
+        receita /
+
+        pedidos.length
+
+        :
+
+        0;
+
+    alert(
+
+`RELATÓRIO FINANCEIRO
+
+Pedidos Finalizados:
+
+${pedidos.length}
+
+Receita Total:
+
+${formatarMoeda(receita)}
+
+Ticket Médio:
+
+${formatarMoeda(ticket)}
+
+Clientes:
+
+${Admin.clientes.length}
+
+Produto Mais Vendido:
+
+${calcularProdutoMaisVendido()}`
+
+    );
+
+}
+
+/*==================================================
+EXPORTAR FINANCEIRO
+==================================================*/
+
+function exportarFinanceiro(){
+
+    const dados = {
+
+        data:
+
+        new Date().toLocaleString(
+
+            "pt-BR"
+
+        ),
+
+        receita:
+
+        Admin.pedidos
+
+        .filter(
+
+            pedido=>
+
+            pedido.status==="Finalizado"
+
+        )
+
+        .reduce(
+
+            (t,p)=>
+
+            t+Number(
+
+                p.total || 0
+
+            ),
+
+            0
+
+        ),
+
+        pedidos:
+
+        Admin.pedidos.length,
+
+        clientes:
+
+        Admin.clientes.length
+
+    };
+
+    const blob = new Blob(
+
+        [
+
+            JSON.stringify(
+
+                dados,
+
+                null,
+
+                4
+
+            )
+
+        ],
+
+        {
+
+            type:
+
+            "application/json"
+
+        }
+
+    );
+
+    const url =
+
+    URL.createObjectURL(blob);
+
+    const a =
+
+    document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+
+    "financeiro-el-prado.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+}
+
+/*==================================================
+API
+==================================================*/
+
+window.gerarRelatorioFinanceiro =
+gerarRelatorioFinanceiro;
+
+window.exportarFinanceiro =
+exportarFinanceiro;
 /*==================================================
 CONFIGURAÇÕES
 ==================================================*/
 
 function carregarConfiguracoes(){
 
-    if(!configuracoes){
+    Admin.configuracoes =
 
-        configuracoes = {};
+    Storage.getConfiguracoes() || {};
+
+    preencherConfiguracoes();
+
+}
+
+/*==================================================
+PREENCHER FORMULÁRIO
+==================================================*/
+
+function preencherConfiguracoes(){
+
+    const config = Admin.configuracoes;
+
+    definirValor("nomeLoja", config.nome);
+    definirValor("telefoneLoja", config.telefone);
+    definirValor("pixLoja", config.pix);
+    definirValor("taxaEntrega", config.taxaEntrega);
+    definirValor("enderecoLoja", config.endereco);
+    definirValor("horarioLoja", config.horario);
+    definirValor("tempoEntrega", config.tempoEntrega);
+
+}
+
+/*==================================================
+CONFIGURAR EVENTOS
+==================================================*/
+
+function configurarEventosConfiguracoes(){
+
+    const form =
+
+    document.getElementById(
+
+        "formConfiguracoes"
+
+    );
+
+    if(!form){
+
+        return;
 
     }
 
-    const campos = {
-
-        nomeLoja: "nome",
-
-        telefoneLoja: "telefone",
-
-        pixLoja: "pix",
-
-        taxaEntrega: "taxaEntrega",
-
-        enderecoLoja: "endereco",
-
-        horarioLoja: "horario",
-
-        tempoEntrega: "tempoEntrega"
-
-    };
-
-    Object.entries(campos).forEach(([id,chave])=>{
-
-        const elemento =
-        document.getElementById(id);
-
-        if(elemento){
-
-            elemento.value =
-            configuracoes[chave] || "";
-
-        }
-
-    });
-
-}
-/*==================================================
-SALVAR CONFIGURAÇÕES
-==================================================*/
-
-const formConfiguracoes =
-document.getElementById("formConfiguracoes");
-
-if(formConfiguracoes){
-
-    formConfiguracoes.addEventListener(
+    form.addEventListener(
 
         "submit",
 
@@ -1780,80 +2067,358 @@ if(formConfiguracoes){
 
 }
 
+/*==================================================
+SALVAR
+==================================================*/
+
 function salvarConfiguracoes(event){
 
     event.preventDefault();
 
-    configuracoes = {
+    Admin.configuracoes = {
 
         nome:
 
-        document.getElementById(
-        "nomeLoja"
-        ).value,
+        obterValor("nomeLoja"),
 
         telefone:
 
-        document.getElementById(
-        "telefoneLoja"
-        ).value,
+        obterValor("telefoneLoja"),
 
         pix:
 
-        document.getElementById(
-        "pixLoja"
-        ).value,
+        obterValor("pixLoja"),
 
-        taxaEntrega:Number(
+        taxaEntrega:
 
-            document.getElementById(
-            "taxaEntrega"
-            ).value
+        Number(
 
-        ),
+            obterValor("taxaEntrega")
+
+        ) || 0,
 
         endereco:
 
-        document.getElementById(
-        "enderecoLoja"
-        ).value,
+        obterValor("enderecoLoja"),
 
         horario:
 
-        document.getElementById(
-        "horarioLoja"
-        ).value,
+        obterValor("horarioLoja"),
 
         tempoEntrega:
 
-        document.getElementById(
-        "tempoEntrega"
-        ).value
+        obterValor("tempoEntrega")
 
     };
 
     Storage.salvarConfiguracoes(
 
-        configuracoes
+        Admin.configuracoes
 
     );
 
     mostrarAlerta(
 
-        "Configurações salvas com sucesso!",
-
-        "success"
+        "Configurações salvas com sucesso."
 
     );
 
 }
+
+/*==================================================
+UTILITÁRIOS CONFIGURAÇÕES
+==================================================*/
+
+function obterValor(id){
+
+    return document
+
+    .getElementById(id)
+
+    ?.value
+
+    .trim() || "";
+
+}
+
+function definirValor(id,valor){
+
+    const campo =
+
+    document.getElementById(id);
+
+    if(campo){
+
+        campo.value = valor || "";
+
+    }
+
+}
+
+/*==================================================
+RESETAR CONFIGURAÇÕES
+==================================================*/
+
+function restaurarConfiguracoesPadrao(){
+
+    if(
+
+        !confirm(
+
+            "Deseja restaurar as configurações padrão?"
+
+        )
+
+    ){
+
+        return;
+
+    }
+
+    Admin.configuracoes = {
+
+        nome:"El Prado Burguer",
+
+        telefone:"",
+
+        pix:"",
+
+        taxaEntrega:0,
+
+        endereco:"",
+
+        horario:"",
+
+        tempoEntrega:"40-60 min"
+
+    };
+
+    Storage.salvarConfiguracoes(
+
+        Admin.configuracoes
+
+    );
+
+    preencherConfiguracoes();
+
+    mostrarAlerta(
+
+        "Configurações restauradas."
+
+    );
+
+}
+
+/*==================================================
+API
+==================================================*/
+
+window.restaurarConfiguracoesPadrao =
+restaurarConfiguracoesPadrao;
+/*==================================================
+UTILITÁRIOS
+==================================================*/
+
+function formatarMoeda(valor){
+
+    return Number(valor || 0).toLocaleString(
+
+        "pt-BR",
+
+        {
+
+            style:"currency",
+
+            currency:"BRL"
+
+        }
+
+    );
+
+}
+
+function classeStatus(status){
+
+    switch(status){
+
+        case "Recebido":
+
+            return "info";
+
+        case "Em preparo":
+
+            return "warning";
+
+        case "Saiu para entrega":
+
+            return "destaque";
+
+        case "Finalizado":
+
+            return "ativo";
+
+        case "Cancelado":
+
+            return "inativo";
+
+        default:
+
+            return "";
+
+    }
+
+}
+
+function mostrarAlerta(
+
+    mensagem,
+
+    tipo="success"
+
+){
+
+    const alerta =
+
+    document.createElement("div");
+
+    alerta.className =
+
+    `alert alert-${tipo}`;
+
+    alerta.textContent = mensagem;
+
+    alerta.style.position = "fixed";
+    alerta.style.top = "20px";
+    alerta.style.right = "20px";
+    alerta.style.zIndex = "999999";
+
+    document.body.appendChild(alerta);
+
+    setTimeout(()=>{
+
+        alerta.style.opacity = "0";
+
+        alerta.style.transition = ".3s";
+
+        setTimeout(()=>{
+
+            alerta.remove();
+
+        },300);
+
+    },2500);
+
+}
+
 /*==================================================
 ATUALIZAÇÃO GERAL
 ==================================================*/
 
+function atualizarSistema(){
+
+    carregarDados();
+
+    atualizarDashboard();
+
+    renderizarProdutos();
+
+    renderizarPedidos();
+
+    renderizarClientes();
+
+    atualizarFinanceiro();
+
+    carregarConfiguracoes();
+
+}
 
 /*==================================================
-FIM DO ADMIN.JS V5
+SALVAR TUDO
 ==================================================*/
 
+function salvarTudo(){
 
+    Storage.salvarProdutos(
+
+        Admin.produtos
+
+    );
+
+    Storage.salvarPedidos(
+
+        Admin.pedidos
+
+    );
+
+    Storage.salvarClientes(
+
+        Admin.clientes
+
+    );
+
+    Storage.salvarConfiguracoes(
+
+        Admin.configuracoes
+
+    );
+
+}
+
+/*==================================================
+SINCRONIZAÇÃO ENTRE ABAS
+==================================================*/
+
+window.addEventListener(
+
+    "storage",
+
+    ()=>{
+
+        atualizarSistema();
+
+    }
+
+);
+
+/*==================================================
+API GLOBAL
+==================================================*/
+
+window.Admin = Admin;
+
+window.salvarTudo = salvarTudo;
+
+window.atualizarSistema = atualizarSistema;
+
+window.atualizarDashboard = atualizarDashboard;
+
+window.renderizarProdutos = renderizarProdutos;
+
+window.renderizarPedidos = renderizarPedidos;
+
+window.renderizarClientes = renderizarClientes;
+
+window.atualizarFinanceiro = atualizarFinanceiro;
+
+/*==================================================
+LOG
+==================================================*/
+
+console.log(
+
+    "%cEL PRADO CONTROL",
+
+    "color:#D4AF37;font-size:18px;font-weight:bold"
+
+);
+
+console.log(
+
+    "Admin carregado com sucesso."
+
+);
+
+/*==================================================
+FIM DO ADMIN.JS
+VERSÃO 6.0
+==================================================*/
