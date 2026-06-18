@@ -1,0 +1,795 @@
+/*==================================================
+EL PRADO BURGUER
+CHECKOUT.CSS
+==================================================*/
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+:root{
+
+    --primary:#D4AF37;
+
+    --primary-hover:#E6C65C;
+
+    --background:#090909;
+
+    --background-light:#121212;
+
+    --card:#181818;
+
+    --border:#2B2B2B;
+
+    --text:#FFFFFF;
+
+    --text-secondary:#BDBDBD;
+
+    --success:#25D366;
+
+    --radius:20px;
+
+}
+
+body{
+
+    background:var(--background);
+
+    color:var(--text);
+
+    font-family:'Poppins',sans-serif;
+
+    overflow-x:hidden;
+
+}
+
+img{
+
+    display:block;
+
+    max-width:100%;
+
+}
+
+a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+.container{
+
+    width:min(1400px,92%);
+
+    margin:auto;
+
+}
+
+/*==================================================
+HEADER
+==================================================*/
+
+.header{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    height:90px;
+
+    background:rgba(9,9,9,.95);
+
+    backdrop-filter:blur(15px);
+
+    border-bottom:1px solid rgba(255,255,255,.05);
+
+    z-index:999;
+
+}
+
+.header .container{
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+}
+
+.logo img{
+
+    height:70px;
+
+}
+
+.header-titulo{
+
+    font-size:26px;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+.btn-voltar{
+
+    background:var(--primary);
+
+    color:#000;
+
+    padding:14px 24px;
+
+    border-radius:12px;
+
+    font-weight:700;
+
+    transition:.30s;
+
+}
+
+.btn-voltar:hover{
+
+    background:var(--primary-hover);
+
+}
+
+/*==================================================
+CHECKOUT
+==================================================*/
+
+.checkout{
+
+    padding-top:150px;
+
+    padding-bottom:80px;
+
+}
+
+.checkout-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:40px;
+
+    align-items:start;
+
+}
+
+.checkout-form{
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:40px;
+
+}
+
+.checkout-form h2{
+
+    color:var(--primary);
+
+    margin-bottom:30px;
+
+    font-size:28px;
+
+}
+/*==================================================
+FORMULÁRIO
+==================================================*/
+
+.campo{
+
+    display:flex;
+
+    flex-direction:column;
+
+    margin-bottom:25px;
+
+}
+
+.campo label{
+
+    margin-bottom:10px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:var(--text);
+
+}
+
+.campo input,
+
+.campo textarea,
+
+.campo select{
+
+    width:100%;
+
+    padding:16px 18px;
+
+    background:var(--background-light);
+
+    color:var(--text);
+
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    font-size:15px;
+
+    transition:.30s;
+
+}
+
+.campo textarea{
+
+    resize:vertical;
+
+    min-height:120px;
+
+}
+
+.campo input:focus,
+
+.campo textarea:focus,
+
+.campo select:focus{
+
+    outline:none;
+
+    border-color:var(--primary);
+
+    box-shadow:0 0 0 4px rgba(212,175,55,.15);
+
+}
+
+/*==================================================
+DUAS COLUNAS
+==================================================*/
+
+.duas-colunas{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
+}
+
+/*==================================================
+RESUMO
+==================================================*/
+
+.checkout-resumo{
+
+    position:sticky;
+
+    top:120px;
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:24px;
+
+    padding:35px;
+
+}
+
+.checkout-resumo h2{
+
+    color:var(--primary);
+
+    margin-bottom:25px;
+
+    font-size:26px;
+
+}
+
+.lista-resumo{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+    margin-bottom:30px;
+
+    max-height:300px;
+
+    overflow-y:auto;
+
+}
+
+.item-resumo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding-bottom:15px;
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+.item-resumo h4{
+
+    font-size:16px;
+
+}
+
+.item-resumo p{
+
+    color:var(--text-secondary);
+
+    font-size:14px;
+
+}
+
+.item-resumo strong{
+
+    color:var(--primary);
+
+}
+/*==================================================
+ENTREGA
+==================================================*/
+
+.opcoes-entrega{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+    margin-bottom:35px;
+
+}
+
+.opcao{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:18px;
+
+    background:var(--background-light);
+
+    border:1px solid var(--border);
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+}
+
+.opcao:hover{
+
+    border-color:var(--primary);
+
+    transform:translateY(-2px);
+
+}
+
+.opcao input{
+
+    accent-color:var(--primary);
+
+    transform:scale(1.2);
+
+}
+
+.opcao span{
+
+    font-weight:600;
+
+    font-size:16px;
+
+}
+
+/*==================================================
+PAGAMENTO
+==================================================*/
+
+.pagamentos{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+    margin-bottom:35px;
+
+}
+
+/*==================================================
+TOTAIS
+==================================================*/
+
+.totais{
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    padding-top:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.totais div{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.totais span{
+
+    color:var(--text-secondary);
+
+}
+
+.totais strong{
+
+    font-size:18px;
+
+}
+
+.total{
+
+    margin-top:10px;
+
+    padding-top:20px;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+.total span{
+
+    color:#FFF;
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.total strong{
+
+    color:var(--primary);
+
+    font-size:28px;
+
+    font-weight:800;
+
+}
+
+/*==================================================
+BOTÃO FINALIZAR
+==================================================*/
+
+.btn-finalizar{
+
+    width:100%;
+
+    margin-top:35px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:var(--primary);
+
+    color:#000;
+
+    padding:20px;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+}
+
+.btn-finalizar:hover{
+
+    background:var(--primary-hover);
+
+    transform:translateY(-3px);
+
+    box-shadow:0 15px 35px rgba(212,175,55,.30);
+
+}
+
+.btn-finalizar:active{
+
+    transform:scale(.98);
+
+}
+/*==================================================
+FOOTER
+==================================================*/
+
+.footer{
+
+    padding:40px 0;
+
+    text-align:center;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    background:#080808;
+
+}
+
+.footer p{
+
+    color:var(--text-secondary);
+
+    font-size:14px;
+
+}
+
+/*==================================================
+ANIMAÇÕES
+==================================================*/
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.checkout-form,
+
+.checkout-resumo{
+
+    animation:fadeUp .6s ease;
+
+}
+
+/*==================================================
+RESPONSIVIDADE
+==================================================*/
+
+@media(max-width:1100px){
+
+    .checkout-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .checkout-resumo{
+
+        position:relative;
+
+        top:0;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .header{
+
+        height:80px;
+
+    }
+
+    .logo img{
+
+        height:60px;
+
+    }
+
+    .header-titulo{
+
+        font-size:20px;
+
+    }
+
+    .btn-voltar{
+
+        padding:10px 18px;
+
+        font-size:14px;
+
+    }
+
+    .checkout{
+
+        padding-top:120px;
+
+    }
+
+    .checkout-form,
+
+    .checkout-resumo{
+
+        padding:25px;
+
+    }
+
+    .duas-colunas{
+
+        grid-template-columns:1fr;
+
+        gap:0;
+
+    }
+
+    .campo input,
+
+    .campo textarea{
+
+        font-size:16px;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .container{
+
+        width:94%;
+
+    }
+
+    .header-titulo{
+
+        display:none;
+
+    }
+
+    .checkout-form h2,
+
+    .checkout-resumo h2{
+
+        font-size:22px;
+
+    }
+
+    .btn-finalizar{
+
+        padding:18px;
+
+        font-size:16px;
+
+    }
+
+}
+
+/*==================================================
+SCROLLBAR
+==================================================*/
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#111;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:var(--primary);
+
+    border-radius:20px;
+
+}
+
+/*==================================================
+SELEÇÃO
+==================================================*/
+
+::selection{
+
+    background:var(--primary);
+
+    color:#000;
+
+}
+
+/*==================================================
+FOCUS
+==================================================*/
+
+button:focus,
+
+input:focus,
+
+textarea:focus{
+
+    outline:2px solid var(--primary);
+
+    outline-offset:3px;
+
+}
+
+/*==================================================
+TRANSIÇÕES
+==================================================*/
+
+button,
+
+input,
+
+textarea,
+
+.opcao,
+
+.btn-voltar,
+
+.btn-finalizar{
+
+    transition:.3s ease;
+
+}
