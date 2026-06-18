@@ -1,61 +1,60 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Admin | El Prado OS</title>
+<title>El Prado Control</title>
 
-<meta name="description"
-content="Painel administrativo El Prado Burguer">
+<link rel="stylesheet" href="../assets/css/admin.css">
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-<link rel="stylesheet"
-href="../assets/css/admin.css">
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-<script defer
-src="../assets/js/storage.js"></script>
+<script defer src="../assets/js/storage.js"></script>
 
-<script defer
-src="../assets/js/admin.js"></script>
+<script defer src="../assets/js/admin.js"></script>
+
+<script defer src="../assets/js/admin-menu.js"></script>
 
 </head>
 
 <body>
 
-<div class="admin">
+<div class="layout">
 
-<!-- ==========================
-SIDEBAR
-========================== -->
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
 <div class="logo">
 
 <img
+
 src="../assets/img/logo.png"
-alt="El Prado Burguer">
+
+alt="El Prado">
 
 <h2>
 
-EL PRADO OS
+El Prado
+
+<span>
+
+Control
+
+</span>
 
 </h2>
 
@@ -63,204 +62,588 @@ EL PRADO OS
 
 <nav>
 
-<a href="#dashboard"
-class="ativo">
+<button
+
+class="menu-item ativo"
+
+data-page="dashboard">
 
 <i class="fa-solid fa-chart-line"></i>
 
-<span>Dashboard</span>
+Dashboard
 
-</a>
+</button>
 
-<a href="#produtos">
+<button
+
+class="menu-item"
+
+data-page="produtos">
 
 <i class="fa-solid fa-burger"></i>
 
-<span>Produtos</span>
+Produtos
 
-</a>
+</button>
 
-<a href="#pedidos">
+<button
 
-<i class="fa-solid fa-receipt"></i>
+class="menu-item"
 
-<span>Pedidos</span>
+data-page="pedidos">
 
-</a>
+<i class="fa-solid fa-box"></i>
 
-<a href="#clientes">
+Pedidos
+
+</button>
+
+<button
+
+class="menu-item"
+
+data-page="clientes">
 
 <i class="fa-solid fa-users"></i>
 
-<span>Clientes</span>
+Clientes
 
-</a>
+</button>
 
-<a href="#financeiro">
+<button
+
+class="menu-item"
+
+data-page="financeiro">
 
 <i class="fa-solid fa-sack-dollar"></i>
 
-<span>Financeiro</span>
+Financeiro
 
-</a>
+</button>
 
-<a href="#configuracoes">
+<button
+
+class="menu-item"
+
+data-page="configuracoes">
 
 <i class="fa-solid fa-gear"></i>
 
-<span>Configurações</span>
+Configurações
 
-</a>
+</button>
 
 </nav>
 
-</aside>
+<div class="sidebar-footer">
 
-<!-- ==========================
-CONTEÚDO
-========================== -->
+<a href="../index.html">
 
-<main class="conteudo">
+<i class="fa-solid fa-arrow-left"></i>
 
-<header class="topbar">
+Voltar ao Site
 
-<div>
-
-<h1>
-
-Painel Administrativo
-
-</h1>
-
-<p>
-
-Gerencie toda a operação do El Prado Burguer.
-
-</p>
+</a>
 
 </div>
 
-<div class="perfil">
+</aside>
 
-<i class="fa-solid fa-user-shield"></i>
+<!-- MAIN -->
 
-<span>
+<div class="content">
+
+<header class="topbar">
+
+<button id="btnMenu">
+
+<i class="fa-solid fa-bars"></i>
+
+</button>
+
+<h1 id="tituloPagina">
+
+Dashboard
+
+</h1>
+
+<div class="usuario">
 
 Administrador
-
-</span>
 
 </div>
 
 </header>
 
-<!-- ==========================
+<main id="conteudo">
+<!-- ===========================
 DASHBOARD
-========================== -->
+=========================== -->
 
 <section
-id="dashboard">
 
-<div class="dashboard">
+id="dashboard"
 
-<div class="card-indicador">
+class="pagina ativa">
 
-<h3>
+<div class="page-header">
+
+<div>
+
+<h2>
+
+Dashboard
+
+</h2>
+
+<p>
+
+Bem-vindo ao El Prado Control.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+<div class="card-icon">
+
+<i class="fa-solid fa-burger"></i>
+
+</div>
+
+<div>
+
+<h3 id="totalProdutos">
+
+0
+
+</h3>
+
+<span>
 
 Produtos
 
-</h3>
-
-<h2 id="totalProdutos">
-
-0
-
-</h2>
+</span>
 
 </div>
 
-<div class="card-indicador">
+</div>
 
-<h3>
+<div class="card">
+
+<div class="card-icon">
+
+<i class="fa-solid fa-box"></i>
+
+</div>
+
+<div>
+
+<h3 id="totalPedidos">
+
+0
+
+</h3>
+
+<span>
 
 Pedidos
 
-</h3>
-
-<h2 id="totalPedidos">
-
-0
-
-</h2>
+</span>
 
 </div>
 
-<div class="card-indicador">
+</div>
 
-<h3>
+<div class="card">
+
+<div class="card-icon">
+
+<i class="fa-solid fa-users"></i>
+
+</div>
+
+<div>
+
+<h3 id="totalClientes">
+
+0
+
+</h3>
+
+<span>
 
 Clientes
 
-</h3>
-
-<h2 id="totalClientes">
-
-0
-
-</h2>
+</span>
 
 </div>
 
-<div class="card-indicador">
+</div>
 
-<h3>
+<div class="card">
 
-Faturamento
+<div class="card-icon">
 
-</h3>
+<i class="fa-solid fa-sack-dollar"></i>
 
-<h2 id="faturamento">
+</div>
+
+<div>
+
+<h3 id="receitaTotal">
 
 R$ 0,00
 
-</h2>
+</h3>
+
+<span>
+
+Receita
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="dashboard-grid">
+
+<div class="painel">
+
+<div class="painel-header">
+
+<h3>
+
+Últimos Pedidos
+
+</h3>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>#</th>
+
+<th>Cliente</th>
+
+<th>Total</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="ultimosPedidos">
+
+<tr>
+
+<td colspan="4">
+
+Nenhum pedido encontrado.
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="painel">
+
+<div class="painel-header">
+
+<h3>
+
+Resumo Financeiro
+
+</h3>
+
+</div>
+
+<div class="financeiro-lista">
+
+<div>
+
+<span>
+
+Receita Total
+
+</span>
+
+<strong id="faturamento">
+
+R$ 0,00
+
+</strong>
+
+</div>
+
+<div>
+
+<span>
+
+Ticket Médio
+
+</span>
+
+<strong id="ticketMedio">
+
+R$ 0,00
+
+</strong>
+
+</div>
+
+<div>
+
+<span>
+
+Pedidos Finalizados
+
+</span>
+
+<strong id="pedidosFinalizados">
+
+0
+
+</strong>
+
+</div>
+
+<div>
+
+<span>
+
+Produto Mais Vendido
+
+</span>
+
+<strong id="produtoMaisVendido">
+
+—
+
+</strong>
+
+</div>
+
+</div>
 
 </div>
 
 </div>
 
 </section>
-
-<!-- ==========================
-CADASTRO DE PRODUTOS
-========================== -->
+<!-- ===========================
+PRODUTOS
+=========================== -->
 
 <section
 id="produtos"
-class="painel">
+class="pagina">
 
-<div class="painel-header">
+<div class="page-header">
+
+<div>
 
 <h2>
 
-Cadastrar Produto
+Produtos
 
 </h2>
 
 <p>
 
-Os produtos cadastrados aparecerão automaticamente na Home e no Cardápio.
+Gerencie todo o cardápio da hamburgueria.
 
 </p>
 
 </div>
 
-<form
-id="formProduto">
+<button
+id="btnNovoProduto"
+class="btn-primary">
 
-<div class="grid-form">
+<i class="fa-solid fa-plus"></i>
 
-<div class="campo">
+Novo Produto
+
+</button>
+
+</div>
+
+<div class="toolbar">
+
+<div class="search-box">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+type="text"
+id="pesquisaProduto"
+placeholder="Pesquisar produto...">
+
+</div>
+
+<select id="filtroCategoria">
+
+<option value="">
+
+Todas as categorias
+
+</option>
+
+<option value="burger">
+
+Hambúrgueres
+
+</option>
+
+<option value="combo">
+
+Combos
+
+</option>
+
+<option value="porcao">
+
+Porções
+
+</option>
+
+<option value="bebida">
+
+Bebidas
+
+</option>
+
+<option value="sobremesa">
+
+Sobremesas
+
+</option>
+
+</select>
+
+</div>
+
+<div class="table-card">
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th width="80">
+
+Imagem
+
+</th>
+
+<th>
+
+Produto
+
+</th>
+
+<th>
+
+Categoria
+
+</th>
+
+<th>
+
+Preço
+
+</th>
+
+<th>
+
+Status
+
+</th>
+
+<th width="150">
+
+Ações
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="listaProdutos">
+
+<tr>
+
+<td colspan="6">
+
+Nenhum produto cadastrado.
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- ===========================
+MODAL PRODUTO
+=========================== -->
+
+<div
+id="modalProduto"
+class="modal">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h2>
+
+Cadastro de Produto
+
+</h2>
+
+<button
+id="fecharModalProduto"
+class="btn-close">
+
+<i class="fa-solid fa-xmark"></i>
+
+</button>
+
+</div>
+
+<form id="formProduto">
+
+<div class="grid-2">
+
+<div class="form-group">
 
 <label>
 
@@ -275,7 +658,7 @@ required>
 
 </div>
 
-<div class="campo">
+<div class="form-group">
 
 <label>
 
@@ -284,11 +667,12 @@ Categoria
 </label>
 
 <select
-id="categoriaProduto">
+id="categoriaProduto"
+required>
 
 <option value="burger">
 
-Burger
+Hambúrguer
 
 </option>
 
@@ -322,7 +706,7 @@ Sobremesa
 
 </div>
 
-<div class="campo">
+<div class="form-group">
 
 <label>
 
@@ -332,15 +716,13 @@ Descrição
 
 <textarea
 id="descricaoProduto"
-required>
-
-</textarea>
+rows="4"></textarea>
 
 </div>
 
-<div class="grid-form">
+<div class="grid-3">
 
-<div class="campo">
+<div class="form-group">
 
 <label>
 
@@ -351,33 +733,15 @@ Preço
 <input
 type="number"
 step="0.01"
-id="precoProduto"
-required>
+id="precoProduto">
 
 </div>
 
-<div class="campo">
+<div class="form-group">
 
 <label>
 
-URL da Imagem
-
-</label>
-
-<input
-type="url"
-id="imagemProduto"
-required>
-
-</div>
-
-</div>
-
-<div class="campo">
-
-<label>
-
-Ordem de Exibição
+Ordem
 
 </label>
 
@@ -387,104 +751,95 @@ id="ordemProduto"
 value="1">
 
 </div>
-<!-- ==========================
-OPÇÕES DO PRODUTO
-========================== -->
 
-<div class="grid-checks">
+<div class="form-group">
 
-<label class="check">
+<label>
+
+Imagem
+
+</label>
+
+<input
+type="text"
+id="imagemProduto"
+placeholder="URL da imagem">
+
+</div>
+
+</div>
+
+<div class="checks">
+
+<label>
 
 <input
 type="checkbox"
 id="produtoAtivo"
 checked>
 
-<span>
-
-Produto Ativo
-
-</span>
+Ativo
 
 </label>
 
-<label class="check">
-
-<input
-type="checkbox"
-id="produtoDestaque">
-
-<span>
-
-Produto em Destaque
-
-</span>
-
-</label>
-
-<label class="check">
+<label>
 
 <input
 type="checkbox"
 id="produtoPromocao">
 
-<span>
-
-Produto em Promoção
-
-</span>
+Promoção
 
 </label>
 
-<label class="check">
+<label>
+
+<input
+type="checkbox"
+id="produtoDestaque">
+
+Destaque
+
+</label>
+
+<label>
 
 <input
 type="checkbox"
 id="produtoMaisVendido">
 
-<span>
-
 Mais Vendido
-
-</span>
 
 </label>
 
-<label class="check">
+<label>
 
 <input
 type="checkbox"
 id="produtoLancamento">
 
-<span>
-
 Lançamento
-
-</span>
 
 </label>
 
 </div>
 
-<div class="acoes-form">
+<div class="modal-footer">
 
 <button
-type="submit"
-class="btn-salvar">
+type="button"
+class="btn-secondary"
+id="cancelarProduto">
 
-<i class="fa-solid fa-floppy-disk"></i>
-
-Salvar Produto
+Cancelar
 
 </button>
 
 <button
-type="reset"
-class="btn-limpar">
+type="submit"
+class="btn-primary">
 
-<i class="fa-solid fa-broom"></i>
-
-Limpar
+Salvar Produto
 
 </button>
 
@@ -492,95 +847,62 @@ Limpar
 
 </form>
 
-</section>
-
-<!-- ==========================
-LISTA DE PRODUTOS
-========================== -->
-
-<section
-class="painel">
-
-<div class="painel-header">
-
-<h2>
-
-Produtos Cadastrados
-
-</h2>
-
-<p>
-
-Todos os produtos cadastrados são utilizados automaticamente na Home, Cardápio e Carrinho.
-
-</p>
-
 </div>
 
-<div class="tabela">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Imagem</th>
-
-<th>Produto</th>
-
-<th>Categoria</th>
-
-<th>Preço</th>
-
-<th>Status</th>
-
-<th>Ações</th>
-
-</tr>
-
-</thead>
-
-<tbody
-id="listaProdutos">
-
-<!-- admin.js renderiza aqui -->
-
-</tbody>
-
-</table>
-
 </div>
-
-</section>
-
-<!-- ==========================
+<!-- ===========================
 PEDIDOS
-========================== -->
+=========================== -->
 
 <section
 id="pedidos"
-class="painel">
+class="pagina">
 
-<div class="painel-header">
+<div class="page-header">
 
-<h2>
+<div>
 
-Pedidos
+<h2>Pedidos</h2>
 
-</h2>
-
-<p>
-
-Pedidos realizados pelos clientes.
-
-</p>
+<p>Gerencie todos os pedidos realizados.</p>
 
 </div>
 
-<div class="tabela">
+</div>
 
-<table>
+<div class="toolbar">
+
+<div class="search-box">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+type="text"
+placeholder="Pesquisar pedido...">
+
+</div>
+
+<select id="filtroStatus">
+
+<option value="">Todos os Status</option>
+
+<option>Recebido</option>
+
+<option>Em preparo</option>
+
+<option>Saiu para entrega</option>
+
+<option>Finalizado</option>
+
+<option>Cancelado</option>
+
+</select>
+
+</div>
+
+<div class="table-card">
+
+<table class="table">
 
 <thead>
 
@@ -602,10 +924,17 @@ Pedidos realizados pelos clientes.
 
 </thead>
 
-<tbody
-id="listaPedidos">
+<tbody id="listaPedidos">
 
-<!-- admin.js -->
+<tr>
+
+<td colspan="6">
+
+Nenhum pedido encontrado.
+
+</td>
+
+</tr>
 
 </tbody>
 
@@ -614,33 +943,30 @@ id="listaPedidos">
 </div>
 
 </section>
-<!-- ==========================
+
+<!-- ===========================
 CLIENTES
-========================== -->
+=========================== -->
 
 <section
 id="clientes"
-class="painel">
+class="pagina">
 
-<div class="painel-header">
+<div class="page-header">
 
-<h2>
+<div>
 
-Clientes
+<h2>Clientes</h2>
 
-</h2>
-
-<p>
-
-Clientes cadastrados no sistema.
-
-</p>
+<p>Clientes cadastrados.</p>
 
 </div>
 
-<div class="tabela">
+</div>
 
-<table>
+<div class="table-card">
+
+<table class="table">
 
 <thead>
 
@@ -650,7 +976,7 @@ Clientes cadastrados no sistema.
 
 <th>Telefone</th>
 
-<th>E-mail</th>
+<th>Email</th>
 
 <th>Pedidos</th>
 
@@ -660,10 +986,17 @@ Clientes cadastrados no sistema.
 
 </thead>
 
-<tbody
-id="listaClientes">
+<tbody id="listaClientes">
 
-<!-- admin.js -->
+<tr>
+
+<td colspan="5">
+
+Nenhum cliente cadastrado.
+
+</td>
+
+</tr>
 
 </tbody>
 
@@ -673,130 +1006,139 @@ id="listaClientes">
 
 </section>
 
-<!-- ==========================
+<!-- ===========================
 FINANCEIRO
-========================== -->
+=========================== -->
 
 <section
 id="financeiro"
-class="painel">
+class="pagina">
 
-<div class="painel-header">
+<div class="page-header">
 
-<h2>
+<div>
 
-Financeiro
+<h2>Financeiro</h2>
 
-</h2>
-
-<p>
-
-Resumo financeiro da hamburgueria.
-
-</p>
+<p>Resumo financeiro da loja.</p>
 
 </div>
 
-<div class="dashboard">
+</div>
 
-<div class="card-indicador">
+<div class="cards">
 
-<h3>
+<div class="card">
 
-Receita Total
-
-</h3>
-
-<h2 id="receitaTotal">
+<h3 id="faturamento">
 
 R$ 0,00
 
-</h2>
+</h3>
+
+<span>
+
+Faturamento Total
+
+</span>
 
 </div>
 
-<div class="card-indicador">
+<div class="card">
 
-<h3>
+<h3 id="ticketMedio">
 
-Pedidos Finalizados
+R$ 0,00
 
 </h3>
 
-<h2 id="pedidosFinalizados">
-
-0
-
-</h2>
-
-</div>
-
-<div class="card-indicador">
-
-<h3>
+<span>
 
 Ticket Médio
 
-</h3>
-
-<h2 id="ticketMedio">
-
-R$ 0,00
-
-</h2>
+</span>
 
 </div>
 
-<div class="card-indicador">
+<div class="card">
 
-<h3>
+<h3 id="pedidosFinalizados">
 
-Produto Mais Vendido
+0
 
 </h3>
 
-<h2 id="produtoMaisVendido">
+<span>
+
+Pedidos Finalizados
+
+</span>
+
+</div>
+
+<div class="card">
+
+<h3 id="produtoMaisVendido">
 
 —
 
-</h2>
+</h3>
+
+<span>
+
+Produto Mais Vendido
+
+</span>
 
 </div>
+
+</div>
+
+<div class="grafico-placeholder">
+
+<i class="fa-solid fa-chart-column"></i>
+
+<h3>
+
+Gráfico de vendas
+
+</h3>
+
+<p>
+
+Será implementado na Sprint de Relatórios.
+
+</p>
 
 </div>
 
 </section>
 
-<!-- ==========================
+<!-- ===========================
 CONFIGURAÇÕES
-========================== -->
+=========================== -->
 
 <section
 id="configuracoes"
-class="painel">
+class="pagina">
 
-<div class="painel-header">
+<div class="page-header">
 
-<h2>
+<div>
 
-Configurações da Loja
+<h2>Configurações</h2>
 
-</h2>
-
-<p>
-
-Informações utilizadas em todo o sistema.
-
-</p>
+<p>Informações da loja.</p>
 
 </div>
 
-<form
-id="formConfiguracoes">
+</div>
 
-<div class="grid-form">
+<form id="formConfiguracoes">
 
-<div class="campo">
+<div class="grid-2">
+
+<div class="form-group">
 
 <label>
 
@@ -810,7 +1152,7 @@ id="nomeLoja">
 
 </div>
 
-<div class="campo">
+<div class="form-group">
 
 <label>
 
@@ -826,9 +1168,9 @@ id="telefoneLoja">
 
 </div>
 
-<div class="grid-form">
+<div class="grid-2">
 
-<div class="campo">
+<div class="form-group">
 
 <label>
 
@@ -842,7 +1184,7 @@ id="pixLoja">
 
 </div>
 
-<div class="campo">
+<div class="form-group">
 
 <label>
 
@@ -859,13 +1201,11 @@ id="taxaEntrega">
 
 </div>
 
-<div class="acoes-form">
+<div class="modal-footer">
 
 <button
 type="submit"
-class="btn-salvar">
-
-<i class="fa-solid fa-floppy-disk"></i>
+class="btn-primary">
 
 Salvar Configurações
 
@@ -880,6 +1220,41 @@ Salvar Configurações
 </main>
 
 </div>
+
+</div>
+<!-- ===========================
+MENU MOBILE
+=========================== -->
+
+<div id="overlayMenu" class="overlay"></div>
+
+<!-- ===========================
+FOOTER
+=========================== -->
+
+<footer class="footer-admin">
+
+<div>
+
+© 2026 El Prado Control
+
+</div>
+
+<div>
+
+Versão 1.0 • Desenvolvido por Joaquim Prado
+
+</div>
+
+</footer>
+
+</div>
+
+<!-- FIM CONTENT -->
+
+</div>
+
+<!-- FIM LAYOUT -->
 
 </body>
 
