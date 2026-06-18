@@ -6,27 +6,40 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>El Prado Control</title>
+<title>
 
-<link rel="stylesheet" href="../assets/css/admin.css">
+El Prado Control
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</title>
 
 <link rel="stylesheet"
+href="../assets/css/admin.css">
 
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-<script defer src="../assets/js/storage.js"></script>
+<script defer
+src="../assets/js/storage.js"></script>
 
-<script defer src="../assets/js/admin.js"></script>
+<script defer
+src="../assets/js/admin.js"></script>
 
-<script defer src="../assets/js/admin-menu.js"></script>
+<script defer
+src="../assets/js/admin-menu.js"></script>
 
 </head>
 
@@ -34,17 +47,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="layout">
 
-<!-- SIDEBAR -->
+<!-- ==================================================
+SIDEBAR
+================================================== -->
 
 <aside class="sidebar">
 
 <div class="logo">
 
 <img
-
 src="../assets/img/logo.png"
-
-alt="El Prado">
+alt="El Prado Burguer">
 
 <h2>
 
@@ -60,77 +73,89 @@ Control
 
 </div>
 
-<nav>
+<nav class="sidebar-menu">
 
 <button
-
 class="menu-item ativo"
-
 data-page="dashboard">
 
 <i class="fa-solid fa-chart-line"></i>
 
+<span>
+
 Dashboard
+
+</span>
 
 </button>
 
 <button
-
 class="menu-item"
-
 data-page="produtos">
 
 <i class="fa-solid fa-burger"></i>
 
+<span>
+
 Produtos
+
+</span>
 
 </button>
 
 <button
-
 class="menu-item"
-
 data-page="pedidos">
 
 <i class="fa-solid fa-box"></i>
 
+<span>
+
 Pedidos
+
+</span>
 
 </button>
 
 <button
-
 class="menu-item"
-
 data-page="clientes">
 
 <i class="fa-solid fa-users"></i>
 
+<span>
+
 Clientes
+
+</span>
 
 </button>
 
 <button
-
 class="menu-item"
-
 data-page="financeiro">
 
 <i class="fa-solid fa-sack-dollar"></i>
 
+<span>
+
 Financeiro
+
+</span>
 
 </button>
 
 <button
-
 class="menu-item"
-
 data-page="configuracoes">
 
 <i class="fa-solid fa-gear"></i>
 
+<span>
+
 Configurações
+
+</span>
 
 </button>
 
@@ -140,9 +165,13 @@ Configurações
 
 <a href="../index.html">
 
-<i class="fa-solid fa-arrow-left"></i>
+<i class="fa-solid fa-store"></i>
 
-Voltar ao Site
+<span>
+
+Ir para o Site
+
+</span>
 
 </a>
 
@@ -150,17 +179,34 @@ Voltar ao Site
 
 </aside>
 
-<!-- MAIN -->
+<!-- ==================================================
+CONTENT
+================================================== -->
 
 <div class="content">
 
+<!-- ==================================================
+HEADER
+================================================== -->
+
 <header class="topbar">
 
-<button id="btnMenu">
+<div class="topbar-left">
+
+<button
+id="btnMenu">
 
 <i class="fa-solid fa-bars"></i>
 
 </button>
+
+<div class="breadcrumb">
+
+<span>
+
+Painel Administrativo
+
+</span>
 
 <h1 id="tituloPagina">
 
@@ -168,23 +214,53 @@ Dashboard
 
 </h1>
 
+</div>
+
+</div>
+
+<div class="topbar-right">
+
 <div class="usuario">
 
+<div class="avatar">
+
+JP
+
+</div>
+
+<div>
+
+<strong>
+
 Administrador
+
+</strong>
+
+<small>
+
+El Prado Control
+
+</small>
+
+</div>
+
+</div>
 
 </div>
 
 </header>
 
+<!-- ==================================================
+MAIN
+================================================== -->
+
 <main id="conteudo">
-<!-- ===========================
+<!-- ==================================================
 DASHBOARD
-=========================== -->
+================================================== -->
 
 <section
-
 id="dashboard"
-
 class="pagina ativa">
 
 <div class="page-header">
@@ -199,9 +275,23 @@ Dashboard
 
 <p>
 
-Bem-vindo ao El Prado Control.
+Acompanhe os indicadores da sua hamburgueria.
 
 </p>
+
+</div>
+
+<div class="page-actions">
+
+<button
+class="btn-primary"
+onclick="atualizarPainel()">
+
+<i class="fa-solid fa-rotate"></i>
+
+Atualizar
+
+</button>
 
 </div>
 
@@ -227,7 +317,7 @@ Bem-vindo ao El Prado Control.
 
 <span>
 
-Produtos
+Produtos Cadastrados
 
 </span>
 
@@ -297,7 +387,7 @@ Clientes
 
 <div>
 
-<h3 id="receitaTotal">
+<h3 id="receitaTotalDashboard">
 
 R$ 0,00
 
@@ -305,7 +395,7 @@ R$ 0,00
 
 <span>
 
-Receita
+Receita Total
 
 </span>
 
@@ -329,7 +419,7 @@ Receita
 
 </div>
 
-<table>
+<table class="table">
 
 <thead>
 
@@ -387,7 +477,7 @@ Receita Total
 
 </span>
 
-<strong id="faturamento">
+<strong id="receitaResumoDashboard">
 
 R$ 0,00
 
@@ -403,7 +493,7 @@ Ticket Médio
 
 </span>
 
-<strong id="ticketMedio">
+<strong id="ticketMedioDashboard">
 
 R$ 0,00
 
@@ -419,7 +509,7 @@ Pedidos Finalizados
 
 </span>
 
-<strong id="pedidosFinalizados">
+<strong id="pedidosFinalizadosDashboard">
 
 0
 
@@ -435,7 +525,7 @@ Produto Mais Vendido
 
 </span>
 
-<strong id="produtoMaisVendido">
+<strong id="produtoMaisVendidoDashboard">
 
 —
 
@@ -450,9 +540,9 @@ Produto Mais Vendido
 </div>
 
 </section>
-<!-- ===========================
+<!-- ==================================================
 PRODUTOS
-=========================== -->
+================================================== -->
 
 <section
 id="produtos"
@@ -470,11 +560,13 @@ Produtos
 
 <p>
 
-Gerencie todo o cardápio da hamburgueria.
+Gerencie o cardápio da hamburgueria.
 
 </p>
 
 </div>
+
+<div class="page-actions">
 
 <button
 id="btnNovoProduto"
@@ -488,6 +580,8 @@ Novo Produto
 
 </div>
 
+</div>
+
 <div class="toolbar">
 
 <div class="search-box">
@@ -497,11 +591,12 @@ Novo Produto
 <input
 type="text"
 id="pesquisaProduto"
-placeholder="Pesquisar produto...">
+placeholder="Pesquisar por nome...">
 
 </div>
 
-<select id="filtroCategoria">
+<select
+id="filtroCategoria">
 
 <option value="">
 
@@ -541,6 +636,29 @@ Sobremesas
 
 </select>
 
+<select
+id="filtroStatusProduto">
+
+<option value="">
+
+Todos
+
+</option>
+
+<option value="ativos">
+
+Somente Ativos
+
+</option>
+
+<option value="inativos">
+
+Somente Inativos
+
+</option>
+
+</select>
+
 </div>
 
 <div class="table-card">
@@ -551,7 +669,7 @@ Sobremesas
 
 <tr>
 
-<th width="80">
+<th width="90">
 
 Imagem
 
@@ -569,19 +687,19 @@ Categoria
 
 </th>
 
-<th>
+<th width="130">
 
 Preço
 
 </th>
 
-<th>
+<th width="220">
 
 Status
 
 </th>
 
-<th width="150">
+<th width="140">
 
 Ações
 
@@ -597,7 +715,21 @@ Ações
 
 <td colspan="6">
 
+<div class="sem-registros">
+
+<h3>
+
 Nenhum produto cadastrado.
+
+</h3>
+
+<p>
+
+Clique em <strong>Novo Produto</strong> para cadastrar o primeiro item do cardápio.
+
+</p>
+
+</div>
 
 </td>
 
@@ -611,15 +743,589 @@ Nenhum produto cadastrado.
 
 </section>
 
+<!-- ==================================================
+PEDIDOS
+================================================== -->
+
+<section
+id="pedidos"
+class="pagina">
+
+<div class="page-header">
+
+<div>
+
+<h2>
+
+Pedidos
+
+</h2>
+
+<p>
+
+Gerencie todos os pedidos da hamburgueria.
+
+</p>
+
+</div>
+
+<div class="page-actions">
+
+<button
+class="btn-primary"
+onclick="renderizarPedidos()">
+
+<i class="fa-solid fa-rotate"></i>
+
+Atualizar
+
+</button>
+
+</div>
+
+</div>
+
+<div class="toolbar">
+
+<div class="search-box">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+type="text"
+id="pesquisaPedido"
+placeholder="Pesquisar cliente...">
+
+</div>
+
+<select id="filtroStatus">
+
+<option value="">
+
+Todos os Status
+
+</option>
+
+<option value="Recebido">
+
+Recebido
+
+</option>
+
+<option value="Em preparo">
+
+Em preparo
+
+</option>
+
+<option value="Saiu para entrega">
+
+Saiu para entrega
+
+</option>
+
+<option value="Finalizado">
+
+Finalizado
+
+</option>
+
+<option value="Cancelado">
+
+Cancelado
+
+</option>
+
+</select>
+
+</div>
+
+<div class="table-card">
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th width="80">
+
+Pedido
+
+</th>
+
+<th>
+
+Cliente
+
+</th>
+
+<th width="140">
+
+Total
+
+</th>
+
+<th width="150">
+
+Pagamento
+
+</th>
+
+<th width="170">
+
+Status
+
+</th>
+
+<th width="120">
+
+Ações
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="listaPedidos">
+
+<tr>
+
+<td colspan="6">
+
+<div class="sem-registros">
+
+<h3>
+
+Nenhum pedido encontrado.
+
+</h3>
+
+<p>
+
+Os pedidos realizados aparecerão aqui.
+
+</p>
+
+</div>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
 <!-- ===========================
-MODAL PRODUTO
+CLIENTES
 =========================== -->
+
+<section
+id="clientes"
+class="pagina">
+
+<div class="page-header">
+
+<div>
+
+<h2>Clientes</h2>
+
+<p>Clientes cadastrados.</p>
+
+</div>
+
+</div>
+
+<div class="table-card">
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Nome</th>
+
+<th>Telefone</th>
+
+<th>Email</th>
+
+<th>Pedidos</th>
+
+<th>Total Gasto</th>
+
+</tr>
+
+</thead>
+
+<tbody id="listaClientes">
+
+<tr>
+
+<td colspan="5">
+
+Nenhum cliente cadastrado.
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- ==================================================
+FINANCEIRO
+================================================== -->
+
+<section
+id="financeiro"
+class="pagina">
+
+<div class="page-header">
+
+<div>
+
+<h2>
+
+Financeiro
+
+</h2>
+
+<p>
+
+Indicadores financeiros da hamburgueria.
+
+</p>
+
+</div>
+
+<div class="page-actions">
+
+<button
+class="btn-primary"
+onclick="atualizarFinanceiro()">
+
+<i class="fa-solid fa-rotate"></i>
+
+Atualizar
+
+</button>
+
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+<div class="card-icon">
+
+<i class="fa-solid fa-wallet"></i>
+
+</div>
+
+<div>
+
+<h3 id="financeiroReceitaTotal">
+
+R$ 0,00
+
+</h3>
+
+<span>
+
+Receita Total
+
+</span>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-icon">
+
+<i class="fa-solid fa-receipt"></i>
+
+</div>
+
+<div>
+
+<h3 id="financeiroTicketMedio">
+
+R$ 0,00
+
+</h3>
+
+<span>
+
+Ticket Médio
+
+</span>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-icon">
+
+<i class="fa-solid fa-circle-check"></i>
+
+</div>
+
+<div>
+
+<h3 id="financeiroPedidosFinalizados">
+
+0
+
+</h3>
+
+<span>
+
+Pedidos Finalizados
+
+</span>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-icon">
+
+<i class="fa-solid fa-fire"></i>
+
+</div>
+
+<div>
+
+<h3 id="financeiroProdutoMaisVendido">
+
+—
+
+</h3>
+
+<span>
+
+Mais Vendido
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="painel">
+
+<div class="painel-header">
+
+<h3>
+
+Resumo Financeiro
+
+</h3>
+
+</div>
+
+<div class="grafico-placeholder">
+
+<i class="fa-solid fa-chart-column"></i>
+
+<h3>
+
+Gráficos em desenvolvimento
+
+</h3>
+
+<p>
+
+Os gráficos serão adicionados na Sprint de Relatórios.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ==================================================
+CONFIGURAÇÕES
+================================================== -->
+
+<section
+id="configuracoes"
+class="pagina">
+
+<div class="page-header">
+
+<div>
+
+<h2>
+
+Configurações
+
+</h2>
+
+<p>
+
+Informações gerais da loja.
+
+</p>
+
+</div>
+
+</div>
+
+<form
+id="formConfiguracoes"
+class="config-form">
+
+<div class="grid-2">
+
+<div class="form-group">
+
+<label>
+
+Nome da Loja
+
+</label>
+
+<input
+type="text"
+id="nomeLoja">
+
+</div>
+
+<div class="form-group">
+
+<label>
+
+WhatsApp
+
+</label>
+
+<input
+type="text"
+id="telefoneLoja">
+
+</div>
+
+</div>
+
+<div class="grid-2">
+
+<div class="form-group">
+
+<label>
+
+Chave PIX
+
+</label>
+
+<input
+type="text"
+id="pixLoja">
+
+</div>
+
+<div class="form-group">
+
+<label>
+
+Taxa de Entrega
+
+</label>
+
+<input
+type="number"
+step="0.01"
+id="taxaEntrega">
+
+</div>
+
+</div>
+
+<div class="grid-2">
+
+<div class="form-group">
+
+<label>
+
+Horário de Funcionamento
+
+</label>
+
+<input
+type="text"
+id="horarioLoja"
+placeholder="18:00 às 23:30">
+
+</div>
+
+<div class="form-group">
+
+<label>
+
+Tempo Médio de Entrega
+
+</label>
+
+<input
+type="text"
+id="tempoEntrega"
+placeholder="40-60 min">
+
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="submit"
+class="btn-primary">
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+Salvar Configurações
+
+</button>
+
+</div>
+
+</form>
+
+</section>
+
+
+<!-- ==================================================
+MODAL PRODUTO
+================================================== -->
 
 <div
 id="modalProduto"
 class="modal">
 
-<div class="modal-content">
+<div class="modal-content modal-lg">
 
 <div class="modal-header">
 
@@ -630,6 +1336,7 @@ Cadastro de Produto
 </h2>
 
 <button
+type="button"
 id="fecharModalProduto"
 class="btn-close">
 
@@ -647,7 +1354,7 @@ class="btn-close">
 
 <label>
 
-Nome
+Nome do Produto
 
 </label>
 
@@ -670,35 +1377,11 @@ Categoria
 id="categoriaProduto"
 required>
 
-<option value="burger">
-
-Hambúrguer
-
-</option>
-
-<option value="combo">
-
-Combo
-
-</option>
-
-<option value="porcao">
-
-Porção
-
-</option>
-
-<option value="bebida">
-
-Bebida
-
-</option>
-
-<option value="sobremesa">
-
-Sobremesa
-
-</option>
+<option value="burger">Hambúrguer</option>
+<option value="combo">Combo</option>
+<option value="porcao">Porção</option>
+<option value="bebida">Bebida</option>
+<option value="sobremesa">Sobremesa</option>
 
 </select>
 
@@ -828,8 +1511,8 @@ Lançamento
 
 <button
 type="button"
-class="btn-secondary"
-id="cancelarProduto">
+id="cancelarProduto"
+class="btn-secondary">
 
 Cancelar
 
@@ -838,6 +1521,8 @@ Cancelar
 <button
 type="submit"
 class="btn-primary">
+
+<i class="fa-solid fa-floppy-disk"></i>
 
 Salvar Produto
 
@@ -850,387 +1535,20 @@ Salvar Produto
 </div>
 
 </div>
-<!-- ===========================
-PEDIDOS
-=========================== -->
 
-<section
-id="pedidos"
-class="pagina">
+<!-- ==================================================
+OVERLAY MOBILE
+================================================== -->
 
-<div class="page-header">
-
-<div>
-
-<h2>Pedidos</h2>
-
-<p>Gerencie todos os pedidos realizados.</p>
+<div
+id="overlayMenu"
+class="overlay">
 
 </div>
 
-</div>
-
-<div class="toolbar">
-
-<div class="search-box">
-
-<i class="fa-solid fa-magnifying-glass"></i>
-
-<input
-type="text"
-placeholder="Pesquisar pedido...">
-
-</div>
-
-<select id="filtroStatus">
-
-<option value="">Todos os Status</option>
-
-<option>Recebido</option>
-
-<option>Em preparo</option>
-
-<option>Saiu para entrega</option>
-
-<option>Finalizado</option>
-
-<option>Cancelado</option>
-
-</select>
-
-</div>
-
-<div class="table-card">
-
-<table class="table">
-
-<thead>
-
-<tr>
-
-<th>#</th>
-
-<th>Cliente</th>
-
-<th>Total</th>
-
-<th>Pagamento</th>
-
-<th>Status</th>
-
-<th>Ações</th>
-
-</tr>
-
-</thead>
-
-<tbody id="listaPedidos">
-
-<tr>
-
-<td colspan="6">
-
-Nenhum pedido encontrado.
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</section>
-
-<!-- ===========================
-CLIENTES
-=========================== -->
-
-<section
-id="clientes"
-class="pagina">
-
-<div class="page-header">
-
-<div>
-
-<h2>Clientes</h2>
-
-<p>Clientes cadastrados.</p>
-
-</div>
-
-</div>
-
-<div class="table-card">
-
-<table class="table">
-
-<thead>
-
-<tr>
-
-<th>Nome</th>
-
-<th>Telefone</th>
-
-<th>Email</th>
-
-<th>Pedidos</th>
-
-<th>Total Gasto</th>
-
-</tr>
-
-</thead>
-
-<tbody id="listaClientes">
-
-<tr>
-
-<td colspan="5">
-
-Nenhum cliente cadastrado.
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</section>
-
-<!-- ===========================
-FINANCEIRO
-=========================== -->
-
-<section
-id="financeiro"
-class="pagina">
-
-<div class="page-header">
-
-<div>
-
-<h2>Financeiro</h2>
-
-<p>Resumo financeiro da loja.</p>
-
-</div>
-
-</div>
-
-<div class="cards">
-
-<div class="card">
-
-<h3 id="faturamento">
-
-R$ 0,00
-
-</h3>
-
-<span>
-
-Faturamento Total
-
-</span>
-
-</div>
-
-<div class="card">
-
-<h3 id="ticketMedio">
-
-R$ 0,00
-
-</h3>
-
-<span>
-
-Ticket Médio
-
-</span>
-
-</div>
-
-<div class="card">
-
-<h3 id="pedidosFinalizados">
-
-0
-
-</h3>
-
-<span>
-
-Pedidos Finalizados
-
-</span>
-
-</div>
-
-<div class="card">
-
-<h3 id="produtoMaisVendido">
-
-—
-
-</h3>
-
-<span>
-
-Produto Mais Vendido
-
-</span>
-
-</div>
-
-</div>
-
-<div class="grafico-placeholder">
-
-<i class="fa-solid fa-chart-column"></i>
-
-<h3>
-
-Gráfico de vendas
-
-</h3>
-
-<p>
-
-Será implementado na Sprint de Relatórios.
-
-</p>
-
-</div>
-
-</section>
-
-<!-- ===========================
-CONFIGURAÇÕES
-=========================== -->
-
-<section
-id="configuracoes"
-class="pagina">
-
-<div class="page-header">
-
-<div>
-
-<h2>Configurações</h2>
-
-<p>Informações da loja.</p>
-
-</div>
-
-</div>
-
-<form id="formConfiguracoes">
-
-<div class="grid-2">
-
-<div class="form-group">
-
-<label>
-
-Nome da Loja
-
-</label>
-
-<input
-type="text"
-id="nomeLoja">
-
-</div>
-
-<div class="form-group">
-
-<label>
-
-WhatsApp
-
-</label>
-
-<input
-type="text"
-id="telefoneLoja">
-
-</div>
-
-</div>
-
-<div class="grid-2">
-
-<div class="form-group">
-
-<label>
-
-PIX
-
-</label>
-
-<input
-type="text"
-id="pixLoja">
-
-</div>
-
-<div class="form-group">
-
-<label>
-
-Taxa de Entrega
-
-</label>
-
-<input
-type="number"
-step="0.01"
-id="taxaEntrega">
-
-</div>
-
-</div>
-
-<div class="modal-footer">
-
-<button
-type="submit"
-class="btn-primary">
-
-Salvar Configurações
-
-</button>
-
-</div>
-
-</form>
-
-</section>
-
-</main>
-
-</div>
-
-</div>
-<!-- ===========================
-MENU MOBILE
-=========================== -->
-
-<div id="overlayMenu" class="overlay"></div>
-
-<!-- ===========================
+<!-- ==================================================
 FOOTER
-=========================== -->
+================================================== -->
 
 <footer class="footer-admin">
 
@@ -1242,7 +1560,13 @@ FOOTER
 
 <div>
 
-Versão 1.0 • Desenvolvido por Joaquim Prado
+Versão 4.1
+
+</div>
+
+<div>
+
+Desenvolvido por Joaquim Prado
 
 </div>
 
