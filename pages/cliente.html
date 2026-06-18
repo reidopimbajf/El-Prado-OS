@@ -1,1 +1,511 @@
-.
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Minha Conta | El Prado Burguer</title>
+
+    <meta name="description"
+        content="Área do cliente El Prado Burguer">
+
+    <!-- Google Fonts -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- CSS -->
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <link rel="stylesheet" href="../assets/css/cliente.css">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="container">
+
+        <nav class="menu">
+
+            <a href="../index.html">Início</a>
+
+            <a href="cardapio.html">Cardápio</a>
+
+            <a href="../index.html#promocoes">Promoções</a>
+
+            <a href="../index.html#contato">Contato</a>
+
+        </nav>
+
+        <div class="header-icons">
+
+            <a href="cliente.html" class="icon-user">
+
+                <i class="fa-solid fa-user"></i>
+
+            </a>
+
+            <a href="carrinho.html" class="icon-cart">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                <span id="contadorCarrinho">0</span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main class="cliente-page">
+
+<section class="cliente-container">
+
+<div class="cliente-card">
+
+<div class="cliente-logo">
+
+<img
+src="../assets/img/logo.png"
+alt="El Prado Burguer">
+
+</div>
+
+<h1>
+
+Minha Conta
+
+</h1>
+
+<p class="cliente-subtitulo">
+
+Entre para acompanhar seus pedidos, salvar endereços e aproveitar promoções exclusivas.
+
+</p>
+<!-- ======================================
+FORMULÁRIO DE LOGIN
+====================================== -->
+
+<form id="formLogin" class="cliente-form">
+
+    <div class="form-group">
+
+        <label for="email">
+
+            <i class="fa-solid fa-envelope"></i>
+
+            E-mail
+
+        </label>
+
+        <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Digite seu e-mail"
+            required>
+
+    </div>
+
+    <div class="form-group">
+
+        <label for="senha">
+
+            <i class="fa-solid fa-lock"></i>
+
+            Senha
+
+        </label>
+
+        <input
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Digite sua senha"
+            required>
+
+    </div>
+
+    <div class="lembrar-senha">
+
+        <label>
+
+            <input
+                type="checkbox"
+                id="lembrar">
+
+            Lembrar de mim
+
+        </label>
+
+        <a href="#" id="esqueciSenha">
+
+            Esqueci minha senha
+
+        </a>
+
+    </div>
+
+    <button
+        type="submit"
+        class="btn-primary btn-login">
+
+        <i class="fa-solid fa-right-to-bracket"></i>
+
+        Entrar
+
+    </button>
+
+</form>
+
+<div class="divisor">
+
+    <span>OU</span>
+
+</div>
+
+<button
+    class="btn-secondary btn-cadastro"
+    id="abrirCadastro">
+
+    <i class="fa-solid fa-user-plus"></i>
+
+    Criar nova conta
+
+</button>
+
+<div class="cliente-info">
+
+    <p>
+
+        🔒 Seus dados são protegidos e utilizados apenas para processar seus pedidos.
+
+    </p>
+
+</div>
+<!-- ======================================
+FORMULÁRIO DE CADASTRO
+(Inicialmente oculto)
+====================================== -->
+
+<section
+id="cadastroCliente"
+class="cadastro-container"
+style="display: none;">
+
+<h2>
+
+Criar Nova Conta
+
+</h2>
+
+<p>
+
+Preencha seus dados para começar a fazer pedidos.
+
+</p>
+
+<form id="formCadastro">
+
+<div class="form-group">
+
+<label for="nome">
+
+<i class="fa-solid fa-user"></i>
+
+Nome Completo
+
+</label>
+
+<input
+type="text"
+id="nome"
+placeholder="Digite seu nome"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label for="telefone">
+
+<i class="fa-solid fa-phone"></i>
+
+Telefone
+
+</label>
+
+<input
+type="tel"
+id="telefone"
+placeholder="(11) 99999-9999"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label for="emailCadastro">
+
+<i class="fa-solid fa-envelope"></i>
+
+E-mail
+
+</label>
+
+<input
+type="email"
+id="emailCadastro"
+placeholder="Digite seu e-mail"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label for="senhaCadastro">
+
+<i class="fa-solid fa-lock"></i>
+
+Senha
+
+</label>
+
+<input
+type="password"
+id="senhaCadastro"
+placeholder="Crie uma senha"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label for="confirmarSenha">
+
+<i class="fa-solid fa-lock"></i>
+
+Confirmar Senha
+
+</label>
+
+<input
+type="password"
+id="confirmarSenha"
+placeholder="Repita a senha"
+required>
+
+</div>
+
+<button
+type="submit"
+class="btn-primary">
+
+<i class="fa-solid fa-user-plus"></i>
+
+Criar Conta
+
+</button>
+
+<button
+type="button"
+id="voltarLogin"
+class="btn-secondary">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Voltar para Login
+
+</button>
+
+</form>
+
+</section>
+<!-- ======================================
+PAINEL DO CLIENTE
+(Aparece após login)
+====================================== -->
+
+<section
+id="painelCliente"
+class="painel-cliente"
+style="display:none;">
+
+<div class="painel-header">
+
+<div class="painel-avatar">
+
+<i class="fa-solid fa-circle-user"></i>
+
+</div>
+
+<div>
+
+<h2 id="nomeCliente">
+
+Olá, Cliente!
+
+</h2>
+
+<p>
+
+Bem-vindo ao El Prado Burguer.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="painel-grid">
+
+<div class="painel-card" id="btnPerfil">
+
+<i class="fa-solid fa-user"></i>
+
+<h3>Meu Perfil</h3>
+
+<p>
+
+Altere seus dados pessoais.
+
+</p>
+
+</div>
+
+<div class="painel-card" id="btnPedidos">
+
+<i class="fa-solid fa-bag-shopping"></i>
+
+<h3>Meus Pedidos</h3>
+
+<p>
+
+Acompanhe seus pedidos.
+
+</p>
+
+</div>
+
+<div class="painel-card" id="btnEnderecos">
+
+<i class="fa-solid fa-location-dot"></i>
+
+<h3>Endereços</h3>
+
+<p>
+
+Cadastre seus endereços.
+
+</p>
+
+</div>
+
+<div class="painel-card" id="btnFavoritos">
+
+<i class="fa-solid fa-heart"></i>
+
+<h3>Favoritos</h3>
+
+<p>
+
+Seus produtos favoritos.
+
+</p>
+
+</div>
+
+<div class="painel-card" id="btnConfiguracoes">
+
+<i class="fa-solid fa-gear"></i>
+
+<h3>Configurações</h3>
+
+<p>
+
+Preferências da conta.
+
+</p>
+
+</div>
+
+<div class="painel-card sair" id="btnSair">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+<h3>Sair</h3>
+
+<p>
+
+Encerrar sessão.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+<!-- ======================================
+RODAPÉ
+====================================== -->
+
+<footer class="footer">
+
+    <div class="container">
+
+        <div class="footer-logo">
+
+            <a href="../index.html">
+
+                <img
+                    src="../assets/img/logo.png"
+                    alt="El Prado Burguer">
+
+            </a>
+
+        </div>
+
+        <div class="footer-copy">
+
+            <p>
+
+                © 2026 El Prado Burguer.
+
+                Todos os direitos reservados.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<!-- ======================================
+SCRIPTS
+====================================== -->
+
+<script src="../assets/js/storage.js"></script>
+
+<script src="../assets/js/cliente.js"></script>
+
+</body>
+
+</html>
