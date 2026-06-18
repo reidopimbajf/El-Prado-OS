@@ -131,9 +131,75 @@ HEADER
 
 }
 
-.logo img{
+/*=========================
+LOGO
+=========================*/
 
-    height:70px;
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    text-decoration:none;
+
+}
+
+.logo-img{
+
+    width:90px;
+
+    height:90px;
+
+    object-fit:contain;
+
+    transition:.3s;
+
+    flex-shrink:0;
+
+}
+
+.logo:hover .logo-img{
+
+    transform:scale(1.06);
+
+}
+
+.logo-texto{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+}
+
+.logo-titulo{
+
+    font-size:32px;
+
+    font-weight:900;
+
+    color:var(--primary);
+
+    line-height:1;
+
+    letter-spacing:2px;
+
+}
+
+.logo-subtitulo{
+
+    font-size:14px;
+
+    color:#FFF;
+
+    letter-spacing:6px;
+
+    margin-top:4px;
 
 }
 
@@ -1538,11 +1604,27 @@ RESPONSIVIDADE
 
     }
 
-    .logo img{
+    .logo-img{
 
-        height:55px;
+    width:60px;
 
-    }
+    height:60px;
+
+}
+
+.logo-titulo{
+
+    font-size:22px;
+
+}
+
+.logo-subtitulo{
+
+    font-size:11px;
+
+    letter-spacing:3px;
+
+}
 
     .menu{
 
