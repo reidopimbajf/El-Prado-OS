@@ -22,84 +22,32 @@ function iniciarHome(){
 }
 
 /*==================================================
- PRODUTOS INICIAIS
+ PRODUTOS
 ==================================================*/
 
 function carregarProdutosIniciais(){
 
-    let produtos = obterProdutos();
+    const produtos = obterProdutos();
 
-    if(produtos.length > 0){
+    if(produtos.length === 0){
+
+        document.getElementById("listaDestaques").innerHTML = `
+            <div class="estado-vazio">
+                <h3>Nenhum produto cadastrado</h3>
+                <p>Os produtos cadastrados no painel administrativo aparecerão aqui.</p>
+            </div>
+        `;
+
+        document.getElementById("listaPromocoes").innerHTML = `
+            <div class="estado-vazio">
+                <h3>Nenhuma promoção disponível</h3>
+                <p>Cadastre um produto em promoção no painel administrativo.</p>
+            </div>
+        `;
 
         return;
 
     }
-
-    produtos = [
-
-        {
-
-            id:1,
-
-            nome:"El Mexicano",
-
-            descricao:"Pão brioche, carne Angus 180g, cheddar, bacon e molho da casa.",
-
-            preco:39.90,
-
-            categoria:"burger",
-
-            destaque:true,
-
-            promocao:false,
-
-            imagem:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800"
-
-        },
-
-        {
-
-            id:2,
-
-            nome:"Prado Bacon",
-
-            descricao:"Duplo smash, muito bacon, cheddar e cebola caramelizada.",
-
-            preco:44.90,
-
-            categoria:"burger",
-
-            destaque:true,
-
-            promocao:true,
-
-            imagem:"https://images.unsplash.com/photo-1550547660-d9450f859349?w=800"
-
-        },
-
-        {
-
-            id:3,
-
-            nome:"Combo El Prado",
-
-            descricao:"Burger + Batata + Refrigerante.",
-
-            preco:54.90,
-
-            categoria:"combo",
-
-            destaque:false,
-
-            promocao:true,
-
-            imagem:"https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=800"
-
-        }
-
-    ];
-
-    salvarProdutos(produtos);
 
 }
 
@@ -119,7 +67,7 @@ function renderizarDestaques(){
 
     const produtos = obterProdutos()
 
-        .filter(produto => produto.destaque);
+       .filter(produto => produto.destaque && produto.ativo);
 
     container.innerHTML = "";
 
@@ -185,7 +133,7 @@ function renderizarPromocoes(){
 
     const produtos = obterProdutos()
 
-        .filter(produto=>produto.promocao);
+        .filter(produto=>produto.promocao && produto.ativo);
 
     container.innerHTML = "";
 
