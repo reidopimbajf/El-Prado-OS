@@ -47,7 +47,13 @@ function iniciarCardapio(){
     configurarEventos();
 
     atualizarCarrinho();
+window.addEventListener(
 
+    "storage",
+
+    atualizarCardapio
+
+);
 }
 
 /*==================================================
@@ -56,7 +62,7 @@ CARREGAR PRODUTOS
 
 function carregarProdutos(){
 
-    App.produtos = obterProdutos()
+  App.produtos = Storage.getProdutos()
 
         .filter(produto=>produto.ativo);
 
@@ -142,7 +148,13 @@ function criarCard(produto){
 
 <div class="produto-imagem">
 
-<img src="${produto.imagem}" alt="${produto.nome}">
+<img
+
+src="${produto.imagem || "../assets/img/sem-imagem.png"}"
+
+alt="${produto.nome}"
+
+loading="lazy">
 
 <div class="badges">
 
@@ -678,29 +690,41 @@ function adicionarAoCarrinho(){
 
     else{
 
-        carrinho.push({
+   carrinho.push({
 
-            id:App.produtoSelecionado.id,
+    id: App.produtoSelecionado.id,
 
-            nome:App.produtoSelecionado.nome,
+    nome: App.produtoSelecionado.nome,
 
-            categoria:App.produtoSelecionado.categoria,
+    categoria: App.produtoSelecionado.categoria,
 
-            imagem:App.produtoSelecionado.imagem,
+    imagem: App.produtoSelecionado.imagem,
 
-            precoUnitario:App.produtoSelecionado.preco,
+    preco: App.produtoSelecionado.preco,
 
-            quantidade:App.quantidade,
+    precoUnitario: App.produtoSelecionado.preco,
 
-            subtotal:subtotal,
+    quantidade: App.quantidade,
 
-            observacoes:observacoes
+    subtotal: subtotal,
 
-        });
+    observacoes: observacoes,
+
+    ativo: true,
+
+    promocao: App.produtoSelecionado.promocao,
+
+    destaque: App.produtoSelecionado.destaque,
+
+    maisVendido: App.produtoSelecionado.maisVendido,
+
+    lancamento: App.produtoSelecionado.lancamento
+
+});
 
     }
 
-    salvarCarrinho(carrinho);
+    Storage.salvarCarrinho(carrinho);
 
     atualizarCarrinho();
 
@@ -732,7 +756,7 @@ function atualizarCarrinho(){
 
     }
 
-    const carrinho = obterCarrinho();
+    const carrinho = Storage.getCarrinho();
 
     let totalItens = 0;
 
