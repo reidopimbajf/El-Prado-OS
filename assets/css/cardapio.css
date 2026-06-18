@@ -1694,7 +1694,45 @@ input{
     font-family:'Poppins',sans-serif;
 
 }
+/*==================================================
+TOAST
+==================================================*/
 
+.toast{
+
+    position:fixed;
+
+    bottom:30px;
+
+    right:30px;
+
+    background:#22C55E;
+
+    color:#FFF;
+
+    padding:16px 22px;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+    opacity:0;
+
+    transform:translateY(20px);
+
+    transition:.3s;
+
+    z-index:999999;
+
+}
+
+.toast.mostrar{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
 /*==================================================
 FIM DO CARDAPIO.CSS
 VERSÃO 2.0
