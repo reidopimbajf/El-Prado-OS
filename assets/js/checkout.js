@@ -258,54 +258,87 @@ function obterPagamento(){
 function finalizarPedido(){
 
     if(!validarFormulario()){
-
         return;
-
     }
+
+    /*=========================================
+      DADOS DO CLIENTE
+    =========================================*/
+
+    const cliente = Storage.salvarCliente({
+
+        nome: document.getElementById("nome").value.trim(),
+
+        telefone: document.getElementById("telefone").value.trim(),
+
+        email: document.getElementById("email")?.value.trim() || "",
+
+        endereco:{
+
+            cep: document.getElementById("cep").value,
+
+            rua: document.getElementById("endereco").value,
+
+            numero: document.getElementById("numero").value,
+
+            complemento: document.getElementById("complemento").value,
+
+            bairro: document.getElementById("bairro").value,
+
+            cidade: document.getElementById("cidade").value,
+
+            estado: document.getElementById("estado")?.value || ""
+
+        }
+
+    });
+
+    /*=========================================
+      PEDIDO
+    =========================================*/
 
     const pedido = {
 
-        id:Date.now(),
+        id: Date.now(),
 
-        data:new Date().toLocaleString("pt-BR"),
+        clienteId: cliente.id,
 
-        cliente:{
+data: new Date().toLocaleString("pt-BR"),
 
-            nome:document.getElementById("nome").value,
+dataISO: new Date().toISOString(),
 
-            telefone:document.getElementById("telefone").value,
+        cliente: cliente.nome,
 
-            cep:document.getElementById("cep").value,
+        telefone: cliente.telefone,
 
-            endereco:document.getElementById("endereco").value,
+        entrega: obterEntrega(),
 
-            numero:document.getElementById("numero").value,
+        pagamento: obterPagamento(),
 
-            complemento:document.getElementById("complemento").value,
+        status: "Recebido",
 
-            bairro:document.getElementById("bairro").value,
+        itens: carrinho,
 
-            cidade:document.getElementById("cidade").value,
+        total: calcularTotal(),
 
-            observacoes:document.getElementById("observacoes").value
-
-        },
-
-        entrega:obterEntrega(),
-
-        pagamento:obterPagamento(),
-
-        itens:carrinho,
-
-        total:calcularTotal()
+        observacoes:
+            document.getElementById("observacoes").value
 
     };
 
-    const pedidos = obterPedidos();
+const pedidos = Storage.getPedidos() || [];
 
     pedidos.push(pedido);
 
-    salvarPedidos(pedidos);
+    Storage.salvarPedidos(pedidos);
+
+    Storage.atualizarEstatisticasCliente(
+
+        cliente.id,
+
+        pedido
+
+    );
 
     enviarWhatsApp(pedido);
 
@@ -335,20 +368,29 @@ function calcularTotal(){
 
 function enviarWhatsApp(pedido){
 
+  const cliente = Storage.buscarClientePorId(
+    pedido.clienteId
+) || {};
+
     let mensagem =
 
 `🍔 *NOVO PEDIDO - EL PRADO BURGUER*
 
 👤 *Cliente:*
-${pedido.cliente.nome}
+${cliente.nome}
 
 📱 *Telefone:*
-${pedido.cliente.telefone}
+${cliente.telefone}
 
 📍 *Endereço:*
-${pedido.cliente.endereco}, ${pedido.cliente.numero}
-${pedido.cliente.bairro}
-${pedido.cliente.cidade}
+${cliente.endereco?.rua || ""}
+, ${cliente.endereco?.numero || ""}
+
+${cliente.endereco?.complemento || ""}
+
+${cliente.endereco?.bairro || ""}
+
+${cliente.endereco?.cidade || ""}
 
 🚚 *Entrega:*
 ${pedido.entrega}
@@ -368,7 +410,9 @@ ${pedido.pagamento}
 
 • ${item.quantidade}x ${item.nome}
 
-R$ ${(item.preco * item.quantidade).toFixed(2).replace(".",",")}`;
+R$ ${(item.preco * item.quantidade)
+.toFixed(2)
+.replace(".",",")}`;
 
     });
 
@@ -380,31 +424,29 @@ R$ ${(item.preco * item.quantidade).toFixed(2).replace(".",",")}`;
 
 💰 *TOTAL*
 
-R$ ${pedido.total.toFixed(2).replace(".",",")}
+R$ ${pedido.total
+.toFixed(2)
+.replace(".",",")}
 
 📝 *Observações*
 
-${pedido.cliente.observacoes || "Nenhuma"}
+${pedido.observacoes || "Nenhuma"}
 
 Obrigado pela preferência ❤️`;
 
-    const numero =
-
-"5511975342595";
+    const numero = "5511975342595";
 
     const url =
-
 `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 
     limparCarrinho();
+carrinho = [];
+
+document.getElementById("formCheckout")?.reset();
 
     window.open(url,"_blank");
 
-    alert(
-
-"Pedido enviado com sucesso!"
-
-    );
+    alert("Pedido enviado com sucesso!");
 
     window.location.href="../index.html";
 
