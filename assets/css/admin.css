@@ -1,1585 +1,254 @@
 /*==================================================
 EL PRADO CONTROL
-ADMIN.CSS
+ADMIN.JS
 VERSÃO 4.1
+BLOCO 1 - INICIALIZAÇÃO
 ==================================================*/
 
 /*==================================================
-RESET
+VARIÁVEIS GLOBAIS
 ==================================================*/
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+let produtos = [];
+let pedidos = [];
+let clientes = [];
+let configuracoes = {};
 
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    font-family:"Poppins",sans-serif;
-    background:#111827;
-    color:#F9FAFB;
-    overflow-x:hidden;
-}
+let produtoEditando = null;
 
 /*==================================================
-VARIÁVEIS
+ELEMENTOS
 ==================================================*/
 
-:root{
+const paginas = document.querySelectorAll(".pagina");
+const menuItens = document.querySelectorAll(".menu-item");
 
-    /* Cores */
+const tituloPagina =
+document.getElementById("tituloPagina");
 
-    --primary:#F4B400;
-    --primary-dark:#D89B00;
+const modalProduto =
+document.getElementById("modalProduto");
 
-    --success:#22C55E;
-    --danger:#EF4444;
-    --warning:#F59E0B;
-    --info:#3B82F6;
+const btnNovoProduto =
+document.getElementById("btnNovoProduto");
 
-    --background:#111827;
-    --background-light:#1F2937;
+const btnFecharModal =
+document.getElementById("fecharModalProduto");
 
-    --card:#1E293B;
-    --card-hover:#273548;
+const btnCancelarProduto =
+document.getElementById("cancelarProduto");
 
-    --sidebar:#0F172A;
-    --sidebar-hover:#1E293B;
+const formProduto =
+document.getElementById("formProduto");
 
-    --border:#374151;
+const previewProduto =
+document.getElementById("previewProduto");
 
-    --text:#F9FAFB;
-    --text-light:#D1D5DB;
-    --text-muted:#9CA3AF;
-
-    /* Sombras */
-
-    --shadow-sm:
-    0 2px 6px rgba(0,0,0,.15);
-
-    --shadow:
-
-    0 10px 30px rgba(0,0,0,.25);
-
-    --shadow-lg:
-
-    0 20px 40px rgba(0,0,0,.35);
-
-    /* Bordas */
-
-    --radius-sm:8px;
-    --radius:14px;
-    --radius-lg:20px;
-
-    /* Transições */
-
-    --transition:.25s ease;
-}
+const campoImagem =
+document.getElementById("imagemProduto");
 
 /*==================================================
-ELEMENTOS GERAIS
+INICIALIZAÇÃO
 ==================================================*/
 
-img{
-    max-width:100%;
-    display:block;
-}
+document.addEventListener(
+"DOMContentLoaded",
+iniciarSistema
+);
 
-button{
-    border:none;
-    outline:none;
-    cursor:pointer;
-    font-family:inherit;
-}
+function iniciarSistema(){
 
-input,
-select,
-textarea{
-    font-family:inherit;
-    outline:none;
-}
+    carregarDados();
 
-table{
-    width:100%;
-    border-collapse:collapse;
-}
+    configurarMenu();
 
-a{
-    text-decoration:none;
-    color:inherit;
-}
+    configurarEventos();
 
-ul{
-    list-style:none;
-}
+    atualizarPainel();
 
-/*==================================================
-LAYOUT
-==================================================*/
+    renderizarProdutos();
 
-.layout{
+    renderizarPedidos();
 
-    display:flex;
+    renderizarClientes();
 
-    min-height:100vh;
+    atualizarFinanceiro();
 
-    background:var(--background);
-
-}
-
-.content{
-
-    flex:1;
-
-    display:flex;
-
-    flex-direction:column;
-
-    min-width:0;
-
-}
-
-main{
-
-    flex:1;
-
-    padding:30px;
-
-    overflow:auto;
+    carregarConfiguracoes();
 
 }
 
 /*==================================================
-PÁGINAS
+CARREGAR DADOS
 ==================================================*/
 
-.pagina{
+function carregarDados(){
 
-    display:none;
+    produtos =
+    Storage.getProdutos() || [];
 
-    animation:fade .25s ease;
+    pedidos =
+    Storage.getPedidos() || [];
 
-}
+    clientes =
+    Storage.getClientes() || [];
 
-.pagina.ativa{
+clientes.forEach(cliente=>{
 
-    display:block;
+    cliente.pedidos = pedidos.filter(
+
+        pedido=>pedido.cliente===cliente.nome
+
+    ).length;
+
+    cliente.totalGasto = pedidos
+
+    .filter(p=>p.cliente===cliente.nome)
+
+    .reduce((s,p)=>s+Number(p.total||0),0);
+
+});
+
+    configuracoes =
+    Storage.getConfiguracoes() || {};
 
 }
 
 /*==================================================
-ANIMAÇÕES
+CONFIGURAR EVENTOS
 ==================================================*/
 
-@keyframes fade{
+function configurarEventos(){
 
-    from{
+    if(btnNovoProduto){
 
-        opacity:0;
-
-        transform:translateY(8px);
+        btnNovoProduto.addEventListener(
+        "click",
+        abrirNovoProduto
+        );
 
     }
 
-    to{
+    if(btnFecharModal){
 
-        opacity:1;
+        btnFecharModal.addEventListener(
+        "click",
+        fecharModalProduto
+        );
 
-        transform:translateY(0);
+    }
+
+    if(btnCancelarProduto){
+
+        btnCancelarProduto.addEventListener(
+        "click",
+        fecharModalProduto
+        );
+
+    }
+
+    if(formProduto){
+
+        formProduto.addEventListener(
+        "submit",
+        salvarProduto
+        );
+
+    }
+
+    if(campoImagem){
+
+        campoImagem.addEventListener(
+        "input",
+        atualizarPreviewImagem
+        );
 
     }
 
 }
+
 /*==================================================
-SIDEBAR
+MENU LATERAL
 ==================================================*/
 
-.sidebar{
+function configurarMenu(){
 
-    width:280px;
+    menuItens.forEach(item=>{
 
-    background:var(--sidebar);
+        item.addEventListener(
+        "click",
+        ()=>{
 
-    border-right:1px solid var(--border);
+            menuItens.forEach(btn=>
+                btn.classList.remove("ativo")
+            );
 
-    display:flex;
+            item.classList.add("ativo");
 
-    flex-direction:column;
+            abrirPagina(
+                item.dataset.page
+            );
 
-    justify-content:space-between;
+        });
 
-    position:sticky;
-
-    top:0;
-
-    height:100vh;
-
-    transition:var(--transition);
-
-    z-index:1000;
-
-    box-shadow:var(--shadow);
+    });
 
 }
 
 /*==================================================
-LOGO
+ABRIR PÁGINAS
 ==================================================*/
 
-.logo{
+function abrirPagina(nome){
 
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    padding:28px 24px;
-
-    border-bottom:1px solid var(--border);
-
-}
-
-.logo img{
-
-    width:60px;
-
-    height:60px;
-
-    object-fit:contain;
-
-}
-
-.logo h2{
-
-    display:flex;
-
-    flex-direction:column;
-
-    font-size:22px;
-
-    font-weight:700;
-
-    color:var(--text);
-
-    line-height:1.1;
-
-}
-
-.logo h2 span{
-
-    color:var(--primary);
-
-    font-size:16px;
-
-    font-weight:600;
-
-}
-
-/*==================================================
-MENU
-==================================================*/
-
-.sidebar-menu{
-
-    flex:1;
-
-    display:flex;
-
-    flex-direction:column;
-
-    padding:20px 16px;
-
-    gap:10px;
-
-}
-
-.menu-item{
-
-    width:100%;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:14px;
-
-    padding:15px 18px;
-
-    background:transparent;
-
-    border-radius:var(--radius);
-
-    color:var(--text-light);
-
-    font-size:15px;
-
-    font-weight:500;
-
-    transition:var(--transition);
-
-}
-
-.menu-item i{
-
-    width:24px;
-
-    font-size:18px;
-
-    text-align:center;
-
-}
-
-.menu-item span{
-
-    flex:1;
-
-    text-align:left;
-
-}
-
-/*==================================================
-HOVER
-==================================================*/
-
-.menu-item:hover{
-
-    background:var(--sidebar-hover);
-
-    color:var(--text);
-
-    transform:translateX(6px);
-
-}
-
-/*==================================================
-ITEM ATIVO
-==================================================*/
-
-.menu-item.ativo{
-
-    background:linear-gradient(
-        90deg,
-        var(--primary),
-        var(--primary-dark)
+    paginas.forEach(pagina=>
+        pagina.classList.remove("ativa")
     );
 
-    color:#111;
+    const pagina =
+    document.getElementById(nome);
 
-    font-weight:700;
+    if(pagina){
 
-    box-shadow:var(--shadow-sm);
+        pagina.classList.add("ativa");
 
-}
+    }
 
-.menu-item.ativo i{
+    if(tituloPagina){
 
-    color:#111;
+        tituloPagina.textContent =
+        pagina.querySelector("h2").textContent;
+
+    }
 
 }
 
 /*==================================================
-FOOTER SIDEBAR
+MODAL PRODUTO
 ==================================================*/
 
-.sidebar-footer{
+function abrirNovoProduto(){
 
-    padding:20px;
+    produtoEditando = null;
 
-    border-top:1px solid var(--border);
+    formProduto.reset();
 
-}
+    previewProduto.src =
+    "../assets/img/sem-imagem.png";
 
-.sidebar-footer a{
+    document.getElementById("produtoAtivo").checked = true;
 
-    display:flex;
+    document.getElementById("ordemProduto").value =
+    produtos.length + 1;
 
-    align-items:center;
-
-    justify-content:center;
-
-    gap:10px;
-
-    padding:14px;
-
-    background:var(--background-light);
-
-    border-radius:var(--radius);
-
-    transition:var(--transition);
-
-    color:var(--text);
-
-    font-weight:600;
+    modalProduto.classList.add("ativo");
 
 }
+function fecharModalProduto(){
 
-.sidebar-footer a:hover{
-
-    background:var(--primary);
-
-    color:#111;
-
-    transform:translateY(-2px);
-
-}
-
-.sidebar-footer i{
-
-    font-size:18px;
-
-}
-/*==================================================
-TOPBAR
-==================================================*/
-
-.topbar{
-
-    height:80px;
-
-    background:var(--background-light);
-
-    border-bottom:1px solid var(--border);
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    padding:0 30px;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:900;
-
-}
-
-.topbar-left{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:20px;
-
-}
-
-#btnMenu{
-
-    width:46px;
-
-    height:46px;
-
-    border-radius:12px;
-
-    background:var(--card);
-
-    color:var(--text);
-
-    font-size:18px;
-
-    transition:var(--transition);
-
-}
-
-#btnMenu:hover{
-
-    background:var(--primary);
-
-    color:#111;
-
-}
-
-.breadcrumb{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:3px;
-
-}
-
-.breadcrumb span{
-
-    font-size:13px;
-
-    color:var(--text-muted);
-
-    font-weight:500;
-
-    letter-spacing:.5px;
-
-    text-transform:uppercase;
-
-}
-
-.breadcrumb h1{
-
-    font-size:28px;
-
-    font-weight:700;
-
-    color:var(--text);
-
-}
-
-/*==================================================
-USUÁRIO
-==================================================*/
-
-.topbar-right{
-
-    display:flex;
-
-    align-items:center;
-
-}
-
-.usuario{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:14px;
-
-    background:var(--card);
-
-    padding:10px 18px;
-
-    border-radius:var(--radius);
-
-    box-shadow:var(--shadow-sm);
-
-}
-
-.avatar{
-
-    width:48px;
-
-    height:48px;
-
-    border-radius:50%;
-
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary-dark)
+    modalProduto.classList.remove(
+    "ativo"
     );
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:#111;
-
-    font-weight:700;
-
-    font-size:18px;
-
-}
-
-.usuario strong{
-
-    display:block;
-
-    color:var(--text);
-
-    font-size:15px;
-
-}
-
-.usuario small{
-
-    color:var(--text-muted);
-
-    font-size:12px;
-
-}
-
-/*==================================================
-CONTEÚDO
-==================================================*/
-
-.content{
-
-    display:flex;
-
-    flex-direction:column;
-
-    min-height:100vh;
-
-    overflow:hidden;
-
-}
-
-main{
-
-    flex:1;
-
-    padding:30px;
-
-    overflow-y:auto;
-
-}
-
-/*==================================================
-PAGE HEADER
-==================================================*/
-
-.page-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    gap:20px;
-
-    margin-bottom:30px;
-
-}
-
-.page-header h2{
-
-    font-size:30px;
-
-    color:var(--text);
-
-    margin-bottom:6px;
-
-}
-
-.page-header p{
-
-    color:var(--text-muted);
-
-    font-size:15px;
-
-}
-
-.page-actions{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-}
-
-/*==================================================
-BOTÕES
-==================================================*/
-
-.btn-primary{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    padding:12px 22px;
-
-    border:none;
-
-    border-radius:var(--radius);
-
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary-dark)
-    );
-
-    color:#111;
-
-    font-weight:700;
-
-    font-size:14px;
-
-    transition:var(--transition);
-
-    box-shadow:var(--shadow-sm);
-
-}
-
-.btn-primary:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:var(--shadow);
-
-}
-
-.btn-secondary{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:10px;
-
-    padding:12px 22px;
-
-    border-radius:var(--radius);
-
-    background:var(--card);
-
-    color:var(--text);
-
-    border:1px solid var(--border);
-
-    transition:var(--transition);
-
-}
-
-.btn-secondary:hover{
-
-    background:var(--sidebar-hover);
-
-}
-/*==================================================
-DASHBOARD
-==================================================*/
-
-.cards{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-
-    gap:24px;
-
-    margin-bottom:30px;
-
-}
-
-/*==================================================
-CARD
-==================================================*/
-
-.card{
-
-    background:var(--card);
-
-    border:1px solid var(--border);
-
-    border-radius:var(--radius);
-
-    padding:24px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:18px;
-
-    transition:var(--transition);
-
-    box-shadow:var(--shadow-sm);
-
-}
-
-.card:hover{
-
-    transform:translateY(-6px);
-
-    background:var(--card-hover);
-
-    box-shadow:var(--shadow);
-
-}
-
-.card-icon{
-
-    width:68px;
-
-    height:68px;
-
-    border-radius:18px;
-
-    background:linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary-dark)
-    );
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:#111;
-
-    font-size:28px;
-
-    flex-shrink:0;
-
-}
-
-.card h3{
-
-    font-size:32px;
-
-    color:var(--text);
-
-    margin-bottom:6px;
-
-    font-weight:700;
-
-}
-
-.card span{
-
-    color:var(--text-muted);
-
-    font-size:14px;
-
-}
-
-/*==================================================
-GRID DASHBOARD
-==================================================*/
-
-.dashboard-grid{
-
-    display:grid;
-
-    grid-template-columns:2fr 1fr;
-
-    gap:25px;
-
-    align-items:start;
-
-}
-
-/*==================================================
-PAINÉIS
-==================================================*/
-
-.painel{
-
-    background:var(--card);
-
-    border:1px solid var(--border);
-
-    border-radius:var(--radius);
-
-    padding:24px;
-
-    box-shadow:var(--shadow-sm);
-
-    transition:var(--transition);
-
-}
-
-.painel:hover{
-
-    box-shadow:var(--shadow);
-
-}
-
-.painel-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:20px;
-
-}
-
-.painel-header h3{
-
-    font-size:20px;
-
-    color:var(--text);
-
-    font-weight:600;
-
-}
-
-/*==================================================
-FINANCEIRO
-==================================================*/
-
-.financeiro-lista{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:18px;
-
-}
-
-.financeiro-lista div{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:14px 16px;
-
-    border-radius:12px;
-
-    background:rgba(255,255,255,.03);
-
-    border:1px solid rgba(255,255,255,.04);
-
-    transition:var(--transition);
-
-}
-
-.financeiro-lista div:hover{
-
-    background:rgba(255,255,255,.06);
-
-}
-
-.financeiro-lista span{
-
-    color:var(--text-light);
-
-    font-size:14px;
-
-}
-
-.financeiro-lista strong{
-
-    color:var(--primary);
-
-    font-size:18px;
-
-    font-weight:700;
-
-}
-
-/*==================================================
-PLACEHOLDER
-==================================================*/
-
-.grafico-placeholder{
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    justify-content:center;
-
-    text-align:center;
-
-    min-height:320px;
-
-    border:2px dashed var(--border);
-
-    border-radius:var(--radius);
-
-    color:var(--text-muted);
-
-    background:rgba(255,255,255,.02);
-
-}
-
-.grafico-placeholder i{
-
-    font-size:64px;
-
-    color:var(--primary);
-
-    margin-bottom:20px;
-
-}
-
-.grafico-placeholder h3{
-
-    color:var(--text);
-
-    margin-bottom:10px;
-
-    font-size:22px;
-
-}
-
-.grafico-placeholder p{
-
-    max-width:320px;
-
-    line-height:1.6;
-
-    font-size:14px;
-
-}
-
-/*==================================================
-SEM REGISTROS
-==================================================*/
-
-.sem-registros{
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    justify-content:center;
-
-    text-align:center;
-
-    padding:50px 20px;
-
-}
-
-.sem-registros h3{
-
-    color:var(--text);
-
-    margin-bottom:10px;
-
-    font-size:20px;
-
-}
-
-.sem-registros p{
-
-    color:var(--text-muted);
-
-    max-width:420px;
-
-    line-height:1.6;
-
-}
-/*==================================================
-TOOLBAR
-==================================================*/
-
-.toolbar{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    gap:20px;
-
-    margin-bottom:25px;
-
-    flex-wrap:wrap;
-
-}
-
-.search-box{
-
-    flex:1;
-
-    min-width:260px;
-
-    position:relative;
-
-}
-
-.search-box i{
-
-    position:absolute;
-
-    left:16px;
-
-    top:50%;
-
-    transform:translateY(-50%);
-
-    color:var(--text-muted);
-
-    font-size:15px;
-
-}
-
-.search-box input{
-
-    width:100%;
-
-    height:48px;
-
-    padding:0 18px 0 48px;
-
-    border-radius:var(--radius);
-
-    border:1px solid var(--border);
-
-    background:var(--card);
-
-    color:var(--text);
-
-    transition:var(--transition);
-
-}
-
-.search-box input:focus{
-
-    border-color:var(--primary);
-
-    box-shadow:0 0 0 3px rgba(244,180,0,.15);
-
-}
-
-.toolbar select{
-
-    min-width:190px;
-
-    height:48px;
-
-    padding:0 15px;
-
-    border-radius:var(--radius);
-
-    border:1px solid var(--border);
-
-    background:var(--card);
-
-    color:var(--text);
-
-    transition:var(--transition);
-
-}
-
-.toolbar select:focus{
-
-    border-color:var(--primary);
-
-}
-
-/*==================================================
-TABLE CARD
-==================================================*/
-
-.table-card{
-
-    background:var(--card);
-
-    border-radius:var(--radius);
-
-    border:1px solid var(--border);
-
-    overflow:hidden;
-
-    box-shadow:var(--shadow-sm);
-
-}
-
-/*==================================================
-TABLE
-==================================================*/
-
-.table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-}
-
-.table thead{
-
-    background:rgba(255,255,255,.04);
-
-}
-
-.table th{
-
-    padding:18px;
-
-    text-align:left;
-
-    color:var(--text-light);
-
-    font-size:13px;
-
-    font-weight:600;
-
-    text-transform:uppercase;
-
-    letter-spacing:.5px;
-
-    border-bottom:1px solid var(--border);
-
-}
-
-.table td{
-
-    padding:18px;
-
-    border-bottom:1px solid rgba(255,255,255,.05);
-
-    color:var(--text);
-
-    vertical-align:middle;
-
-}
-
-.table tbody tr{
-
-    transition:var(--transition);
-
-}
-
-.table tbody tr:hover{
-
-    background:rgba(255,255,255,.03);
-
-}
-
-/*==================================================
-THUMB PRODUTO
-==================================================*/
-
-.produto-thumb{
-
-    width:64px;
-
-    height:64px;
-
-    border-radius:12px;
-
-    object-fit:cover;
-
-    border:2px solid var(--border);
-
-}
-
-/*==================================================
-BADGES
-==================================================*/
-
-.badge{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    padding:6px 12px;
-
-    margin:2px;
-
-    border-radius:999px;
-
-    font-size:12px;
-
-    font-weight:600;
-
-}
-
-.badge.ativo{
-
-    background:rgba(34,197,94,.15);
-
-    color:var(--success);
-
-}
-
-.badge.inativo{
-
-    background:rgba(239,68,68,.15);
-
-    color:var(--danger);
-
-}
-
-.badge.promocao{
-
-    background:rgba(245,158,11,.15);
-
-    color:var(--warning);
-
-}
-
-.badge.destaque{
-
-    background:rgba(59,130,246,.15);
-
-    color:var(--info);
-
-}
-
-.badge.lancamento{
-
-    background:rgba(168,85,247,.15);
-
-    color:#A855F7;
-
-}
-
-.badge.vendido{
-
-    background:rgba(244,180,0,.15);
-
-    color:var(--primary);
-
-}
-
-/*==================================================
-AÇÕES
-==================================================*/
-
-.acoes{
-
-    display:flex;
-
-    gap:10px;
-
-    align-items:center;
-
-}
-
-.btn-acao{
-
-    width:40px;
-
-    height:40px;
-
-    border-radius:12px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:16px;
-
-    transition:var(--transition);
-
-}
-
-.btn-editar{
-
-    background:rgba(59,130,246,.12);
-
-    color:var(--info);
-
-}
-
-.btn-editar:hover{
-
-    background:var(--info);
-
-    color:#FFF;
-
-    transform:scale(1.08);
-
-}
-
-.btn-excluir{
-
-    background:rgba(239,68,68,.12);
-
-    color:var(--danger);
-
-}
-
-.btn-excluir:hover{
-
-    background:var(--danger);
-
-    color:#FFF;
-
-    transform:scale(1.08);
-
-}
-
-.btn-visualizar{
-
-    background:rgba(34,197,94,.12);
-
-    color:var(--success);
-
-}
-
-.btn-visualizar:hover{
-
-    background:var(--success);
-
-    color:#FFF;
-
-    transform:scale(1.08);
-
-}
-
-/*==================================================
-LINHAS ALTERNADAS
-==================================================*/
-
-.table tbody tr:nth-child(even){
-
-    background:rgba(255,255,255,.015);
-
-}
-
-.table tbody tr:nth-child(even):hover{
-
-    background:rgba(255,255,255,.04);
-
-}
-/*==================================================
-FORMULÁRIOS
-==================================================*/
-
-.config-form,
-#formProduto{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:24px;
-
-}
-
-.grid-2{
-
-    display:grid;
-
-    grid-template-columns:repeat(2,1fr);
-
-    gap:20px;
-
-}
-
-.grid-3{
-
-    display:grid;
-
-    grid-template-columns:repeat(3,1fr);
-
-    gap:20px;
-
-}
-
-.form-group{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:10px;
-
-}
-
-.form-group label{
-
-    font-size:14px;
-
-    font-weight:600;
-
-    color:var(--text-light);
-
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select{
-
-    width:100%;
-
-    padding:14px 16px;
-
-    border:1px solid var(--border);
-
-    border-radius:var(--radius);
-
-    background:var(--card);
-
-    color:var(--text);
-
-    font-size:15px;
-
-    transition:var(--transition);
-
-}
-
-.form-group textarea{
-
-    resize:vertical;
-
-    min-height:120px;
-
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus{
-
-    outline:none;
-
-    border-color:var(--primary);
-
-    box-shadow:0 0 0 3px rgba(244,180,0,.15);
-
-}
-
-/*==================================================
-CHECKBOXES
-==================================================*/
-
-.checks{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:18px;
-
-    padding:10px 0;
-
-}
-
-.checks label{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    font-size:14px;
-
-    cursor:pointer;
-
-    color:var(--text);
-
-}
-
-.checks input{
-
-    width:18px;
-
-    height:18px;
-
-    accent-color:var(--primary);
 
 }
 
@@ -1587,193 +256,1165 @@ CHECKBOXES
 PREVIEW DA IMAGEM
 ==================================================*/
 
-.preview-imagem{
+function atualizarPreviewImagem(){
 
-    display:flex;
+    const url =
+    campoImagem.value.trim();
 
-    flex-direction:column;
+    if(url===""){
 
-    align-items:center;
+        previewProduto.src =
+        "../assets/img/sem-imagem.png";
 
-    justify-content:center;
+        return;
 
-    gap:12px;
+    }
 
-    padding:20px;
+    previewProduto.src = url;
 
-    border:2px dashed var(--border);
+    previewProduto.onerror = ()=>{
 
-    border-radius:var(--radius);
+        previewProduto.src =
+        "../assets/img/sem-imagem.png";
 
-    background:rgba(255,255,255,.02);
-
-}
-
-.preview-imagem img{
-
-    width:180px;
-
-    height:180px;
-
-    object-fit:cover;
-
-    border-radius:18px;
-
-    border:2px solid var(--border);
-
-    background:#1b1b1b;
+    };
 
 }
+/*==================================================
+BLOCO 2 - CRUD DE PRODUTOS
+==================================================*/
 
-.preview-imagem p{
+/*==================================================
+SALVAR PRODUTO
+==================================================*/
 
-    font-size:13px;
+function salvarProduto(event){
 
-    color:var(--text-muted);
+    event.preventDefault();
 
-    text-align:center;
+    const produto={
+
+        id: produtoEditando || Date.now(),
+
+        nome: document.getElementById("nomeProduto").value.trim(),
+
+        categoria: document.getElementById("categoriaProduto").value,
+
+        descricao: document.getElementById("descricaoProduto").value.trim(),
+
+        preco: Number(
+            document.getElementById("precoProduto").value
+        ),
+
+        ordem: Number(
+            document.getElementById("ordemProduto").value
+        ),
+
+        imagem:
+            document.getElementById("imagemProduto").value.trim(),
+
+        ativo:
+            document.getElementById("produtoAtivo").checked,
+
+        promocao:
+            document.getElementById("produtoPromocao").checked,
+
+        destaque:
+            document.getElementById("produtoDestaque").checked,
+
+        maisVendido:
+            document.getElementById("produtoMaisVendido").checked,
+
+        lancamento:
+            document.getElementById("produtoLancamento").checked
+
+    };
+
+    if(produtoEditando){
+
+        const indice=
+        produtos.findIndex(
+            p=>p.id===produtoEditando
+        );
+
+        produtos[indice]=produto;
+
+        mostrarAlerta(
+            "Produto atualizado com sucesso!",
+            "success"
+        );
+
+    }else{
+
+        produtos.push(produto);
+
+        mostrarAlerta(
+            "Produto cadastrado com sucesso!",
+            "success"
+        );
+
+    }
+
+    produtos.sort(
+        (a,b)=>a.ordem-b.ordem
+    );
+
+    Storage.salvarProdutos(produtos);
+
+    renderizarProdutos();
+
+    atualizarPainel();
+
+    fecharModalProduto();
 
 }
 
 /*==================================================
-MODAL
+RENDERIZAR PRODUTOS
 ==================================================*/
 
-.modal{
+function renderizarProdutos(){
 
-    position:fixed;
+    const tbody=
+    document.getElementById("listaProdutos");
 
-    inset:0;
+    if(!tbody)return;
 
-    background:rgba(0,0,0,.75);
+let lista = [...produtos];
 
-    display:none;
+const pesquisa =
+document.getElementById("pesquisaProduto")
+?.value.toLowerCase() || "";
 
-    align-items:center;
+const categoria =
+document.getElementById("filtroCategoria")
+?.value || "";
 
-    justify-content:center;
+const status =
+document.getElementById("filtroStatusProduto")
+?.value || "";
 
-    padding:30px;
+if(pesquisa){
 
-    z-index:5000;
+    lista = lista.filter(produto=>
 
-}
+        produto.nome
+        .toLowerCase()
+        .includes(pesquisa)
 
-.modal.ativo{
-
-    display:flex;
-
-}
-
-.modal-content{
-
-    width:100%;
-
-    max-width:900px;
-
-    background:var(--card);
-
-    border-radius:20px;
-
-    border:1px solid var(--border);
-
-    box-shadow:0 30px 60px rgba(0,0,0,.45);
-
-    overflow:hidden;
-
-    animation:modalShow .25s ease;
+    );
 
 }
 
-.modal-lg{
+if(categoria){
 
-    max-width:1000px;
+    lista = lista.filter(produto=>
+
+        produto.categoria===categoria
+
+    );
 
 }
 
-@keyframes modalShow{
+if(status==="ativos"){
 
-    from{
+    lista = lista.filter(produto=>produto.ativo);
 
-        opacity:0;
+}
 
-        transform:translateY(20px) scale(.97);
+if(status==="inativos"){
+
+    lista = lista.filter(produto=>!produto.ativo);
+
+}
+
+   if(lista.length===0){
+
+        tbody.innerHTML=`
+        <tr>
+            <td colspan="6">
+                <div class="sem-registros">
+                    <h3>Nenhum produto cadastrado.</h3>
+                    <p>Clique em <strong>Novo Produto</strong>.</p>
+                </div>
+            </td>
+        </tr>
+        `;
+
+        return;
 
     }
 
-    to{
+    tbody.innerHTML="";
 
-        opacity:1;
+   lista.forEach(produto=>{
 
-        transform:translateY(0) scale(1);
+        tbody.innerHTML+=`
+
+<tr>
+
+<td>
+
+<img
+class="produto-thumb"
+src="${
+produto.imagem ||
+'../assets/img/sem-imagem.png'
+}">
+
+</td>
+
+<td>
+
+<strong>${produto.nome}</strong>
+
+<br>
+
+<small>${produto.descricao}</small>
+
+</td>
+
+<td>
+
+${traduzCategoria(produto.categoria)}
+
+</td>
+
+<td>
+
+R$
+${produto.preco.toFixed(2).replace(".",",")}
+
+</td>
+
+<td>
+
+${gerarBadges(produto)}
+
+</td>
+
+<td>
+
+<div class="acoes">
+
+<button
+class="btn-acao btn-editar"
+onclick="editarProduto(${produto.id})">
+
+<i class="fa-solid fa-pen"></i>
+
+</button>
+
+<button
+class="btn-acao btn-excluir"
+onclick="excluirProduto(${produto.id})">
+
+<i class="fa-solid fa-trash"></i>
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+
+/*==================================================
+EDITAR PRODUTO
+==================================================*/
+
+function editarProduto(id){
+
+    const produto=
+    produtos.find(p=>p.id===id);
+
+    if(!produto)return;
+
+    produtoEditando=id;
+
+    document.getElementById("nomeProduto").value=
+    produto.nome;
+
+    document.getElementById("categoriaProduto").value=
+    produto.categoria;
+
+    document.getElementById("descricaoProduto").value=
+    produto.descricao;
+
+    document.getElementById("precoProduto").value=
+    produto.preco;
+
+    document.getElementById("ordemProduto").value=
+    produto.ordem;
+
+    document.getElementById("imagemProduto").value=
+    produto.imagem;
+
+    document.getElementById("produtoAtivo").checked=
+    produto.ativo;
+
+    document.getElementById("produtoPromocao").checked=
+    produto.promocao;
+
+    document.getElementById("produtoDestaque").checked=
+    produto.destaque;
+
+    document.getElementById("produtoMaisVendido").checked=
+    produto.maisVendido;
+
+    document.getElementById("produtoLancamento").checked=
+    produto.lancamento;
+
+    atualizarPreviewImagem();
+
+    modalProduto.classList.add("ativo");
+
+}
+
+/*==================================================
+EXCLUIR PRODUTO
+==================================================*/
+
+function excluirProduto(id){
+
+    if(!confirm(
+        "Deseja realmente excluir este produto?"
+    )) return;
+
+    produtos=
+    produtos.filter(
+        p=>p.id!==id
+    );
+
+    produtos.sort((a,b)=>a.ordem-b.ordem);
+
+Storage.salvarProdutos(produtos);
+
+    renderizarProdutos();
+
+    atualizarPainel();
+
+    mostrarAlerta(
+        "Produto removido com sucesso!",
+        "warning"
+    );
+
+}
+
+/*==================================================
+BADGES
+==================================================*/
+
+function gerarBadges(produto){
+
+    let html="";
+
+    html+=produto.ativo
+    ?'<span class="badge ativo">Ativo</span>'
+    :'<span class="badge inativo">Inativo</span>';
+
+    if(produto.promocao)
+        html+='<span class="badge promocao">Promoção</span>';
+
+    if(produto.destaque)
+        html+='<span class="badge destaque">Destaque</span>';
+
+    if(produto.maisVendido)
+        html+='<span class="badge vendido">Mais Vendido</span>';
+
+    if(produto.lancamento)
+        html+='<span class="badge lancamento">Lançamento</span>';
+
+    return html;
+
+}
+
+/*==================================================
+TRADUZIR CATEGORIA
+==================================================*/
+
+function traduzCategoria(categoria){
+
+    const categorias={
+
+        burger:"Hambúrguer",
+
+        combo:"Combo",
+
+        porcao:"Porção",
+
+        bebida:"Bebida",
+
+        sobremesa:"Sobremesa"
+
+    };
+
+    return categorias[categoria] || categoria;
+
+}
+/*==================================================
+BLOCO 3 - DASHBOARD
+==================================================*/
+
+/*==================================================
+ATUALIZAR DASHBOARD
+==================================================*/
+
+function atualizarPainel(){
+
+    atualizarCardsDashboard();
+
+    atualizarUltimosPedidos();
+
+    atualizarResumoDashboard();
+
+}
+
+/*==================================================
+CARDS
+==================================================*/
+
+function atualizarCardsDashboard(){
+
+    document.getElementById("totalProdutos").textContent =
+    produtos.length;
+
+    document.getElementById("totalPedidos").textContent =
+    pedidos.length;
+
+    document.getElementById("totalClientes").textContent =
+    clientes.length;
+
+    const receita = pedidos
+        .filter(p=>p.status==="Finalizado")
+        .reduce((total,p)=>total+Number(p.total||0),0);
+
+    document.getElementById("receitaTotalDashboard")
+    .textContent =
+    formatarMoeda(receita);
+
+}
+
+/*==================================================
+ÚLTIMOS PEDIDOS
+==================================================*/
+
+function atualizarUltimosPedidos(){
+
+    const tbody =
+    document.getElementById("ultimosPedidos");
+
+    if(!tbody)return;
+
+    if(pedidos.length===0){
+
+        tbody.innerHTML=`
+        <tr>
+            <td colspan="4">
+                Nenhum pedido encontrado.
+            </td>
+        </tr>
+        `;
+
+        return;
+
+    }
+
+    const ultimos =
+    [...pedidos]
+    .sort((a,b)=>b.id-a.id)
+    .slice(0,5);
+
+    tbody.innerHTML="";
+
+    ultimos.forEach(pedido=>{
+
+        tbody.innerHTML += `
+
+<tr>
+
+<td>#${pedido.id}</td>
+
+<td>${pedido.cliente}</td>
+
+<td>${formatarMoeda(pedido.total)}</td>
+
+<td>
+
+<span class="badge ${classeStatus(pedido.status)}">
+
+${pedido.status}
+
+</span>
+
+</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+
+/*==================================================
+RESUMO FINANCEIRO
+==================================================*/
+
+function atualizarResumoDashboard(){
+
+    const finalizados =
+    pedidos.filter(
+        p=>p.status==="Finalizado"
+    );
+
+    const receita =
+    finalizados.reduce(
+        (soma,p)=>soma+Number(p.total||0),
+        0
+    );
+
+    const ticket =
+    finalizados.length
+    ? receita/finalizados.length
+    :0;
+
+    document.getElementById(
+    "receitaResumoDashboard"
+    ).textContent =
+    formatarMoeda(receita);
+
+    document.getElementById(
+    "ticketMedioDashboard"
+    ).textContent =
+    formatarMoeda(ticket);
+
+    document.getElementById(
+    "pedidosFinalizadosDashboard"
+    ).textContent =
+    finalizados.length;
+
+    document.getElementById(
+    "produtoMaisVendidoDashboard"
+    ).textContent =
+    calcularProdutoMaisVendido();
+
+}
+
+/*==================================================
+PRODUTO MAIS VENDIDO
+==================================================*/
+
+function calcularProdutoMaisVendido(){
+
+    if(pedidos.length===0)
+        return "—";
+
+    const ranking={};
+
+    pedidos.forEach(pedido=>{
+
+        if(!pedido.itens)return;
+
+        pedido.itens.forEach(item=>{
+
+            ranking[item.nome] =
+            (ranking[item.nome]||0)+item.quantidade;
+
+        });
+
+    });
+
+    let maior=0;
+    let produto="—";
+
+    Object.keys(ranking).forEach(nome=>{
+
+        if(ranking[nome]>maior){
+
+            maior=ranking[nome];
+
+            produto=nome;
+
+        }
+
+    });
+
+    return produto;
+
+}
+
+/*==================================================
+STATUS
+==================================================*/
+
+function classeStatus(status){
+
+    switch(status){
+
+        case "Recebido":
+            return "info";
+
+        case "Em preparo":
+            return "warning";
+
+        case "Saiu para entrega":
+            return "destaque";
+
+        case "Finalizado":
+            return "ativo";
+
+        case "Cancelado":
+            return "inativo";
+
+        default:
+            return "";
 
     }
 
 }
 
-.modal-header{
+/*==================================================
+UTILITÁRIOS
+==================================================*/
 
-    display:flex;
+function formatarMoeda(valor){
 
-    justify-content:space-between;
+    return Number(valor||0).toLocaleString(
 
-    align-items:center;
+        "pt-BR",
 
-    padding:24px 30px;
+        {
 
-    border-bottom:1px solid var(--border);
+            style:"currency",
+
+            currency:"BRL"
+
+        }
+
+    );
+
+}
+/*==================================================
+BLOCO 4 - PEDIDOS
+==================================================*/
+
+/*==================================================
+RENDERIZAR PEDIDOS
+==================================================*/
+
+function renderizarPedidos(){
+
+    const tbody =
+    document.getElementById("listaPedidos");
+
+    if(!tbody) return;
+
+    const pesquisa =
+    document.getElementById("pesquisaPedido")
+    ?.value.toLowerCase() || "";
+
+    const statusFiltro =
+    document.getElementById("filtroStatus")
+    ?.value || "";
+
+    let lista = [...pedidos];
+
+    if(pesquisa){
+
+        lista = lista.filter(p=>
+
+            (p.cliente || "")
+            .toLowerCase()
+            .includes(pesquisa)
+
+        );
+
+    }
+
+    if(statusFiltro){
+
+        lista = lista.filter(
+            p=>p.status===statusFiltro
+        );
+
+    }
+
+    if(lista.length===0){
+
+        tbody.innerHTML=`
+        <tr>
+            <td colspan="6">
+                <div class="sem-registros">
+                    <h3>Nenhum pedido encontrado.</h3>
+                </div>
+            </td>
+        </tr>
+        `;
+
+        return;
+
+    }
+
+    lista.sort((a,b)=>b.id-a.id);
+
+    tbody.innerHTML="";
+
+    lista.forEach(pedido=>{
+
+        tbody.innerHTML += `
+
+<tr>
+
+<td>#${pedido.id}</td>
+
+<td>
+
+<strong>${pedido.cliente}</strong>
+
+<br>
+
+<small>${pedido.telefone || ""}</small>
+
+</td>
+
+<td>
+
+${formatarMoeda(pedido.total)}
+
+</td>
+
+<td>
+
+${pedido.pagamento || "-"}
+
+</td>
+
+<td>
+
+<select
+class="status-select"
+onchange="alterarStatusPedido(${pedido.id},this.value)">
+
+${gerarOpcoesStatus(pedido.status)}
+
+</select>
+
+</td>
+
+<td>
+
+<div class="acoes">
+
+<button
+class="btn-acao btn-visualizar"
+onclick="visualizarPedido(${pedido.id})">
+
+<i class="fa-solid fa-eye"></i>
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+    });
 
 }
 
-.modal-header h2{
+/*==================================================
+STATUS
+==================================================*/
 
-    font-size:22px;
+function alterarStatusPedido(id,status){
 
-}
+    const pedido =
+    pedidos.find(p=>p.id===id);
 
-.modal-content form{
+    if(!pedido)return;
 
-    padding:30px;
+    pedido.status=status;
 
-}
+    Storage.salvarPedidos(pedidos);
+    
+    carregarDados();
 
-.btn-close{
+renderizarClientes();
+    
+    renderizarPedidos();
 
-    width:42px;
+    atualizarPainel();
 
-    height:42px;
+    atualizarFinanceiro();
 
-    border-radius:50%;
+    mostrarAlerta(
 
-    display:flex;
+        "Status atualizado!",
 
-    align-items:center;
+        "success"
 
-    justify-content:center;
-
-    background:rgba(255,255,255,.05);
-
-    transition:var(--transition);
-
-}
-
-.btn-close:hover{
-
-    background:var(--danger);
-
-    color:#fff;
+    );
 
 }
 
-.modal-footer{
+/*==================================================
+OPÇÕES STATUS
+==================================================*/
 
-    display:flex;
+function gerarOpcoesStatus(statusAtual){
 
-    justify-content:flex-end;
+    const lista=[
 
-    gap:14px;
+        "Recebido",
 
-    margin-top:15px;
+        "Em preparo",
+
+        "Saiu para entrega",
+
+        "Finalizado",
+
+        "Cancelado"
+
+    ];
+
+    return lista.map(status=>`
+
+<option
+
+value="${status}"
+
+${status===statusAtual?"selected":""}
+
+>
+
+${status}
+
+</option>
+
+`).join("");
+
+}
+
+/*==================================================
+VISUALIZAR PEDIDO
+==================================================*/
+
+function visualizarPedido(id){
+
+    const pedido =
+    pedidos.find(p=>p.id===id);
+
+    if(!pedido)return;
+
+    let itens="";
+
+    if(pedido.itens){
+
+        pedido.itens.forEach(item=>{
+
+            itens +=
+
+`${item.quantidade}x ${item.nome}
+`;
+
+        });
+
+    }
+
+    alert(
+
+`Pedido #${pedido.id}
+
+Cliente:
+${pedido.cliente}
+
+Telefone:
+${pedido.telefone || "-"}
+
+Pagamento:
+${pedido.pagamento || "-"}
+
+Status:
+${pedido.status}
+
+Itens:
+
+${itens}
+
+Total:
+${formatarMoeda(pedido.total)}`
+
+    );
+
+}
+
+/*==================================================
+EVENTOS DOS FILTROS
+==================================================*/
+
+const pesquisaPedido =
+document.getElementById("pesquisaPedido");
+
+if(pesquisaPedido){
+
+    pesquisaPedido.addEventListener(
+
+        "input",
+
+        renderizarPedidos
+
+    );
+
+}
+
+const filtroStatus =
+document.getElementById("filtroStatus");
+
+if(filtroStatus){
+
+    filtroStatus.addEventListener(
+
+        "change",
+
+        renderizarPedidos
+
+    );
+
+}
+/*==================================================
+BLOCO 5 - CLIENTES | FINANCEIRO | CONFIGURAÇÕES
+==================================================*/
+
+/*==================================================
+CLIENTES
+==================================================*/
+
+function renderizarClientes(){
+
+    const tbody =
+    document.getElementById("listaClientes");
+
+    if(!tbody) return;
+
+    if(clientes.length===0){
+
+        tbody.innerHTML=`
+        <tr>
+            <td colspan="5">
+                <div class="sem-registros">
+                    <h3>Nenhum cliente cadastrado.</h3>
+                    <p>Os clientes aparecerão após o primeiro pedido.</p>
+                </div>
+            </td>
+        </tr>
+        `;
+
+        return;
+
+    }
+
+    const pesquisa =
+    document.getElementById("pesquisaCliente")
+    ?.value.toLowerCase() || "";
+
+    let lista = [...clientes];
+
+    if(pesquisa){
+
+        lista = lista.filter(cliente=>
+
+            (cliente.nome || "")
+            .toLowerCase()
+            .includes(pesquisa)
+
+        );
+
+    }
+
+    tbody.innerHTML="";
+
+    lista.forEach(cliente=>{
+
+        tbody.innerHTML += `
+
+<tr>
+
+<td>${cliente.nome}</td>
+
+<td>${cliente.telefone || "-"}</td>
+
+<td>${cliente.email || "-"}</td>
+
+<td>${cliente.pedidos || 0}</td>
+
+<td>${formatarMoeda(cliente.totalGasto || 0)}</td>
+
+</tr>
+
+`;
+
+    });
+
+}
+
+/*==================================================
+FINANCEIRO
+==================================================*/
+
+function atualizarFinanceiro(){
+
+    const finalizados =
+    pedidos.filter(
+        pedido=>pedido.status==="Finalizado"
+    );
+
+    const receita =
+    finalizados.reduce(
+        (soma,pedido)=>
+        soma+Number(pedido.total||0),
+        0
+    );
+
+    const ticket =
+    finalizados.length
+    ? receita/finalizados.length
+    :0;
+
+    document.getElementById(
+    "financeiroReceitaTotal"
+    ).textContent =
+    formatarMoeda(receita);
+
+    document.getElementById(
+    "financeiroTicketMedio"
+    ).textContent =
+    formatarMoeda(ticket);
+
+    document.getElementById(
+    "financeiroPedidosFinalizados"
+    ).textContent =
+    finalizados.length;
+
+    document.getElementById(
+    "financeiroProdutoMaisVendido"
+    ).textContent =
+    calcularProdutoMaisVendido();
+
+}
+
+/*==================================================
+CONFIGURAÇÕES
+==================================================*/
+
+function carregarConfiguracoes(){
+
+    if(!configuracoes)
+        configuracoes={};
+
+    document.getElementById("nomeLoja").value =
+    configuracoes.nome || "";
+
+    document.getElementById("telefoneLoja").value =
+    configuracoes.telefone || "";
+
+    document.getElementById("pixLoja").value =
+    configuracoes.pix || "";
+
+    document.getElementById("taxaEntrega").value =
+    configuracoes.taxaEntrega || 0;
+
+    document.getElementById("enderecoLoja").value =
+    configuracoes.endereco || "";
+
+    document.getElementById("horarioLoja").value =
+    configuracoes.horario || "";
+
+    document.getElementById("tempoEntrega").value =
+    configuracoes.tempoEntrega || "";
+
+}
+
+const formConfiguracoes =
+document.getElementById("formConfiguracoes");
+
+if(formConfiguracoes){
+
+formConfiguracoes.addEventListener(
+
+"submit",
+
+function(e){
+
+e.preventDefault();
+
+configuracoes={
+
+nome:
+document.getElementById("nomeLoja").value,
+
+telefone:
+document.getElementById("telefoneLoja").value,
+
+pix:
+document.getElementById("pixLoja").value,
+
+taxaEntrega:
+Number(
+document.getElementById("taxaEntrega").value
+),
+
+endereco:
+document.getElementById("enderecoLoja").value,
+
+horario:
+document.getElementById("horarioLoja").value,
+
+tempoEntrega:
+document.getElementById("tempoEntrega").value
+
+};
+
+Storage.salvarConfiguracoes(
+configuracoes
+);
+
+mostrarAlerta(
+"Configurações salvas!",
+"success"
+);
+
+}
+
+);
+
+}
+
+/*==================================================
+PESQUISA CLIENTES
+==================================================*/
+
+const pesquisaCliente =
+document.getElementById("pesquisaCliente");
+
+if(pesquisaCliente){
+
+pesquisaCliente.addEventListener(
+
+"input",
+
+renderizarClientes
+
+);
 
 }
 
@@ -1781,193 +1422,100 @@ MODAL
 ALERTAS
 ==================================================*/
 
-.alert{
+function mostrarAlerta(
+mensagem,
+tipo="success"
+){
 
-    min-width:320px;
+const alerta =
+document.createElement("div");
 
-    padding:16px 22px;
+alerta.className =
+`alert alert-${tipo}`;
 
-    border-radius:14px;
+alerta.textContent =
+mensagem;
 
-    color:#fff;
+alerta.style.position="fixed";
+alerta.style.top="25px";
+alerta.style.right="25px";
+alerta.style.zIndex="99999";
 
-    font-weight:600;
+document.body.appendChild(alerta);
 
-    box-shadow:0 20px 40px rgba(0,0,0,.35);
+setTimeout(()=>{
 
-    animation:alertShow .3s ease;
+alerta.style.opacity="0";
 
-}
+alerta.style.transition=".3s";
 
-.alert-success{
+setTimeout(()=>{
 
-    background:#16a34a;
+alerta.remove();
 
-}
+},300);
 
-.alert-error{
-
-    background:#dc2626;
-
-}
-
-.alert-warning{
-
-    background:#d97706;
-
-}
-
-@keyframes alertShow{
-
-    from{
-
-        opacity:0;
-
-        transform:translateX(40px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateX(0);
-
-    }
+},2500);
 
 }
 
 /*==================================================
-FOOTER
+UTILITÁRIOS
 ==================================================*/
 
-.footer-admin{
+function gerarId(){
 
-    margin-top:40px;
-
-    padding:22px 30px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    border-top:1px solid var(--border);
-
-    color:var(--text-muted);
-
-    font-size:13px;
+return Date.now();
 
 }
 
+function salvarTudo(){
+
+Storage.salvarProdutos(produtos);
+
+Storage.salvarPedidos(pedidos);
+
+Storage.salvarClientes(clientes);
+
+Storage.salvarConfiguracoes(configuracoes);
+
+}
+document
+.getElementById("pesquisaProduto")
+?.addEventListener(
+"input",
+renderizarProdutos
+);
+
+document
+.getElementById("filtroCategoria")
+?.addEventListener(
+"change",
+renderizarProdutos
+);
+
+document
+.getElementById("filtroStatusProduto")
+?.addEventListener(
+"change",
+renderizarProdutos
+);
+
+function atualizarSistema(){
+
+    carregarDados();
+
+    atualizarPainel();
+
+    renderizarProdutos();
+
+    renderizarPedidos();
+
+    renderizarClientes();
+
+    atualizarFinanceiro();
+
+}
 /*==================================================
-RESPONSIVIDADE
+FIM DO ADMIN.JS V4.1
 ==================================================*/
-
-@media(max-width:1100px){
-
-    .grid-3{
-
-        grid-template-columns:1fr;
-
-    }
-
-}
-
-@media(max-width:900px){
-
-    .grid-2{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .cards{
-
-        grid-template-columns:repeat(2,1fr);
-
-    }
-
-    .dashboard-grid{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .toolbar{
-
-        flex-direction:column;
-
-        align-items:stretch;
-
-    }
-
-}
-
-@media(max-width:768px){
-
-    .content{
-
-        margin-left:0;
-
-    }
-
-    .topbar{
-
-        padding:18px;
-
-    }
-
-    .page-header{
-
-        flex-direction:column;
-
-        align-items:flex-start;
-
-    }
-
-    .cards{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .table-card{
-
-        overflow-x:auto;
-
-    }
-    
-.table{
-
-    min-width:900px;
-
-}
-    .modal{
-
-        padding:15px;
-
-    }
-
-    .modal-content{
-
-        max-height:95vh;
-
-        overflow-y:auto;
-
-    }
-
-    .footer-admin{
-
-        flex-direction:column;
-
-        text-align:center;
-
-    }
-
-}
