@@ -5,473 +5,786 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
+<meta
+name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Checkout | El Prado Burguer</title>
+<title>
 
-<link rel="preconnect"
+Checkout | El Prado Burguer
+
+</title>
+
+<meta
+name="description"
+content="Finalizar Pedido - El Prado Burguer">
+
+<!-- Google Fonts -->
+
+<link
+rel="preconnect"
 href="https://fonts.googleapis.com">
 
-<link rel="preconnect"
+<link
+rel="preconnect"
 href="https://fonts.gstatic.com"
 crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
 rel="stylesheet">
 
-<link rel="stylesheet"
+<!-- Font Awesome -->
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<!-- CSS -->
+
+<link
+rel="stylesheet"
+href="../assets/css/style.css">
+
+<link
+rel="stylesheet"
 href="../assets/css/checkout.css">
-
-<script defer
-src="../assets/js/storage.js"></script>
-
-<script defer
-src="../assets/js/checkout.js"></script>
 
 </head>
 
 <body>
 
+<!--=====================================
+HEADER
+======================================-->
+
 <header class="header">
 
 <div class="container">
 
-<a href="../index.html"
-class="logo">
+<nav class="menu">
 
-<img
-src="../assets/img/logo.png"
-alt="El Prado Burguer">
+<a href="../index.html">
+
+Início
 
 </a>
 
-<div class="header-titulo">
+<a href="cardapio.html">
 
-Finalizar Pedido
+Cardápio
 
-</div>
+</a>
+
+<a href="cliente.html">
+
+Minha Conta
+
+</a>
+
+<a href="carrinho.html">
+
+Carrinho
+
+</a>
+
+</nav>
+
+<div class="header-icons">
 
 <a
-href="cardapio.html"
-class="btn-voltar">
+href="cliente.html"
+class="icon-user">
 
-← Voltar
+<i class="fa-solid fa-user"></i>
 
 </a>
+
+<a
+href="carrinho.html"
+class="icon-cart">
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+<span id="contadorCarrinho">
+
+0
+
+</span>
+
+</a>
+
+</div>
 
 </div>
 
 </header>
 
-<main>
+<!--=====================================
+CONTEÚDO
+======================================-->
 
-<section class="checkout">
+<main class="checkout-page">
 
-<div class="container">
+<div class="checkout-container">
 
-<div class="checkout-grid">
+<!--=========================
+RESUMO
+==========================-->
 
-<!-- ===================== -->
-<!-- DADOS DO CLIENTE -->
-<!-- ===================== -->
+<section class="checkout-resumo">
 
-<div class="checkout-form">
+<h1>
 
-<h2>
+Finalizar Pedido
 
-Dados do Cliente
+</h1>
 
-</h2>
+<p>
 
-<div class="campo">
+Confira seus dados antes de concluir sua compra.
 
-<label>
-
-Nome Completo
-
-</label>
-
-<input
-
-type="text"
-
-id="nome"
-
-placeholder="Seu nome">
-
-</div>
-
-<div class="campo">
-
-<label>
-
-Telefone
-
-</label>
-
-<input
-
-type="tel"
-
-id="telefone"
-
-placeholder="(11) 99999-9999">
-
-</div>
-
-<div class="campo">
-
-<label>
-
-CEP
-
-</label>
-
-<input
-
-type="text"
-
-id="cep"
-
-placeholder="00000-000">
-
-</div>
-
-<div class="campo">
-
-<label>
-
-Endereço
-
-</label>
-
-<input
-
-type="text"
-
-id="endereco"
-
-placeholder="Rua...">
-
-</div>
-
-<div class="duas-colunas">
-
-<div class="campo">
-
-<label>
-
-Número
-
-</label>
-
-<input
-
-type="text"
-
-id="numero">
-
-</div>
-
-<div class="campo">
-
-<label>
-
-Complemento
-
-</label>
-
-<input
-
-type="text"
-
-id="complemento">
-
-</div>
-
-</div>
-
-<div class="campo">
-
-<label>
-
-Bairro
-
-</label>
-
-<input
-
-type="text"
-
-id="bairro">
-
-</div>
-
-<div class="campo">
-
-<label>
-
-Cidade
-
-</label>
-
-<input
-
-type="text"
-
-id="cidade">
-
-</div>
-
-<div class="campo">
-
-<label>
-
-Observações
-
-</label>
-
-<textarea
-
-id="observacoes"
-
-rows="4"
-
-placeholder="Ex.: sem cebola, tocar interfone...">
-
-</textarea>
-
-</div>
-
-</div>
-<!-- ===================== -->
-<!-- ENTREGA -->
-<!-- ===================== -->
-
-<div class="checkout-resumo">
-
-<h2>
-
-Entrega
-
-</h2>
-
-<div class="opcoes-entrega">
-
-<label class="opcao">
-
-<input
-type="radio"
-name="entrega"
-value="delivery"
-checked>
-
-<span>
-
-🚚 Delivery
-
-</span>
-
-</label>
-
-<label class="opcao">
-
-<input
-type="radio"
-name="entrega"
-value="retirada">
-
-<span>
-
-🏪 Retirar no Local
-
-</span>
-
-</label>
-
-</div>
-
-<!-- ===================== -->
-<!-- PAGAMENTO -->
-<!-- ===================== -->
-
-<h2>
-
-Forma de Pagamento
-
-</h2>
-
-<div class="pagamentos">
-
-<label class="opcao">
-
-<input
-type="radio"
-name="pagamento"
-value="pix"
-checked>
-
-<span>
-
-💳 Pix
-
-</span>
-
-</label>
-
-<label class="opcao">
-
-<input
-type="radio"
-name="pagamento"
-value="credito">
-
-<span>
-
-💳 Crédito
-
-</span>
-
-</label>
-
-<label class="opcao">
-
-<input
-type="radio"
-name="pagamento"
-value="debito">
-
-<span>
-
-💳 Débito
-
-</span>
-
-</label>
-
-<label class="opcao">
-
-<input
-type="radio"
-name="pagamento"
-value="dinheiro">
-
-<span>
-
-💵 Dinheiro
-
-</span>
-
-</label>
-
-</div>
-
-<!-- ===================== -->
-<!-- RESUMO -->
-<!-- ===================== -->
-
-<h2>
-
-Resumo do Pedido
-
-</h2>
+</p>
 
 <div
 id="listaResumo"
 class="lista-resumo">
 
-<!-- checkout.js -->
-
-</div>
-
-<div class="totais">
-
-<div>
-
-<span>
-
-Subtotal
-
-</span>
-
-<strong id="subtotal">
-
-R$ 0,00
-
-</strong>
-
-</div>
-
-<div>
-
-<span>
-
-Entrega
-
-</span>
-
-<strong id="taxaEntrega">
-
-A calcular
-
-</strong>
-
-</div>
-
-<div class="total">
-
-<span>
-
-Total
-
-</span>
-
-<strong id="totalPedido">
-
-R$ 0,00
-
-</strong>
-
-</div>
-
-</div>
-
-<button
-
-id="btnFinalizar"
-
-class="btn-finalizar">
-
-Finalizar Pedido
-
-</button>
-
-</div>
-
-</div>
+<!-- JS -->
 
 </div>
 
 </section>
 
-</main>
+<!--=========================
+CLIENTE
+==========================-->
 
-<footer class="footer">
+<section class="checkout-card">
 
-<div class="container">
+<h2>
 
-<p>
+<i class="fa-solid fa-user"></i>
 
-© 2026 El Prado Burguer
+Dados do Cliente
 
-Todos os direitos reservados.
+</h2>
 
-</p>
+<div class="form-group">
+
+    <label for="nome">
+
+        Nome Completo
+
+    </label>
+
+    <input
+        type="text"
+        id="nome"
+        autocomplete="name"
+        required>
 
 </div>
 
+<div class="form-group">
+
+    <label for="telefone">
+
+        Telefone
+
+    </label>
+
+    <input
+        type="tel"
+        id="telefone"
+        autocomplete="tel"
+        required>
+
+</div>
+<div class="form-group">
+
+    <label for="email">
+
+        E-mail
+
+    </label>
+
+    <input
+        type="email"
+        id="email"
+        autocomplete="email"
+        readonly>
+
+</div>
+</div>
+
+</section>
+
+<!--=========================
+ENDEREÇO
+==========================-->
+
+<section class="checkout-card">
+
+    <h2>
+
+        <i class="fa-solid fa-location-dot"></i>
+
+        Endereço de Entrega
+
+    </h2>
+
+    <div class="checkout-grid">
+
+        <div class="form-group">
+
+            <label>CEP</label>
+
+            <input
+                type="text"
+                id="cep"
+                readonly>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Rua</label>
+
+            <input
+                type="text"
+                id="endereco"
+                readonly>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Número</label>
+
+            <input
+                type="text"
+                id="numero"
+                readonly>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Bairro</label>
+
+            <input
+                type="text"
+                id="bairro"
+                readonly>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Cidade</label>
+
+            <input
+                type="text"
+                id="cidade"
+                readonly>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Estado</label>
+
+            <input
+                type="text"
+                id="estado"
+                readonly>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!--=========================
+OBSERVAÇÕES
+==========================-->
+
+<section class="checkout-card">
+
+    <h2>
+
+        <i class="fa-solid fa-note-sticky"></i>
+
+        Observações
+
+    </h2>
+
+    <textarea
+
+        id="observacaoPedido"
+
+        rows="5"
+
+        placeholder="Ex.: sem cebola, ponto da carne, troco para R$100, etc.">
+
+    </textarea>
+
+</section>
+
+<!--=========================
+CUPOM
+==========================-->
+
+<section class="checkout-card">
+
+    <h2>
+
+        <i class="fa-solid fa-ticket"></i>
+
+        Cupom de Desconto
+
+    </h2>
+
+    <div class="cupom-container">
+
+        <input
+
+            type="text"
+
+            id="cupom"
+
+            placeholder="Digite seu cupom">
+
+        <button
+
+            id="btnCupom"
+
+            class="btn-secondary"
+
+            type="button">
+
+            Aplicar
+
+        </button>
+
+    </div>
+
+</section>
+
+<!--=========================
+PAGAMENTO
+==========================-->
+
+<section class="checkout-card">
+
+    <h2>
+
+        <i class="fa-solid fa-credit-card"></i>
+
+        Forma de Pagamento
+
+    </h2>
+
+    <div class="pagamentos">
+
+        <label class="pagamento-item">
+
+            <input
+
+                type="radio"
+
+                name="pagamento"
+
+                value="pix"
+
+                checked>
+
+            <i class="fa-solid fa-qrcode"></i>
+
+            PIX
+
+        </label>
+
+        <label class="pagamento-item">
+
+            <input
+
+                type="radio"
+
+                name="pagamento"
+
+                value="credito">
+
+            <i class="fa-solid fa-credit-card"></i>
+
+            Cartão de Crédito
+
+        </label>
+
+        <label class="pagamento-item">
+
+            <input
+
+                type="radio"
+
+                name="pagamento"
+
+                value="debito">
+
+            <i class="fa-solid fa-credit-card"></i>
+
+            Cartão de Débito
+
+        </label>
+
+        <label class="pagamento-item">
+
+            <input
+
+                type="radio"
+
+                name="pagamento"
+
+                value="dinheiro">
+
+            <i class="fa-solid fa-money-bill-wave"></i>
+
+            Dinheiro
+
+        </label>
+
+    </div>
+
+</section>
+<!--=========================
+RESUMO FINANCEIRO
+==========================-->
+
+<aside class="checkout-card resumo-final">
+
+    <h2>
+
+        <i class="fa-solid fa-receipt"></i>
+
+        Resumo do Pedido
+
+    </h2>
+
+    <div class="linha-resumo">
+
+        <span>
+
+            Subtotal
+
+        </span>
+
+        <strong id="subtotalPedido">
+
+            R$ 0,00
+
+        </strong>
+
+    </div>
+
+    <div class="linha-resumo">
+
+        <span>
+
+            Taxa de Entrega
+
+        </span>
+
+        <strong id="taxaEntrega">
+
+            Grátis
+
+        </strong>
+
+    </div>
+
+    <div class="linha-resumo">
+
+        <span>
+
+            Desconto
+
+        </span>
+
+        <strong id="descontoPedido">
+
+            R$ 0,00
+
+        </strong>
+
+    </div>
+
+    <hr>
+
+    <div class="linha-total">
+
+        <span>
+
+            Total
+
+        </span>
+
+        <strong id="totalPedido">
+
+            R$ 0,00
+
+        </strong>
+
+    </div>
+
+</aside>
+
+<!--=========================
+AÇÕES
+==========================-->
+
+<section class="checkout-acoes">
+
+    <button
+
+        class="btn-secondary"
+
+        type="button"
+
+        onclick="window.location.href='carrinho.html'">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Voltar ao Carrinho
+
+    </button>
+
+    <button
+
+        id="btnFinalizar"
+
+        class="btn-primary"
+
+        type="button">
+
+        <i class="fa-solid fa-circle-check"></i>
+
+        Finalizar Pedido
+
+    </button>
+
+</section>
+
+<!--=========================
+SEGURANÇA
+==========================-->
+
+<section class="checkout-seguro">
+
+    <div class="seguro-item">
+
+        <i class="fa-solid fa-lock"></i>
+
+        <span>
+
+            Compra 100% Segura
+
+        </span>
+
+    </div>
+
+    <div class="seguro-item">
+
+        <i class="fa-solid fa-shield-halved"></i>
+
+        <span>
+
+            Dados Protegidos
+
+        </span>
+
+    </div>
+
+    <div class="seguro-item">
+
+        <i class="fa-solid fa-clock"></i>
+
+        <span>
+
+            Entrega Rápida
+
+        </span>
+
+    </div>
+
+</section>
+<!--=========================
+INFORMAÇÕES
+==========================-->
+
+<section class="checkout-informacoes">
+
+    <div class="info-card">
+
+        <i class="fa-solid fa-motorcycle"></i>
+
+        <div>
+
+            <h3>
+
+                Entrega
+
+            </h3>
+
+            <p>
+
+                Tempo estimado entre
+                30 e 50 minutos.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="info-card">
+
+        <i class="fa-solid fa-headset"></i>
+
+        <div>
+
+            <h3>
+
+                Atendimento
+
+            </h3>
+
+            <p>
+
+                Suporte durante todo
+                o horário de funcionamento.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="info-card">
+
+        <i class="fa-solid fa-burger"></i>
+
+        <div>
+
+            <h3>
+
+                Qualidade
+
+            </h3>
+
+            <p>
+
+                Hambúrgueres preparados
+                na hora.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+</main>
+
+<!--=====================================
+RODAPÉ
+======================================-->
+
+<footer class="footer">
+
+    <div class="container">
+
+        <div class="footer-logo">
+
+            <img
+
+                src="../assets/img/logo.png"
+
+                alt="El Prado Burguer">
+
+        </div>
+
+        <div class="footer-copy">
+
+            <p>
+
+                © 2026 El Prado Burguer
+
+                Todos os direitos reservados.
+
+            </p>
+
+        </div>
+
+    </div>
+
 </footer>
+
+<!--=====================================
+MODAL DE PROCESSAMENTO
+======================================-->
+
+<div
+
+    id="modalLoading"
+
+    class="modal-loading"
+
+    style="display:none;">
+
+    <div class="loading-box">
+
+        <div class="loading-spinner"></div>
+
+        <h2>
+
+            Processando pedido...
+
+        </h2>
+
+        <p>
+
+            Aguarde alguns instantes.
+
+        </p>
+
+    </div>
+
+</div>
+
+<!--=====================================
+TOAST
+======================================-->
+
+<div
+
+    id="toast"
+
+    class="toast">
+
+</div>
+<!--=====================================
+SCRIPTS
+======================================-->
+
+<script src="../assets/js/storage.js"></script>
+
+<script src="../assets/js/carrinho.js"></script>
+
+<script src="../assets/js/checkout.js"></script>
 
 </body>
 
