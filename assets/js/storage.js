@@ -66,7 +66,7 @@ version:"2.0.0",
 
         localStorage.clear();
 
-    }
+    },
 /*=========================================
   EXISTE CHAVE
 =========================================*/
@@ -533,7 +533,36 @@ cliente.endereco = {
 
 };
 
-Storage.atualizarEstatisticasCliente = function(clienteId,pedido)
+Storage.atualizarEstatisticasCliente = function(clienteId,pedido){
+
+    const clientes = this.getClientes();
+
+    const cliente = clientes.find(
+
+        c => c.id === clienteId
+
+    );
+
+    if(!cliente) return;
+
+    cliente.pedidos++;
+
+    cliente.totalGasto += Number(pedido.total || 0);
+
+    cliente.ticketMedio =
+
+        cliente.totalGasto /
+
+        cliente.pedidos;
+
+    cliente.ultimoPedido =
+
+        new Date().toISOString();
+
+    this.salvarClientes(clientes);
+
+};
+
 /*==================================================
 API V2 - CLIENTES
 ==================================================*/
@@ -1360,7 +1389,6 @@ Storage.getUsuario = obterUsuario;
 
 Storage.salvarUsuario = salvarUsuario;
 
-Storage.logout = logoutUsuario;
 
 Storage.totalClientes = totalClientes;
 
@@ -1393,32 +1421,4 @@ Storage.ping = function(){
     };
 
 };
-{
-
-    const clientes = this.getClientes();
-
-    const cliente = clientes.find(
-
-        c => c.id === clienteId
-
-    );
-
-    if(!cliente) return;
-
-    cliente.pedidos++;
-
-    cliente.totalGasto += Number(pedido.total || 0);
-
-    cliente.ticketMedio =
-
-        cliente.totalGasto /
-
-        cliente.pedidos;
-
-    cliente.ultimoPedido =
-
-        new Date().toISOString();
-
-    this.salvarClientes(clientes);
-
-};
+Storage.init();
