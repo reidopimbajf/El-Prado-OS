@@ -471,57 +471,72 @@ Storage.salvarCliente = function(dados){
 
     if(cliente){
 
-        cliente.nome = dados.nome || cliente.nome;
+    cliente.nome = dados.nome || cliente.nome;
 
-        cliente.email = dados.email || cliente.email;
+    cliente.email = dados.email || cliente.email;
 
-cliente.endereco = {
+    cliente.telefone = telefone;
 
-    ...cliente.endereco,
+    if(dados.senha){
 
-    ...(dados.endereco || {})
+        cliente.senha = dados.senha;
+
+    }
+
+    cliente.endereco = {
+
+        ...cliente.endereco,
+
+        ...(dados.endereco || {})
+
+    };
+
+    cliente.ativo = true;
+
+}
+
+    
+    else{
+
+       cliente = {
+
+    id: dados.id || Date.now(),
+
+    nome: dados.nome || "",
+
+    telefone,
+
+    email: dados.email || "",
+
+    senha: dados.senha || "",
+
+    endereco: dados.endereco || {
+
+        cep:"",
+        rua:"",
+        numero:"",
+        complemento:"",
+        bairro:"",
+        cidade:"",
+        estado:""
+
+    },
+
+    favoritos: dados.favoritos || [],
+
+    pedidos: 0,
+
+    totalGasto: 0,
+
+    ticketMedio: 0,
+
+    dataCadastro: dados.dataCadastro || new Date().toISOString(),
+
+    ultimoPedido:"",
+
+    ativo:true
 
 };
-
-        cliente.ativo = true;
-
-    }else{
-
-        cliente = {
-
-            id: Date.now(),
-
-            nome: dados.nome || "",
-
-            telefone,
-
-            email: dados.email || "",
-
-            endereco: dados.endereco || {
-
-                cep:"",
-                rua:"",
-                numero:"",
-                complemento:"",
-                bairro:"",
-                cidade:"",
-                estado:""
-
-            },
-
-            pedidos:0,
-
-            totalGasto:0,
-
-            ticketMedio:0,
-
-            dataCadastro:new Date().toISOString(),
-
-            ultimoPedido:"",
-
-            ativo:true
-
-        };
 
         clientes.push(cliente);
 
