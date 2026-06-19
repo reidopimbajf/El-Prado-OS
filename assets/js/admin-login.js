@@ -102,3 +102,49 @@ function realizarLogin(e){
     "admin-dashboard.html";
 
 }
+/*==================================================
+PROTEÇÃO
+==================================================*/
+
+if(
+
+    window.location.pathname
+
+    .includes("admin-dashboard")
+
+){
+
+    if(
+
+        localStorage.getItem(
+
+            "adminLogado"
+
+        ) !== "true"
+
+    ){
+
+        window.location.href =
+
+        "admin.html";
+
+    }
+
+}
+/*==================================================
+LOGOUT
+==================================================*/
+
+function logoutAdmin(){
+
+    localStorage.removeItem(
+
+        "adminLogado"
+
+    );
+
+    window.location.href =
+
+    "admin.html";
+
+}
