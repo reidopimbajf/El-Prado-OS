@@ -119,3 +119,39 @@
     background:#15803d;
 
 }
+/*======================================
+PRIORIDADE
+======================================*/
+
+.prioridade-verde{
+
+    border-left:8px solid #22c55e;
+
+}
+
+.prioridade-amarela{
+
+    border-left:8px solid #eab308;
+
+}
+
+.prioridade-vermelha{
+
+    border-left:8px solid #ef4444;
+
+}
+
+/*======================================
+CRONÔMETRO
+======================================*/
+
+.cronometro{
+
+    margin-top:8px;
+
+    font-size:22px;
+
+    font-weight:700;
+
+}
+
