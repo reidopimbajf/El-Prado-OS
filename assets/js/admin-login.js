@@ -89,13 +89,15 @@ function realizarLogin(e){
 
     }
 
-    localStorage.setItem(
+ Storage.loginAdmin({
 
-        "adminLogado",
+    usuario,
 
-        "true"
+    nome:"Administrador",
 
-    );
+    login:Storage.dataAtual()
+
+});
 
     window.location.href =
 
@@ -114,15 +116,11 @@ if(
 
 ){
 
-    if(
+ if(
 
-        localStorage.getItem(
+    !Storage.adminEstaLogado()
 
-            "adminLogado"
-
-        ) !== "true"
-
-    ){
+){
 
         window.location.href =
 
@@ -137,11 +135,7 @@ LOGOUT
 
 function logoutAdmin(){
 
-    localStorage.removeItem(
-
-        "adminLogado"
-
-    );
+   Storage.logoutAdmin();
 
     window.location.href =
 
