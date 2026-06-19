@@ -206,154 +206,104 @@ mostrarPainel();
 // PAINEL INTERATIVO
 // ==========================
 
-const conteudoPainel =
-document.getElementById("conteudoPainel");
+const btnPerfil = document.getElementById("btnPerfil");
+const btnPedidos = document.getElementById("btnPedidos");
+const btnEnderecos = document.getElementById("btnEnderecos");
+const btnFavoritos = document.getElementById("btnFavoritos");
+const btnConfiguracoes = document.getElementById("btnConfiguracoes");
+const conteudoPainel = document.getElementById("conteudoPainel");
 
-document.getElementById("btnPerfil").onclick = function(){
+if (btnPerfil) {
 
-conteudoPainel.innerHTML = `
+    btnPerfil.addEventListener("click", () => {
 
-<h2>Meu Perfil</h2>
+        conteudoPainel.innerHTML = `
+            <h2>Meu Perfil</h2>
 
-<div class="painel-box">
+            <div class="painel-box">
 
-<p><strong>Nome:</strong> ${clienteLogado.nome}</p>
+                <p><strong>Nome:</strong> ${clienteLogado.nome}</p>
 
-<p><strong>E-mail:</strong> ${clienteLogado.email}</p>
+                <p><strong>Email:</strong> ${clienteLogado.email}</p>
 
-<p><strong>Telefone:</strong> ${clienteLogado.telefone}</p>
+                <p><strong>Telefone:</strong> ${clienteLogado.telefone}</p>
 
-<br>
+            </div>
+        `;
 
-<button class="btn-primary">
+    });
 
-Salvar Alterações
+}
 
-</button>
+if (btnPedidos) {
 
-</div>
+    btnPedidos.addEventListener("click", () => {
 
-`;
+        conteudoPainel.innerHTML = `
+            <h2>Meus Pedidos</h2>
 
-};
+            <p>Nenhum pedido encontrado.</p>
+        `;
 
-document.getElementById("btnPedidos").onclick = function(){
+    });
 
-conteudoPainel.innerHTML = `
+}
 
-<h2>Meus Pedidos</h2>
+if (btnEnderecos) {
 
-<div class="painel-box">
+    btnEnderecos.addEventListener("click", () => {
 
-<p>
+        conteudoPainel.innerHTML = `
+            <h2>Meus Endereços</h2>
 
-Você ainda não realizou nenhum pedido.
+            <p>Nenhum endereço cadastrado.</p>
+        `;
 
-</p>
+    });
 
-</div>
+}
 
-`;
+if (btnFavoritos) {
 
-};
+    btnFavoritos.addEventListener("click", () => {
 
-document.getElementById("btnEnderecos").onclick = function(){
+        conteudoPainel.innerHTML = `
+            <h2>Favoritos</h2>
 
-conteudoPainel.innerHTML = `
+            <p>Você ainda não possui favoritos.</p>
+        `;
 
-<h2>Meus Endereços</h2>
+    });
 
-<div class="painel-box">
+}
 
-<p>
+if (btnConfiguracoes) {
 
-Nenhum endereço cadastrado.
+    btnConfiguracoes.addEventListener("click", () => {
 
-</p>
+        conteudoPainel.innerHTML = `
+            <h2>Configurações</h2>
 
-<button class="btn-primary">
+            <p>Configurações da conta.</p>
+        `;
 
-Adicionar Endereço
+    });
 
-</button>
-
-</div>
-
-`;
-
-};
-
-document.getElementById("btnFavoritos").onclick = function(){
-
-conteudoPainel.innerHTML = `
-
-<h2>Favoritos</h2>
-
-<div class="painel-box">
-
-<p>
-
-Você ainda não possui favoritos.
-
-</p>
-
-</div>
-
-`;
-
-};
-
-document.getElementById("btnConfiguracoes").onclick = function(){
-
-conteudoPainel.innerHTML = `
-
-<h2>Configurações</h2>
-
-<div class="painel-box">
-
-<label>
-
-<input type="checkbox">
-
-Receber promoções
-
-</label>
-
-<br><br>
-
-<label>
-
-<input type="checkbox">
-
-Receber novidades
-
-</label>
-
-</div>
-
-`;
-
-};
+}
 // ==========================
 // LOGOUT
 // ==========================
 
-const btnSair=
+const btnSair = document.getElementById("btnSair");
 
-document.getElementById("btnSair");
+if (btnSair) {
 
-if(btnSair){
+    btnSair.addEventListener("click", () => {
 
-btnSair.onclick=function(){
+        localStorage.removeItem("clienteLogado");
 
-localStorage.removeItem(
+        window.location.reload();
 
-"clienteLogado"
-
-);
-
-location.reload();
-
-};
+    });
 
 }
