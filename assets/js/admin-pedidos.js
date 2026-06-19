@@ -151,17 +151,7 @@ pedidos.sort(
 
     }
 
-    aplicarFiltros(
-
-        pedido=>{
-
-            listaPedidos.innerHTML +=
-
-            criarCard(pedido);
-
-        }
-
-    );
+    aplicarFiltros();
 
 }
 
@@ -730,15 +720,15 @@ atualizarContadores();
 
 renderPedidos();
 
-if(
+const enviar = confirm(
 
-    confirm(
+    `Status alterado para "${pedido.status}".
 
-        "Deseja avisar o cliente pelo WhatsApp?"
+Deseja enviar uma mensagem para o cliente pelo WhatsApp?`
 
-    )
+);
 
-){
+if(enviar){
 
     enviarWhatsapp(
 
@@ -749,7 +739,6 @@ if(
 }
 
 };
-
 
 /*==================================================
 MODAL
