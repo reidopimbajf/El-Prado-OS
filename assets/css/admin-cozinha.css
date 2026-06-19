@@ -11,3 +11,84 @@
     padding:25px;
 
 }
+.card-cozinha{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.card-topo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:20px;
+
+    font-weight:700;
+
+}
+
+.card-cozinha h2{
+
+    margin-bottom:20px;
+
+    font-size:26px;
+
+}
+
+.card-cozinha ul{
+
+    margin:20px 0;
+
+    padding-left:22px;
+
+}
+
+.card-cozinha li{
+
+    margin-bottom:10px;
+
+    font-size:18px;
+
+}
+
+.observacao{
+
+    background:#f8f8f8;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    margin:20px 0;
+
+}
+
+.btn-cozinha{
+
+    width:100%;
+
+    border:none;
+
+    padding:18px;
+
+    border-radius:12px;
+
+    background:#d4af37;
+
+    color:#111;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
