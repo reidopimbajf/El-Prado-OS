@@ -17,6 +17,22 @@ document.getElementById("listaPedidos");
 const pesquisaPedido =
 document.getElementById("pesquisaPedido");
 
+const filtros =
+
+document.querySelectorAll(
+
+    ".filtro"
+
+);
+
+const btnAtualizar =
+
+document.getElementById(
+
+    "btnAtualizar"
+
+);
+
 /*==================================================
 ESTADO
 ==================================================*/
@@ -103,7 +119,7 @@ function renderPedidos(){
 
     }
 
-    pedidos.forEach(
+    aplicarFiltros(
 
         pedido=>{
 
@@ -321,19 +337,71 @@ EVENTOS
 
 function registrarEventos(){
 
-    if(!pesquisaPedido){
+    if(pesquisaPedido){
 
-        return;
+        pesquisaPedido.addEventListener(
+
+            "input",
+
+            aplicarFiltros
+
+        );
 
     }
 
-    pesquisaPedido.addEventListener(
+    filtros.forEach(botao=>{
 
-        "input",
+        botao.addEventListener(
 
-        pesquisarPedidos
+            "click",
 
-    );
+            ()=>{
+
+                filtros.forEach(
+
+                    b=>b.classList.remove(
+
+                        "active"
+
+                    )
+
+                );
+
+                botao.classList.add(
+
+                    "active"
+
+                );
+
+                filtroAtual =
+
+                botao.dataset.status;
+
+                aplicarFiltros();
+
+            }
+
+        );
+
+    });
+
+    if(btnAtualizar){
+
+        btnAtualizar.addEventListener(
+
+            "click",
+
+            ()=>{
+
+                carregarPedidos();
+
+                aplicarFiltros();
+
+            }
+
+        );
+
+    }
 
 }
 
@@ -341,7 +409,7 @@ function registrarEventos(){
 PESQUISA
 ==================================================*/
 
-function pesquisarPedidos(){
+function aplicarFiltros(){
 
     const texto =
 
@@ -351,35 +419,77 @@ function pesquisarPedidos(){
 
         .trim();
 
-    const filtrados =
+    const lista = pedidos.filter(
 
-        pedidos.filter(
+        pedido=>{
 
-            pedido=>
+            const pesquisa =
 
-            pedido.clienteNome
+                String(pedido.id)
 
-            .toLowerCase()
+                .includes(texto)
 
-            .includes(texto)
+                ||
 
-            ||
+                (pedido.clienteNome||"")
 
-            String(pedido.id)
+                .toLowerCase()
 
-            .includes(texto)
+                .includes(texto)
 
-            ||
+                ||
 
-            pedido.telefone
+                (pedido.telefone||"")
 
-            .includes(texto)
+                .includes(texto);
 
-        );
+            const status =
+
+                filtroAtual==="Todos"
+
+                ||
+
+                pedido.status===
+
+                filtroAtual;
+
+            return pesquisa && status;
+
+        }
+
+    );
 
     listaPedidos.innerHTML="";
 
-    filtrados.forEach(
+    if(lista.length===0){
+
+        listaPedidos.innerHTML=`
+
+        <div class="sem-pedidos">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <h2>
+
+                Nenhum pedido encontrado
+
+            </h2>
+
+            <p>
+
+                Tente alterar os filtros.
+
+            </p>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+    lista.forEach(
 
         pedido=>{
 
@@ -392,7 +502,6 @@ function pesquisarPedidos(){
     );
 
 }
-
 /*==================================================
 AÇÕES
 ==================================================*/
