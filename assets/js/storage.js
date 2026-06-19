@@ -1380,7 +1380,7 @@ Storage.init = function(){
 AUTO START
 ==================================================*/
 
-Storage.init();
+
 /*==================================================
 COMPATIBILIDADE V2
 ==================================================*/
@@ -1397,7 +1397,10 @@ Storage.totalProdutos = totalProdutos;
 Storage.totalPedidos = totalPedidos;
 
 Storage.totalFaturamento = faturamentoTotal;
-
+Storage.getUsuario = obterUsuario;
+Storage.salvarUsuario = salvarUsuario;
+Storage.logoutUsuario = logoutUsuario;
+    Storage.init();
 /*==================================================
 UTILITÁRIOS
 ==================================================*/
@@ -1421,4 +1424,4 @@ Storage.ping = function(){
     };
 
 };
-Storage.init();
+    Storage.init();
