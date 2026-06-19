@@ -486,3 +486,76 @@ MODAL
     }
 
 }
+/*======================================
+PESQUISA
+======================================*/
+
+.pesquisa-container{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:20px;
+
+}
+
+.pesquisa-container i{
+
+    color:#666;
+
+    font-size:18px;
+
+}
+
+.pesquisa-container input{
+
+    flex:1;
+
+}
+
+.btn-atualizar{
+
+    padding:12px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    background:#111;
+
+    color:#fff;
+
+    font-weight:600;
+
+}
+
+.btn-atualizar:hover{
+
+    opacity:.9;
+
+}
+
+/*======================================
+CONTADORES
+======================================*/
+
+.filtro span{
+
+    margin-left:8px;
+
+    background:#ffffff30;
+
+    padding:2px 8px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
