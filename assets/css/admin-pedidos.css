@@ -286,11 +286,19 @@ BOTÕES
 
 .acoes{
 
-    display:flex;
+    display:grid;
+
+    grid-template-columns:
+
+    55px
+
+    55px
+
+    55px
+
+    1fr;
 
     gap:10px;
-
-    margin-top:20px;
 
 }
 
@@ -557,5 +565,36 @@ CONTADORES
     font-size:12px;
 
     font-weight:700;
+
+}
+/*======================================
+BOTÕES
+======================================*/
+
+.btn-comprovante{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.btn-whatsapp{
+
+    background:#16a34a;
+
+    color:white;
+
+}
+
+.btn-comprovante:hover{
+
+    background:#1d4ed8;
+
+}
+
+.btn-whatsapp:hover{
+
+    background:#15803d;
 
 }
