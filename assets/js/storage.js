@@ -5,7 +5,11 @@
 ==================================================*/
 
 const Storage = {
+/*=========================================
+  VERSÃO
+=========================================*/
 
+version:"2.0.0",
     /*=========================================
       CHAVES
     =========================================*/
@@ -63,7 +67,91 @@ const Storage = {
         localStorage.clear();
 
     }
+/*=========================================
+  EXISTE CHAVE
+=========================================*/
 
+existe(chave){
+
+    return localStorage.getItem(chave) !== null;
+
+},
+
+/*=========================================
+  RESETAR CHAVE
+=========================================*/
+
+resetar(chave){
+
+    this.remover(chave);
+
+    this.salvar(chave,[]);
+
+},
+
+/*=========================================
+  CONTAR REGISTROS
+=========================================*/
+
+contar(chave){
+
+    return this.buscar(chave).length;
+
+},
+
+/*=========================================
+  EXPORTAR
+=========================================*/
+
+exportar(){
+
+    return{
+
+        produtos:this.getProdutos(),
+
+        pedidos:this.getPedidos(),
+
+        clientes:this.getClientes(),
+
+        carrinho:this.getCarrinho(),
+
+        configuracoes:this.getConfiguracoes()
+
+    };
+
+},
+
+/*=========================================
+  IMPORTAR
+=========================================*/
+
+importar(dados){
+
+    if(dados.produtos)
+
+        this.salvarProdutos(dados.produtos);
+
+    if(dados.pedidos)
+
+        this.salvarPedidos(dados.pedidos);
+
+    if(dados.clientes)
+
+        this.salvarClientes(dados.clientes);
+
+    if(dados.carrinho)
+
+        this.salvarCarrinho(dados.carrinho);
+
+    if(dados.configuracoes)
+
+        this.salvarConfiguracoes(
+
+            dados.configuracoes
+
+        );
+
+}
 };
 
 /*==================================================
@@ -445,7 +533,50 @@ cliente.endereco = {
 
 };
 
-Storage.atualizarEstatisticasCliente = function(clienteId,pedido){
+Storage.atualizarEstatisticasCliente = function(clienteId,pedido)
+
+/*==================================================
+COMPATIBILIDADE V2
+==================================================*/
+
+Storage.getUsuario = obterUsuario;
+
+Storage.salvarUsuario = salvarUsuario;
+
+Storage.logout = logoutUsuario;
+
+Storage.totalClientes = totalClientes;
+
+Storage.totalProdutos = totalProdutos;
+
+Storage.totalPedidos = totalPedidos;
+
+Storage.totalFaturamento = faturamentoTotal;
+
+/*==================================================
+UTILITÁRIOS
+==================================================*/
+
+Storage.getVersao = function(){
+
+    return this.version;
+
+};
+
+Storage.ping = function(){
+
+    return{
+
+        status:"OK",
+
+        versao:this.version,
+
+        data:new Date().toISOString()
+
+    };
+
+};
+{
 
     const clientes = this.getClientes();
 
