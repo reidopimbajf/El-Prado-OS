@@ -30,7 +30,27 @@ const cardClientes =
 document.getElementById("totalClientes");
 
 const cardProdutos =
+document.getElementById(""use strict";
+
+/*==================================================
+CACHE
+==================================================*/
+
+const cardPedidos =
+document.getElementById("pedidosHoje");
+
+const cardFaturamento =
+document.getElementById("faturamentoHoje");
+
+const cardClientes =
+document.getElementById("totalClientes");
+
+const cardProdutos =
 document.getElementById("totalProdutos");
+
+const nomeAdmin =
+document.getElementById("nomeAdmin");
+
 
 /*==================================================
 ESTADO
@@ -55,6 +75,20 @@ document.addEventListener(
 );
 
 function iniciarDashboard(){
+
+    if(
+
+        nomeAdmin &&
+
+        Admin
+
+    ){
+
+        nomeAdmin.textContent =
+
+        Admin.nome;
+
+    }
 
     carregarDados();
 
