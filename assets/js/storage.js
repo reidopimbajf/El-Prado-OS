@@ -1438,5 +1438,53 @@ Storage.ping = function(){
 
     };
 
-};
+};/*==================================================
+ADMINISTRADOR
+==================================================*/
+
+loginAdmin(admin){
+
+    localStorage.setItem(
+
+        "adminLogado",
+
+        JSON.stringify(admin)
+
+    );
+
+},
+
+logoutAdmin(){
+
+    localStorage.removeItem(
+
+        "adminLogado"
+
+    );
+
+},
+
+adminEstaLogado(){
+
+    return localStorage.getItem(
+
+        "adminLogado"
+
+    ) !== null;
+
+},
+
+getAdmin(){
+
+    return JSON.parse(
+
+        localStorage.getItem(
+
+            "adminLogado"
+
+        )
+
+    );
+
+},
     Storage.init();
