@@ -1438,11 +1438,12 @@ Storage.ping = function(){
 
     };
 
-};/*==================================================
+};
+/*==================================================
 ADMINISTRADOR
 ==================================================*/
 
-loginAdmin(admin){
+Storage.loginAdmin = function(admin){
 
     localStorage.setItem(
 
@@ -1452,9 +1453,9 @@ loginAdmin(admin){
 
     );
 
-},
+};
 
-logoutAdmin(){
+Storage.logoutAdmin = function(){
 
     localStorage.removeItem(
 
@@ -1462,9 +1463,9 @@ logoutAdmin(){
 
     );
 
-},
+};
 
-adminEstaLogado(){
+Storage.adminEstaLogado = function(){
 
     return localStorage.getItem(
 
@@ -1472,9 +1473,9 @@ adminEstaLogado(){
 
     ) !== null;
 
-},
+};
 
-getAdmin(){
+Storage.getAdmin = function(){
 
     return JSON.parse(
 
@@ -1486,5 +1487,4 @@ getAdmin(){
 
     );
 
-},
-    Storage.init();
+};
