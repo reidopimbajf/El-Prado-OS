@@ -170,18 +170,19 @@ function preencherCliente(){
 
     const endereco = cliente.endereco || {};
 
-    campoCep.value = endereco.cep || "";
+if(campoCep) campoCep.value = endereco.cep || "";
 
-    campoRua.value = endereco.rua || "";
+if(campoRua) campoRua.value = endereco.rua || "";
 
-    campoNumero.value = endereco.numero || "";
+if(campoNumero) campoNumero.value = endereco.numero || "";
 
-    campoBairro.value = endereco.bairro || "";
+if(campoComplemento) campoComplemento.value = endereco.complemento || "";
 
-    campoCidade.value = endereco.cidade || "";
+if(campoBairro) campoBairro.value = endereco.bairro || "";
 
-    campoEstado.value = endereco.estado || "";
+if(campoCidade) campoCidade.value = endereco.cidade || "";
 
+if(campoEstado) campoEstado.value = endereco.estado || "";
 }
 
 /*==================================================
@@ -375,21 +376,23 @@ function montarPedido(){
 
         endereco:{
 
-            cep:campoCep.value,
+    cep: campoCep.value,
 
-            rua:campoRua.value,
+    rua: campoRua.value,
 
-            numero:campoNumero.value,
+    numero: campoNumero.value,
 
-            bairro:campoBairro.value,
+    complemento: campoComplemento ? campoComplemento.value : "",
 
-            cidade:campoCidade.value,
+    bairro: campoBairro.value,
 
-            estado:campoEstado.value
+    cidade: campoCidade.value,
 
-        },
+    estado: campoEstado.value
 
-        itens:[...carrinho],
+},
+
+        itens: Storage.clonar(carrinho),
 
         subtotal,
 
@@ -441,41 +444,37 @@ function validarCheckout(){
 
     }
 
-    if(
+   if(!campoRua || campoRua.value.trim()===""){
 
-        campoRua.value.trim()===""
+    alert("Endereço não encontrado.");
 
-    ){
+    return false;
 
-        alert(
+}
 
-            "Informe o endereço de entrega."
+if(!campoNumero || campoNumero.value.trim()===""){
 
-        );
+    alert("Número do endereço não encontrado.");
 
-        campoRua.focus();
+    return false;
 
-        return false;
+}
 
-    }
+if(!campoCidade || campoCidade.value.trim()===""){
 
-    if(
+    alert("Cidade não encontrada.");
 
-        campoNumero.value.trim()===""
+    return false;
 
-    ){
+}
 
-        alert(
+if(!campoEstado || campoEstado.value.trim()===""){
 
-            "Informe o número."
+    alert("Estado não encontrado.");
 
-        );
+    return false;
 
-        campoNumero.focus();
-
-        return false;
-
-    }
+}
 
     return true;
 
@@ -507,55 +506,62 @@ function finalizarPedido(){
 
     );
 
-    Storage.salvarCarrinho([]);
+Storage.salvarCarrinho([]);
+
+atualizarCheckout();
 
     setTimeout(()=>{
 
-        esconderLoading();
+    esconderLoading();
 
-        mostrarToast(
+    mostrarToast(
 
-            "Pedido realizado com sucesso! 🍔"
+        "Pedido realizado com sucesso! 🍔"
 
-        );
+    );
 
-        setTimeout(()=>{
+    setTimeout(()=>{
 
-            window.location.href=
+        window.location.href=
 
-            "cliente.html";
+        "pedido-sucesso.html?id=" + pedido.id;
 
-        },1500);
+    },1500);
 
-    },1200);
+},1200);
 
 }
 
 /*==================================================
 SALVAR ENDEREÇO
 ==================================================*/
-
 function salvarEnderecoCliente(){
 
-    Storage.atualizarCliente(
+    const clienteAtualizado = Storage.atualizarCliente(
 
         cliente.id,
 
         {
 
+            nome: campoNome.value,
+
+            telefone: campoTelefone.value,
+
             endereco:{
 
-                cep:campoCep.value,
+                cep: campoCep.value,
 
-                rua:campoRua.value,
+                rua: campoRua.value,
 
-                numero:campoNumero.value,
+                numero: campoNumero.value,
 
-                bairro:campoBairro.value,
+                complemento: campoComplemento ? campoComplemento.value : "",
 
-                cidade:campoCidade.value,
+                bairro: campoBairro.value,
 
-                estado:campoEstado.value
+                cidade: campoCidade.value,
+
+                estado: campoEstado.value
 
             }
 
@@ -563,13 +569,13 @@ function salvarEnderecoCliente(){
 
     );
 
-    cliente = Storage.getCliente(
+    if(clienteAtualizado){
 
-        cliente.id
+        cliente = clienteAtualizado;
 
-    );
+        Storage.login(clienteAtualizado);
 
-    Storage.login(cliente);
+    }
 
 }
 
