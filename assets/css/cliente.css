@@ -1,1 +1,1697 @@
-.
+/*==================================================
+ EL PRADO OS
+ CLIENTE.CSS
+ Área do Cliente
+ Release 7.2R.1
+====================================================*/
+
+/*=========================================
+=            VARIÁVEIS GLOBAIS            =
+=========================================*/
+
+:root{
+
+    --cliente-primary:#d62828;
+    --cliente-primary-hover:#b71c1c;
+
+    --cliente-secondary:#1f2937;
+
+    --cliente-bg:#f5f5f5;
+
+    --cliente-card:#ffffff;
+
+    --cliente-border:#e5e7eb;
+
+    --cliente-text:#1f2937;
+
+    --cliente-text-light:#6b7280;
+
+    --cliente-success:#16a34a;
+
+    --cliente-warning:#f59e0b;
+
+    --cliente-danger:#dc2626;
+
+    --cliente-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+
+    --cliente-radius:18px;
+
+    --cliente-transition:.30s;
+}
+
+/*=========================================
+=              PÁGINA                     =
+=========================================*/
+
+.cliente-page{
+
+    width:100%;
+
+    min-height:100vh;
+
+    background:var(--cliente-bg);
+
+    padding:50px 20px;
+
+}
+
+/*=========================================
+=            CONTAINER                    =
+=========================================*/
+
+.cliente-container{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+}
+
+/*=========================================
+=             CARD PRINCIPAL              =
+=========================================*/
+
+.cliente-card{
+
+    background:var(--cliente-card);
+
+    border-radius:var(--cliente-radius);
+
+    box-shadow:var(--cliente-shadow);
+
+    padding:50px;
+
+    overflow:hidden;
+
+}
+
+/*=========================================
+=               LOGO                      =
+=========================================*/
+
+.cliente-logo{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-bottom:25px;
+
+}
+
+.cliente-logo img{
+
+    width:140px;
+
+    height:auto;
+
+}
+
+/*=========================================
+=               TÍTULOS                   =
+=========================================*/
+
+.cliente-card h1{
+
+    text-align:center;
+
+    font-size:2.1rem;
+
+    color:var(--cliente-text);
+
+    margin-bottom:15px;
+
+    font-weight:700;
+
+}
+
+.cliente-card h2{
+
+    color:var(--cliente-text);
+
+    margin-bottom:15px;
+
+    font-size:1.6rem;
+
+}
+
+.cliente-subtitulo{
+
+    text-align:center;
+
+    color:var(--cliente-text-light);
+
+    max-width:650px;
+
+    margin:0 auto 35px;
+
+    line-height:1.7;
+
+}
+
+/*=========================================
+=              FORMULÁRIOS                =
+=========================================*/
+
+.cliente-form,
+#formCadastro{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+/*=========================================
+=              FORM GROUP                 =
+=========================================*/
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.form-group label{
+
+    font-weight:600;
+
+    color:var(--cliente-text);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.form-group label i{
+
+    color:var(--cliente-primary);
+
+}
+
+/*=========================================
+=                INPUTS                   =
+=========================================*/
+
+.form-group input{
+
+    width:100%;
+
+    padding:14px 16px;
+
+    border:2px solid var(--cliente-border);
+
+    border-radius:12px;
+
+    font-size:15px;
+
+    transition:var(--cliente-transition);
+
+    outline:none;
+
+    background:#fff;
+
+}
+
+.form-group input:focus{
+
+    border-color:var(--cliente-primary);
+
+    box-shadow:
+
+    0 0 0 4px rgba(214,40,40,.12);
+
+}
+
+/*=========================================
+=          LEMBRAR SENHA                  =
+=========================================*/
+
+.lembrar-senha{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    margin-top:5px;
+
+    margin-bottom:10px;
+
+    flex-wrap:wrap;
+
+}
+
+.lembrar-senha label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:.95rem;
+
+    color:var(--cliente-text-light);
+
+}
+
+.lembrar-senha a{
+
+    color:var(--cliente-primary);
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.lembrar-senha a:hover{
+
+    text-decoration:underline;
+
+}
+
+/*=========================================
+=             DIVISOR                     =
+=========================================*/
+
+.divisor{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin:35px 0;
+
+}
+
+.divisor::before,
+.divisor::after{
+
+    content:"";
+
+    flex:1;
+
+    height:1px;
+
+    background:var(--cliente-border);
+
+}
+
+.divisor span{
+
+    color:var(--cliente-text-light);
+
+    font-size:.9rem;
+
+}
+/*=========================================
+=               BOTÕES                    =
+=========================================*/
+
+.btn-login,
+.btn-cadastro,
+#formCadastro .btn-primary,
+#formCadastro .btn-secondary{
+
+    width:100%;
+
+    padding:15px 20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    transition:var(--cliente-transition);
+
+}
+
+.btn-login,
+#formCadastro .btn-primary{
+
+    background:var(--cliente-primary);
+
+    color:#fff;
+
+}
+
+.btn-login:hover,
+#formCadastro .btn-primary:hover{
+
+    background:var(--cliente-primary-hover);
+
+    transform:translateY(-2px);
+
+}
+
+.btn-cadastro,
+#formCadastro .btn-secondary{
+
+    background:#fff;
+
+    color:var(--cliente-primary);
+
+    border:2px solid var(--cliente-primary);
+
+    margin-top:12px;
+
+}
+
+.btn-cadastro:hover,
+#formCadastro .btn-secondary:hover{
+
+    background:var(--cliente-primary);
+
+    color:#fff;
+
+}
+
+/*=========================================
+=         INFORMAÇÕES CLIENTE             =
+=========================================*/
+
+.cliente-info{
+
+    margin-top:30px;
+
+    padding:18px;
+
+    background:#fff8e6;
+
+    border-left:5px solid var(--cliente-warning);
+
+    border-radius:10px;
+
+}
+
+.cliente-info p{
+
+    color:#8a5b00;
+
+    line-height:1.6;
+
+    font-size:.95rem;
+
+}
+
+/*=========================================
+=          CADASTRO CLIENTE               =
+=========================================*/
+
+.cadastro-container{
+
+    margin-top:45px;
+
+    border-top:1px solid var(--cliente-border);
+
+    padding-top:45px;
+
+}
+
+.cadastro-container h2{
+
+    text-align:center;
+
+    margin-bottom:12px;
+
+}
+
+.cadastro-container p{
+
+    text-align:center;
+
+    color:var(--cliente-text-light);
+
+    margin-bottom:35px;
+
+}
+
+/*=========================================
+=           PAINEL CLIENTE                =
+=========================================*/
+
+.painel-cliente{
+
+    margin-top:40px;
+
+    animation:fadePainel .4s ease;
+
+}
+
+/*=========================================
+=           HEADER PAINEL                 =
+=========================================*/
+
+.painel-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+    margin-bottom:35px;
+
+    padding:25px;
+
+    background:#fafafa;
+
+    border-radius:16px;
+
+    border:1px solid var(--cliente-border);
+
+}
+
+.painel-avatar{
+
+    width:80px;
+
+    height:80px;
+
+    border-radius:50%;
+
+    background:var(--cliente-primary);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#fff;
+
+    font-size:42px;
+
+    flex-shrink:0;
+
+}
+
+.painel-header h2{
+
+    margin-bottom:8px;
+
+}
+
+.painel-header p{
+
+    color:var(--cliente-text-light);
+
+}
+
+/*=========================================
+=          BOAS VINDAS                    =
+=========================================*/
+
+.boas-vindas{
+
+    background:#fff;
+
+    border:1px solid var(--cliente-border);
+
+    border-radius:16px;
+
+    padding:30px;
+
+    margin-bottom:35px;
+
+    text-align:center;
+
+    box-shadow:var(--cliente-shadow);
+
+}
+
+.boas-vindas h2{
+
+    margin-bottom:12px;
+
+}
+
+.boas-vindas p{
+
+    color:var(--cliente-text-light);
+
+}
+
+/*=========================================
+=          GRID DO PAINEL                 =
+=========================================*/
+
+.painel-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(auto-fit,minmax(240px,1fr));
+
+    gap:25px;
+
+}
+
+/*=========================================
+=          CARD DO PAINEL                 =
+=========================================*/
+
+.painel-card{
+
+    background:#fff;
+
+    border:1px solid var(--cliente-border);
+
+    border-radius:18px;
+
+    padding:35px 25px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:var(--cliente-transition);
+
+    box-shadow:var(--cliente-shadow);
+
+}
+
+.painel-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:var(--cliente-primary);
+
+}
+
+.painel-card i{
+
+    font-size:42px;
+
+    color:var(--cliente-primary);
+
+    margin-bottom:18px;
+
+}
+
+.painel-card h3{
+
+    margin-bottom:12px;
+
+    color:var(--cliente-text);
+
+}
+
+.painel-card p{
+
+    color:var(--cliente-text-light);
+
+    line-height:1.6;
+
+}
+/*=========================================
+=      CONTEÚDO DO PAINEL                 =
+=========================================*/
+
+.conteudo-painel{
+
+    margin-top:35px;
+
+}
+
+.conteudo-painel section{
+
+    background:#fff;
+
+    border:1px solid var(--cliente-border);
+
+    border-radius:16px;
+
+    padding:30px;
+
+    margin-bottom:25px;
+
+    box-shadow:var(--cliente-shadow);
+
+}
+
+.conteudo-painel h3{
+
+    font-size:1.3rem;
+
+    color:var(--cliente-text);
+
+    margin-bottom:20px;
+
+}
+
+.conteudo-painel p{
+
+    color:var(--cliente-text-light);
+
+    line-height:1.7;
+
+}
+
+/*=========================================
+=          PERFIL                         =
+=========================================*/
+
+.perfil-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(auto-fit,minmax(260px,1fr));
+
+    gap:20px;
+
+}
+
+.perfil-item{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.perfil-item strong{
+
+    color:var(--cliente-text);
+
+}
+
+.perfil-item span{
+
+    color:var(--cliente-text-light);
+
+}
+
+/*=========================================
+=         ENDEREÇOS                       =
+=========================================*/
+
+.endereco-card{
+
+    border:1px solid var(--cliente-border);
+
+    border-radius:14px;
+
+    padding:20px;
+
+    margin-bottom:18px;
+
+    transition:var(--cliente-transition);
+
+}
+
+.endereco-card:hover{
+
+    border-color:var(--cliente-primary);
+
+}
+
+.endereco-card h4{
+
+    margin-bottom:10px;
+
+    color:var(--cliente-text);
+
+}
+
+.endereco-card p{
+
+    color:var(--cliente-text-light);
+
+    margin-bottom:6px;
+
+}
+
+/*=========================================
+=         PEDIDOS                         =
+=========================================*/
+
+.pedido-card{
+
+    border:1px solid var(--cliente-border);
+
+    border-radius:16px;
+
+    padding:25px;
+
+    margin-bottom:20px;
+
+    transition:var(--cliente-transition);
+
+}
+
+.pedido-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:var(--cliente-shadow);
+
+}
+
+.pedido-topo{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin-bottom:15px;
+
+}
+
+.pedido-numero{
+
+    font-weight:700;
+
+    color:var(--cliente-text);
+
+}
+
+.pedido-total{
+
+    font-size:1.1rem;
+
+    color:var(--cliente-primary);
+
+    font-weight:700;
+
+}
+
+/*=========================================
+=          STATUS DOS PEDIDOS             =
+=========================================*/
+
+.status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+}
+
+.status-preparo{
+
+    background:#fff4db;
+
+    color:#c57d00;
+
+}
+
+.status-entrega{
+
+    background:#dff7ea;
+
+    color:#14804a;
+
+}
+
+.status-finalizado{
+
+    background:#e6f0ff;
+
+    color:#1d4ed8;
+
+}
+
+.status-cancelado{
+
+    background:#fde8e8;
+
+    color:#dc2626;
+
+}
+
+/*=========================================
+=         FAVORITOS                       =
+=========================================*/
+
+.favoritos-grid{
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+
+}
+
+.favorito-card{
+
+    border:1px solid var(--cliente-border);
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    transition:var(--cliente-transition);
+
+}
+
+.favorito-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.favorito-card img{
+
+    width:100%;
+
+    height:170px;
+
+    object-fit:cover;
+
+}
+
+.favorito-info{
+
+    padding:18px;
+
+}
+
+.favorito-info h4{
+
+    margin-bottom:10px;
+
+}
+
+.favorito-info span{
+
+    color:var(--cliente-primary);
+
+    font-weight:700;
+
+}
+
+/*=========================================
+=       CONFIGURAÇÕES                     =
+=========================================*/
+
+.config-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.config-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:16px 20px;
+
+    border:1px solid var(--cliente-border);
+
+    border-radius:12px;
+
+}
+
+.config-item span{
+
+    color:var(--cliente-text);
+
+}
+/*=========================================
+=            TABELAS                      =
+=========================================*/
+
+.tabela-cliente{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:20px;
+
+    background:#fff;
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+    box-shadow:var(--cliente-shadow);
+
+}
+
+.tabela-cliente thead{
+
+    background:var(--cliente-primary);
+
+    color:#fff;
+
+}
+
+.tabela-cliente th{
+
+    padding:18px;
+
+    text-align:left;
+
+    font-size:.95rem;
+
+}
+
+.tabela-cliente td{
+
+    padding:16px 18px;
+
+    border-bottom:1px solid var(--cliente-border);
+
+    color:var(--cliente-text-light);
+
+}
+
+.tabela-cliente tbody tr:hover{
+
+    background:#fafafa;
+
+}
+
+/*=========================================
+=         ESTADO VAZIO                    =
+=========================================*/
+
+.estado-vazio{
+
+    text-align:center;
+
+    padding:60px 20px;
+
+}
+
+.estado-vazio i{
+
+    font-size:70px;
+
+    color:#d1d5db;
+
+    margin-bottom:20px;
+
+}
+
+.estado-vazio h3{
+
+    color:var(--cliente-text);
+
+    margin-bottom:10px;
+
+}
+
+.estado-vazio p{
+
+    color:var(--cliente-text-light);
+
+}
+
+/*=========================================
+=       ALERTAS E MENSAGENS               =
+=========================================*/
+
+.alerta{
+
+    padding:16px 20px;
+
+    border-radius:12px;
+
+    margin-bottom:20px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    font-weight:500;
+
+}
+
+.alerta i{
+
+    font-size:20px;
+
+}
+
+.alerta-sucesso{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    border-left:5px solid #22c55e;
+
+}
+
+.alerta-erro{
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+    border-left:5px solid #ef4444;
+
+}
+
+.alerta-aviso{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+    border-left:5px solid #f59e0b;
+
+}
+
+.alerta-info{
+
+    background:#dbeafe;
+
+    color:#1e40af;
+
+    border-left:5px solid #3b82f6;
+
+}
+
+/*=========================================
+=           BOTÃO SAIR                    =
+=========================================*/
+
+.painel-card.sair{
+
+    border:2px solid #ef4444;
+
+}
+
+.painel-card.sair i{
+
+    color:#ef4444;
+
+}
+
+.painel-card.sair:hover{
+
+    background:#ef4444;
+
+    border-color:#ef4444;
+
+    color:#fff;
+
+}
+
+.painel-card.sair:hover h3,
+
+.painel-card.sair:hover p,
+
+.painel-card.sair:hover i{
+
+    color:#fff;
+
+}
+
+/*=========================================
+=            ANIMAÇÕES                    =
+=========================================*/
+
+@keyframes fadePainel{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+@keyframes aparecer{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.95);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+}
+
+.painel-card{
+
+    animation:aparecer .35s ease;
+
+}
+
+/*=========================================
+=            RESPONSIVIDADE               =
+=========================================*/
+
+@media(max-width:992px){
+
+    .cliente-card{
+
+        padding:35px;
+
+    }
+
+    .painel-grid{
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .cliente-page{
+
+        padding:25px 15px;
+
+    }
+
+    .cliente-card{
+
+        padding:25px;
+
+    }
+
+    .painel-header{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+    .painel-avatar{
+
+        width:70px;
+
+        height:70px;
+
+        font-size:38px;
+
+    }
+
+    .painel-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .pedido-topo{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .config-item{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:12px;
+
+    }
+
+    .lembrar-senha{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .cliente-card h1{
+
+        font-size:1.8rem;
+
+    }
+
+    .cliente-card{
+
+        padding:20px;
+
+    }
+
+    .btn-login,
+    .btn-cadastro,
+    #formCadastro .btn-primary,
+    #formCadastro .btn-secondary{
+
+        font-size:15px;
+
+        padding:14px;
+
+    }
+
+    .form-group input{
+
+        padding:12px;
+
+    }
+
+    .tabela-cliente{
+
+        display:block;
+
+        overflow-x:auto;
+
+        white-space:nowrap;
+
+    }
+
+}
+/*=========================================
+=             UTILITÁRIOS                 =
+=========================================*/
+
+.hidden{
+
+    display:none !important;
+
+}
+
+.flex{
+
+    display:flex !important;
+
+}
+
+.block{
+
+    display:block !important;
+
+}
+
+.center{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.text-center{
+
+    text-align:center;
+
+}
+
+.mt-10{
+
+    margin-top:10px;
+
+}
+
+.mt-20{
+
+    margin-top:20px;
+
+}
+
+.mt-30{
+
+    margin-top:30px;
+
+}
+
+.mb-10{
+
+    margin-bottom:10px;
+
+}
+
+.mb-20{
+
+    margin-bottom:20px;
+
+}
+
+.mb-30{
+
+    margin-bottom:30px;
+
+}
+
+/*=========================================
+=             LOADING                     =
+=========================================*/
+
+.loading{
+
+    width:100%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:40px 20px;
+
+    gap:20px;
+
+}
+
+.loading-spinner{
+
+    width:50px;
+
+    height:50px;
+
+    border:5px solid #ececec;
+
+    border-top:5px solid var(--cliente-primary);
+
+    border-radius:50%;
+
+    animation:girar .8s linear infinite;
+
+}
+
+@keyframes girar{
+
+    0%{
+
+        transform:rotate(0deg);
+
+    }
+
+    100%{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/*=========================================
+=          BADGES                         =
+=========================================*/
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:6px 12px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+.badge-success{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+}
+
+.badge-warning{
+
+    background:#fef3c7;
+
+    color:#b45309;
+
+}
+
+.badge-danger{
+
+    background:#fee2e2;
+
+    color:#b91c1c;
+
+}
+
+.badge-info{
+
+    background:#dbeafe;
+
+    color:#1d4ed8;
+
+}
+
+/*=========================================
+=           BOTÕES AUXILIARES             =
+=========================================*/
+
+.btn-small{
+
+    padding:10px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.30s;
+
+}
+
+.btn-small:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.btn-success{
+
+    background:#16a34a;
+
+    color:#fff;
+
+}
+
+.btn-warning{
+
+    background:#f59e0b;
+
+    color:#fff;
+
+}
+
+.btn-danger{
+
+    background:#dc2626;
+
+    color:#fff;
+
+}
+
+.btn-info{
+
+    background:#2563eb;
+
+    color:#fff;
+
+}
+
+/*=========================================
+=         SCROLL PERSONALIZADO            =
+=========================================*/
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+    height:8px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#ececec;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:var(--cliente-primary);
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:var(--cliente-primary-hover);
+
+}
+
+/*=========================================
+=        ESTADOS DOS COMPONENTES          =
+=========================================*/
+
+.painel-card.active{
+
+    border:2px solid var(--cliente-primary);
+
+    background:#fff5f5;
+
+}
+
+.painel-card.disabled{
+
+    opacity:.55;
+
+    pointer-events:none;
+
+}
+
+.form-group input:disabled{
+
+    background:#f3f4f6;
+
+    cursor:not-allowed;
+
+}
+
+button:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}
+
+/*=========================================
+=           TRANSIÇÕES GERAIS             =
+=========================================*/
+
+*{
+
+    transition:
+    background .25s,
+    color .25s,
+    border-color .25s,
+    box-shadow .25s;
+
+}
+
+/*=========================================
+=         PREPARAÇÃO WHITE LABEL          =
+=========================================*/
+
+/*
+As variáveis de cores serão substituídas
+na versão 2.0 pelas configurações do
+Prado Control.
+
+Nenhum componente utiliza cores fixas
+como identidade visual principal.
+
+Toda personalização futura ocorrerá
+alterando apenas as variáveis CSS.
+
+Release 7.2R.1
+Arquitetura preparada para White Label.
+*/
+
+/*=========================================
+=             FIM DO ARQUIVO              =
+=========================================*/
