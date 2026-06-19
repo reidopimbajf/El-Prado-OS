@@ -109,7 +109,7 @@ function criarCard(pedido){
 
     return `
 
-    <div class="card-cozinha">
+<div class="card-cozinha ${classePrioridade(pedido.data)}">
 
         <div class="card-topo">
 
@@ -119,11 +119,21 @@ function criarCard(pedido){
 
             </span>
 
-            <span class="status">
+          <div>
 
-                ${pedido.status}
+<span class="status">
 
-            </span>
+${pedido.status}
+
+</span>
+
+<div class="cronometro">
+
+⏱ ${tempoDecorrido(pedido.data)}
+
+</div>
+
+</div>
 
         </div>
 
@@ -333,6 +343,65 @@ window.finalizarPreparo = function(id){
     }
 
 };
+/*==================================================
+PRIORIDADE
+==================================================*/
+
+function classePrioridade(data){
+
+    const minutos =
+
+        Math.floor(
+
+            (new Date() - new Date(data))
+
+            /60000
+
+        );
+
+    if(minutos < 10){
+
+        return "prioridade-verde";
+
+    }
+
+    if(minutos < 20){
+
+        return "prioridade-amarela";
+
+    }
+
+    return "prioridade-vermelha";
+
+}
+
+/*==================================================
+CRONÔMETRO
+==================================================*/
+
+function tempoDecorrido(data){
+
+    const segundos =
+
+        Math.floor(
+
+            (new Date()-new Date(data))
+
+            /1000
+
+        );
+
+    const minutos =
+
+        Math.floor(segundos/60);
+
+    const resto =
+
+        segundos % 60;
+
+    return `${String(minutos).padStart(2,"0")}:${String(resto).padStart(2,"0")}`;
+
+}
 /*==================================================
 AUTO UPDATE
 ==================================================*/
