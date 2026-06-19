@@ -24,13 +24,63 @@ const nomeCliente = document.getElementById("nomeCliente");
 // STORAGE
 // ==========================
 
-let clientes =
-JSON.parse(localStorage.getItem("clientes")) || [];
+function carregarClientes(){
 
-let clienteLogado =
-JSON.parse(localStorage.getItem("clienteLogado")) || null;
+    return JSON.parse(
 
+        localStorage.getItem("clientes")
 
+    ) || [];
+
+}
+
+function salvarClientes(clientes){
+
+    localStorage.setItem(
+
+        "clientes",
+
+        JSON.stringify(clientes)
+
+    );
+
+}
+
+function carregarSessao(){
+
+    return JSON.parse(
+
+        localStorage.getItem("clienteLogado")
+
+    ) || null;
+
+}
+
+function salvarSessao(cliente){
+
+    localStorage.setItem(
+
+        "clienteLogado",
+
+        JSON.stringify(cliente)
+
+    );
+
+}
+
+function limparSessao(){
+
+    localStorage.removeItem(
+
+        "clienteLogado"
+
+    );
+
+}
+
+let clientes = carregarClientes();
+
+let clienteLogado = carregarSessao();
 // ==========================
 // ABRIR CADASTRO
 // ==========================
@@ -103,13 +153,7 @@ return;
 
 clientes.push(cliente);
 
-localStorage.setItem(
-
-"clientes",
-
-JSON.stringify(clientes)
-
-);
+salvarClientes(clientes);
 
 alert("Cadastro realizado com sucesso!");
 
@@ -158,15 +202,9 @@ return;
 
 }
 
-clienteLogado=cliente;
+clienteLogado = cliente;
 
-localStorage.setItem(
-
-"clienteLogado",
-
-JSON.stringify(cliente)
-
-);
+salvarSessao(cliente);
 
 mostrarPainel();
 
@@ -300,7 +338,7 @@ if (btnSair) {
 
     btnSair.addEventListener("click", () => {
 
-        localStorage.removeItem("clienteLogado");
+        limparSessao();
 
         window.location.reload();
 
