@@ -1,0 +1,197 @@
+/*==================================================
+PEDIDO SUCESSO
+Sprint 8.3
+==================================================*/
+
+:root{
+
+    --primary:#d4af37;
+    --secondary:#111111;
+    --background:#f7f7f7;
+    --card:#ffffff;
+    --border:#e5e5e5;
+    --success:#2e7d32;
+
+}
+
+.pedido-page{
+
+    background:var(--background);
+
+    min-height:100vh;
+
+    padding:60px 20px;
+
+}
+
+.pedido-container{
+
+    max-width:900px;
+
+    margin:auto;
+
+}
+
+.pedido-card{
+
+    background:var(--card);
+
+    border-radius:20px;
+
+    padding:50px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+    text-align:center;
+
+}
+
+.pedido-icon{
+
+    width:90px;
+
+    height:90px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    background:#e8f5e9;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.pedido-icon i{
+
+    font-size:48px;
+
+    color:var(--success);
+
+}
+
+.pedido-card h1{
+
+    color:var(--secondary);
+
+    margin-bottom:15px;
+
+    font-size:2.2rem;
+
+}
+
+.pedido-card p{
+
+    color:#666;
+
+    line-height:1.7;
+
+    margin-bottom:35px;
+
+}
+
+#pedidoResumo{
+
+    margin:35px 0;
+
+    text-align:left;
+
+}
+
+.resumo-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:14px 0;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.resumo-item strong{
+
+    color:var(--secondary);
+
+}
+
+.pedido-acoes{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+    margin-top:40px;
+
+}
+
+.pedido-acoes button{
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.btn-primary{
+
+    background:var(--primary);
+
+    color:#111;
+
+}
+
+.btn-primary:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.btn-secondary{
+
+    background:#111;
+
+    color:#fff;
+
+}
+
+.btn-secondary:hover{
+
+    background:#333;
+
+}
+
+@media(max-width:768px){
+
+    .pedido-card{
+
+        padding:30px;
+
+    }
+
+    .pedido-acoes{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
