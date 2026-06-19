@@ -730,25 +730,27 @@ atualizarContadores();
 
 renderPedidos();
 
-/*==================================================
-MONITOR
-==================================================*/
+if(
 
-window.addEventListener(
+    confirm(
 
-    "storage",
+        "Deseja avisar o cliente pelo WhatsApp?"
 
-    ()=>{
+    )
 
-    carregarPedidos();
+){
 
-    atualizarContadores();
+    enviarWhatsapp(
 
-    renderPedidos();
+        pedido.id
+
+    );
 
 }
 
-);
+};
+
+
 /*==================================================
 MODAL
 ==================================================*/
@@ -944,6 +946,25 @@ function iniciarMonitor(){
 
 }
 /*==================================================
+MONITOR
+==================================================*/
+
+window.addEventListener(
+
+    "storage",
+
+    ()=>{
+
+    carregarPedidos();
+
+    atualizarContadores();
+
+    renderPedidos();
+
+}
+
+);
+/*==================================================
 NOTIFICAÇÃO
 ==================================================*/
 
@@ -975,12 +996,15 @@ window.abrirComprovante=function(id){
 /*==================================================
 WHATSAPP
 ==================================================*/
+/*==================================================
+WHATSAPP
+==================================================*/
 
-window.enviarWhatsapp=function(id){
+window.enviarWhatsapp = function(id){
 
     const pedido = pedidos.find(
 
-        p=>p.id===id
+        p => p.id === id
 
     );
 
@@ -990,30 +1014,47 @@ window.enviarWhatsapp=function(id){
 
     }
 
-    let mensagem =
+    const mensagem =
 
-`🍔 *El Prado Burguer*
+        Notificacoes.gerar(
 
-Pedido #${pedido.id}
+            pedido.status,
 
-Cliente:
-${pedido.clienteNome}
+            pedido
 
-Total:
-${moeda(pedido.total)}
+        );
 
-Status:
-${pedido.status}`;
+    const telefone =
+
+        (pedido.telefone || "")
+
+        .replace(/\D/g,"");
+
+    if(!telefone){
+
+        alert(
+
+            "Telefone do cliente não encontrado."
+
+        );
+
+        return;
+
+    }
 
     window.open(
 
         "https://wa.me/55"+
 
-        pedido.telefone+
+        telefone+
 
         "?text="+
 
-        encodeURIComponent(mensagem),
+        encodeURIComponent(
+
+            mensagem
+
+        ),
 
         "_blank"
 
