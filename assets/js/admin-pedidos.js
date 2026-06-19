@@ -396,16 +396,21 @@ function pesquisarPedidos(){
 /*==================================================
 AÇÕES
 ==================================================*/
-
 window.verPedido=function(id){
 
-    alert(
+    const pedido = pedidos.find(
 
-        "Visualização do pedido #" + id +
-
-        " será implementada na Parte 5."
+        p=>p.id===id
 
     );
+
+    if(!pedido){
+
+        return;
+
+    }
+
+    abrirModalPedido(pedido);
 
 }
 
@@ -518,7 +523,162 @@ window.addEventListener(
     }
 
 );
+/*==================================================
+MODAL
+==================================================*/
 
+function abrirModalPedido(pedido){
+
+    const modal =
+
+        document.getElementById(
+
+            "modalPedido"
+
+        );
+
+    const conteudo =
+
+        document.getElementById(
+
+            "conteudoPedido"
+
+        );
+
+    let itens="";
+
+    pedido.itens.forEach(item=>{
+
+        itens+=`
+
+        <li>
+
+            ${item.quantidade}x
+
+            ${item.nome}
+
+            -
+
+            ${moeda(item.preco*item.quantidade)}
+
+        </li>
+
+        `;
+
+    });
+
+    conteudo.innerHTML=`
+
+        <p>
+
+            <strong>Pedido:</strong>
+
+            #${pedido.id}
+
+        </p>
+
+        <p>
+
+            <strong>Cliente:</strong>
+
+            ${pedido.clienteNome}
+
+        </p>
+
+        <p>
+
+            <strong>Telefone:</strong>
+
+            ${pedido.telefone}
+
+        </p>
+
+        <p>
+
+            <strong>Pagamento:</strong>
+
+            ${pedido.pagamento}
+
+        </p>
+
+        <p>
+
+            <strong>Status:</strong>
+
+            ${pedido.status}
+
+        </p>
+
+        <p>
+
+            <strong>Total:</strong>
+
+            ${moeda(pedido.total)}
+
+        </p>
+
+        <hr>
+
+        <h3>
+
+            Itens
+
+        </h3>
+
+        <ul>
+
+            ${itens}
+
+        </ul>
+
+        <hr>
+
+        <p>
+
+            <strong>Observação</strong>
+
+        </p>
+
+        <p>
+
+            ${pedido.observacao || "Nenhuma"}
+
+        </p>
+
+    `;
+
+    modal.style.display="flex";
+
+}
+/*==================================================
+FECHAR MODAL
+==================================================*/
+
+document.addEventListener(
+
+    "click",
+
+    e=>{
+
+        if(
+
+            e.target.id==="fecharModal" ||
+
+            e.target.id==="btnFecharModal"
+
+        ){
+
+            document.getElementById(
+
+                "modalPedido"
+
+            ).style.display="none";
+
+        }
+
+    }
+
+);
 /*==================================================
 LOG
 ==================================================*/
