@@ -34,31 +34,34 @@ CLIENTE
 ==================================================*/
 
 const campoNome =
-document.getElementById("checkoutNome");
+document.getElementById("nome");
 
 const campoTelefone =
-document.getElementById("checkoutTelefone");
+document.getElementById("telefone");
 
 const campoEmail =
-document.getElementById("checkoutEmail");
+document.getElementById("email"); // quando adicionarmos este campo
 
 const campoCep =
-document.getElementById("checkoutCep");
+document.getElementById("cep");
 
 const campoRua =
-document.getElementById("checkoutRua");
+document.getElementById("endereco");
 
 const campoNumero =
-document.getElementById("checkoutNumero");
+document.getElementById("numero");
+
+const campoComplemento =
+document.getElementById("complemento");
 
 const campoBairro =
-document.getElementById("checkoutBairro");
+document.getElementById("bairro");
 
 const campoCidade =
-document.getElementById("checkoutCidade");
+document.getElementById("cidade");
 
 const campoEstado =
-document.getElementById("checkoutEstado");
+document.getElementById("estado"); // quando adicionarmos este campo
 
 /*==================================================
 ESTADO
