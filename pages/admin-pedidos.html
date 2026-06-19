@@ -160,21 +160,47 @@ Administrador
 
 <section class="pedidos-header">
 
+<div class="pesquisa-container">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
 <input
 
 type="text"
 
 id="pesquisaPedido"
 
-placeholder="Pesquisar por número, cliente ou telefone...">
+placeholder="Pesquisar pedido, cliente ou telefone...">
+
+<button
+
+id="btnAtualizar"
+
+class="btn-atualizar"
+
+type="button">
+
+<i class="fa-solid fa-rotate"></i>
+
+Atualizar
+
+</button>
+
+</div>
 
 <div class="filtros">
-
+    
 <button
 class="filtro active"
 data-status="Todos">
 
 Todos
+
+<span id="totalTodos">
+
+0
+
+</span>
 
 </button>
 
@@ -184,6 +210,12 @@ data-status="Recebido">
 
 Recebidos
 
+<span id="totalRecebidos">
+
+0
+
+</span>
+
 </button>
 
 <button
@@ -191,6 +223,12 @@ class="filtro"
 data-status="Em preparo">
 
 Em preparo
+
+<span id="totalPreparo">
+
+0
+
+</span>
 
 </button>
 
@@ -200,6 +238,12 @@ data-status="Saiu para entrega">
 
 Entrega
 
+<span id="totalEntrega">
+
+0
+
+</span>
+
 </button>
 
 <button
@@ -208,6 +252,12 @@ data-status="Finalizado">
 
 Finalizados
 
+<span id="totalFinalizados">
+
+0
+
+</span>
+
 </button>
 
 <button
@@ -215,6 +265,12 @@ class="filtro"
 data-status="Cancelado">
 
 Cancelados
+
+<span id="totalCancelados">
+
+0
+
+</span>
 
 </button>
 
