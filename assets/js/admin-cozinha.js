@@ -151,20 +151,219 @@ function criarCard(pedido){
 
         </div>
 
-        <button
+${pedido.status==="Recebido"
 
-            class="btn-cozinha"
+?`
 
-            onclick="iniciarPreparo(${pedido.id})">
+<button
 
-            👨🏻‍🍳
+class="btn-cozinha"
 
-            Iniciar preparo
+onclick="iniciarPreparo(${pedido.id})">
 
-        </button>
+👨🏻‍🍳 Iniciar preparo
+
+</button>
+
+`
+
+:`
+
+<button
+
+class="btn-pronto"
+
+onclick="finalizarPreparo(${pedido.id})">
+
+✅ Pedido pronto
+
+</button>
+
+`
+
+}
 
     </div>
 
     `;
 
-}
+}/*==================================================
+INICIAR PREPARO
+==================================================*/
+
+window.iniciarPreparo = function(id){
+
+    const pedido = pedidos.find(
+
+        p => p.id === id
+
+    );
+
+    if(!pedido){
+
+        return;
+
+    }
+
+    pedido.status = "Em preparo";
+
+    if(!pedido.timeline){
+
+        pedido.timeline = {
+
+            recebido:pedido.data,
+
+            preparo:null,
+
+            saiuEntrega:null,
+
+            finalizado:null,
+
+            cancelado:null
+
+        };
+
+    }
+
+    pedido.timeline.preparo =
+
+        Storage.dataAtual();
+
+    const todosPedidos =
+
+        Storage.getPedidos();
+
+    const indice =
+
+        todosPedidos.findIndex(
+
+            p => p.id === id
+
+        );
+
+    if(indice !== -1){
+
+        todosPedidos[indice] = pedido;
+
+        Storage.salvarPedidos(
+
+            todosPedidos
+
+        );
+
+    }
+
+    carregarPedidos();
+
+};
+/*==================================================
+PEDIDO PRONTO
+==================================================*/
+
+window.finalizarPreparo = function(id){
+
+    const pedido = pedidos.find(
+
+        p => p.id === id
+
+    );
+
+    if(!pedido){
+
+        return;
+
+    }
+
+    pedido.status =
+
+        "Saiu para entrega";
+
+    pedido.timeline =
+
+        pedido.timeline || {};
+
+    pedido.timeline.saiuEntrega =
+
+        Storage.dataAtual();
+
+    const lista =
+
+        Storage.getPedidos();
+
+    const indice =
+
+        lista.findIndex(
+
+            p => p.id === id
+
+        );
+
+    if(indice !== -1){
+
+        lista[indice] = pedido;
+
+        Storage.salvarPedidos(
+
+            lista
+
+        );
+
+    }
+
+    carregarPedidos();
+
+    if(
+
+        typeof Notificacoes !== "undefined"
+
+    ){
+
+        console.log(
+
+            Notificacoes.gerar(
+
+                pedido.status,
+
+                pedido
+
+            )
+
+        );
+
+    }
+
+};
+/*==================================================
+AUTO UPDATE
+==================================================*/
+
+window.addEventListener(
+
+    "storage",
+
+    ()=>{
+
+        carregarPedidos();
+
+if(
+
+    typeof Notificacoes !== "undefined"
+
+){
+
+    console.log(
+
+        Notificacoes.gerar(
+
+            pedido.status,
+
+            pedido
+
+        )
+
+    );
+
+
+    }
+
+);
