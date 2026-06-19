@@ -59,6 +59,8 @@ let pedidos = [];
 
 let filtroAtual = "Todos";
 
+let totalPedidosCache = 0;
+
 /*==================================================
 INICIALIZAÇÃO
 ==================================================*/
@@ -75,9 +77,13 @@ function iniciar(){
 
     carregarPedidos();
 
+    totalPedidosCache = pedidos.length;
+
     renderPedidos();
 
     registrarEventos();
+
+    iniciarMonitor();
 
 }
 
@@ -106,7 +112,15 @@ RENDERIZAÇÃO
 ==================================================*/
 
 function renderPedidos(){
+pedidos.sort(
 
+    (a,b)=>
+
+    new Date(b.data)-
+
+    new Date(a.data)
+
+);
     listaPedidos.innerHTML = "";
 
     if(pedidos.length===0){
@@ -873,6 +887,57 @@ document.addEventListener(
     }
 
 );
+
+/*==================================================
+MONITOR AUTOMÁTICO
+==================================================*/
+
+function iniciarMonitor(){
+
+    setInterval(()=>{
+
+        const lista =
+
+        Storage.getPedidos() || [];
+
+        if(
+
+            lista.length !==
+
+            totalPedidosCache
+
+        ){
+
+            pedidos = lista;
+
+            totalPedidosCache =
+
+            lista.length;
+
+            atualizarContadores();
+
+            renderPedidos();
+
+            mostrarNotificacao();
+
+        }
+
+    },3000);
+
+}
+/*==================================================
+NOTIFICAÇÃO
+==================================================*/
+
+function mostrarNotificacao(){
+
+    mostrarToast(
+
+        "Novo pedido recebido 🍔"
+
+    );
+
+}
 /*==================================================
 LOG
 ==================================================*/
