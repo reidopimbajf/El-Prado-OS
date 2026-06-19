@@ -104,31 +104,7 @@ function realizarLogin(e){
     "admin-dashboard.html";
 
 }
-/*==================================================
-PROTEÇÃO
-==================================================*/
 
-if(
-
-    window.location.pathname
-
-    .includes("admin-dashboard")
-
-){
-
- if(
-
-    !Storage.adminEstaLogado()
-
-){
-
-        window.location.href =
-
-        "admin.html";
-
-    }
-
-}
 /*==================================================
 LOGOUT
 ==================================================*/
