@@ -377,3 +377,112 @@ SEM PEDIDOS
     color:#666;
 
 }
+/*======================================
+MODAL
+======================================*/
+
+.modal-pedido{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+.modal-card{
+
+    width:90%;
+
+    max-width:700px;
+
+    background:white;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    animation:fadeModal .25s;
+
+}
+
+.modal-header{
+
+    background:#111;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 25px;
+
+}
+
+.modal-header button{
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+}
+
+#conteudoPedido{
+
+    padding:30px;
+
+    max-height:65vh;
+
+    overflow:auto;
+
+}
+
+.modal-footer{
+
+    padding:20px;
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    background:#fafafa;
+
+}
+
+@keyframes fadeModal{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.95);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+}
