@@ -235,33 +235,51 @@ function criarCard(pedido){
 
         </div>
 
-        <div class="acoes">
+      <div class="acoes">
 
-            <button
+    <button
 
-                class="btn-ver"
+        class="btn-ver"
 
-                onclick="verPedido(${pedido.id})">
+        onclick="verPedido(${pedido.id})">
 
-                <i class="fa-solid fa-eye"></i>
+        <i class="fa-solid fa-eye"></i>
 
-                Ver
+    </button>
 
-            </button>
+    <button
 
-            <button
+        class="btn-comprovante"
 
-                class="btn-status"
+        onclick="abrirComprovante(${pedido.id})">
 
-                onclick="alterarStatus(${pedido.id})">
+        <i class="fa-solid fa-file-lines"></i>
 
-                <i class="fa-solid fa-rotate"></i>
+    </button>
 
-                Status
+    <button
 
-            </button>
+        class="btn-whatsapp"
 
-        </div>
+        onclick="enviarWhatsapp(${pedido.id})">
+
+        <i class="fa-brands fa-whatsapp"></i>
+
+    </button>
+
+    <button
+
+        class="btn-status"
+
+        onclick="alterarStatus(${pedido.id})"
+
+        ${pedido.status==="Finalizado" ? "disabled" : ""}>
+
+        ${textoBotao(pedido.status)}
+
+    </button>
+
+</div>
 
     </div>
 
@@ -938,6 +956,70 @@ function mostrarNotificacao(){
     );
 
 }
+/*==================================================
+COMPROVANTE
+==================================================*/
+
+window.abrirComprovante=function(id){
+
+    window.open(
+
+        "pedido-sucesso.html?id="+id,
+
+        "_blank"
+
+    );
+
+};
+
+/*==================================================
+WHATSAPP
+==================================================*/
+
+window.enviarWhatsapp=function(id){
+
+    const pedido = pedidos.find(
+
+        p=>p.id===id
+
+    );
+
+    if(!pedido){
+
+        return;
+
+    }
+
+    let mensagem =
+
+`🍔 *El Prado Burguer*
+
+Pedido #${pedido.id}
+
+Cliente:
+${pedido.clienteNome}
+
+Total:
+${moeda(pedido.total)}
+
+Status:
+${pedido.status}`;
+
+    window.open(
+
+        "https://wa.me/55"+
+
+        pedido.telefone+
+
+        "?text="+
+
+        encodeURIComponent(mensagem),
+
+        "_blank"
+
+    );
+
+};
 /*==================================================
 LOG
 ==================================================*/
