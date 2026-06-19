@@ -1,216 +1,430 @@
 /*==================================================
  EL PRADO BURGUER
- CHECKOUT.JS
+ checkout.js
+ Sprint 8.2
+ Parte 1
 ==================================================*/
 
-document.addEventListener("DOMContentLoaded", iniciarCheckout);
+"use strict";
 
 /*==================================================
- INICIAR
+CACHE
 ==================================================*/
+
+const listaResumo =
+document.getElementById("listaResumo");
+
+const subtotalPedido =
+document.getElementById("subtotalPedido");
+
+const taxaEntrega =
+document.getElementById("taxaEntrega");
+
+const descontoPedido =
+document.getElementById("descontoPedido");
+
+const totalPedido =
+document.getElementById("totalPedido");
+
+const btnFinalizar =
+document.getElementById("btnFinalizar");
+
+/*==================================================
+CLIENTE
+==================================================*/
+
+const campoNome =
+document.getElementById("checkoutNome");
+
+const campoTelefone =
+document.getElementById("checkoutTelefone");
+
+const campoEmail =
+document.getElementById("checkoutEmail");
+
+const campoCep =
+document.getElementById("checkoutCep");
+
+const campoRua =
+document.getElementById("checkoutRua");
+
+const campoNumero =
+document.getElementById("checkoutNumero");
+
+const campoBairro =
+document.getElementById("checkoutBairro");
+
+const campoCidade =
+document.getElementById("checkoutCidade");
+
+const campoEstado =
+document.getElementById("checkoutEstado");
+
+/*==================================================
+ESTADO
+==================================================*/
+
+let cliente = null;
 
 let carrinho = [];
 
+let subtotal = 0;
+
+let entrega = 0;
+
+let desconto = 0;
+
+let total = 0;
+
+/*==================================================
+INICIALIZAÇÃO
+==================================================*/
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    iniciarCheckout
+
+);
+
 function iniciarCheckout(){
 
-    carrinho = obterCarrinho();
+    validarSessao();
 
-    carregarResumo();
+    carregarCliente();
 
-    configurarEventos();
+    carregarCarrinho();
 
-}
+    preencherCliente();
 
-/*==================================================
- EVENTOS
-==================================================*/
+    atualizarResumo();
 
-function configurarEventos(){
-
-    const cep = document.getElementById("cep");
-
-    if(cep){
-
-        cep.addEventListener("blur", buscarCEP);
-
-    }
-
-    const botao = document.getElementById("btnFinalizar");
-
-    if(botao){
-
-        botao.addEventListener("click", finalizarPedido);
-
-    }
+    registrarEventos();
 
 }
 
 /*==================================================
- RESUMO
+VALIDAÇÃO
 ==================================================*/
 
-function carregarResumo(){
+function validarSessao(){
 
-    const lista = document.getElementById("listaResumo");
+    if(
 
-    const subtotal = document.getElementById("subtotal");
+        !Storage.estaLogado()
 
-    const total = document.getElementById("totalPedido");
+    ){
 
-    if(!lista){
+        alert(
 
-        return;
-
-    }
-
-    lista.innerHTML = "";
-
-    let valorTotal = 0;
-
-    carrinho.forEach(item=>{
-
-        const totalItem = item.preco * item.quantidade;
-
-        valorTotal += totalItem;
-
-        lista.innerHTML += `
-
-<div class="item-resumo">
-
-<div>
-
-<h4>
-
-${item.nome}
-
-</h4>
-
-<p>
-
-${item.quantidade} x R$ ${item.preco.toFixed(2).replace(".",",")}
-
-</p>
-
-</div>
-
-<strong>
-
-R$ ${totalItem.toFixed(2).replace(".",",")}
-
-</strong>
-
-</div>
-
-`;
-
-    });
-
-    subtotal.textContent =
-    `R$ ${valorTotal.toFixed(2).replace(".",",")}`;
-
-    total.textContent =
-    `R$ ${valorTotal.toFixed(2).replace(".",",")}`;
-
-}
-/*==================================================
- VIA CEP
-==================================================*/
-
-async function buscarCEP(){
-
-    const cep = document
-        .getElementById("cep")
-        .value
-        .replace(/\D/g,"");
-
-    if(cep.length !== 8){
-
-        return;
-
-    }
-
-    try{
-
-        const resposta = await fetch(
-
-            `https://viacep.com.br/ws/${cep}/json/`
+            "Faça login para continuar."
 
         );
 
-        const endereco = await resposta.json();
+        window.location.href="cliente.html";
 
-        if(endereco.erro){
+        return;
 
-            alert("CEP não encontrado.");
+    }
 
-            return;
+    cliente = Storage.getUsuario();
 
-        }
+}
+/*==================================================
+CARREGAR CLIENTE
+==================================================*/
 
-        document.getElementById("endereco").value =
-            endereco.logradouro || "";
+function carregarCliente(){
 
-        document.getElementById("bairro").value =
-            endereco.bairro || "";
+    cliente = Storage.getUsuario();
 
-        document.getElementById("cidade").value =
-            endereco.localidade || "";
+    if(!cliente){
 
-    }catch(erro){
-
-        console.error(erro);
-
-        alert("Erro ao consultar o CEP.");
+        return;
 
     }
 
 }
 
 /*==================================================
- VALIDAÇÃO
+PREENCHER DADOS
 ==================================================*/
 
-function validarFormulario(){
+function preencherCliente(){
 
-    const obrigatorios = [
+    if(!cliente){
 
-        "nome",
-
-        "telefone",
-
-        "cep",
-
-        "endereco",
-
-        "numero",
-
-        "bairro",
-
-        "cidade"
-
-    ];
-
-    for(const campo of obrigatorios){
-
-        const elemento = document.getElementById(campo);
-
-        if(!elemento.value.trim()){
-
-            alert(
-
-                "Preencha o campo: " +
-
-                campo
-
-            );
-
-            elemento.focus();
-
-            return false;
-
-        }
+        return;
 
     }
+
+    campoNome.value = cliente.nome || "";
+
+    campoTelefone.value = cliente.telefone || "";
+
+    campoEmail.value = cliente.email || "";
+
+    const endereco = cliente.endereco || {};
+
+    campoCep.value = endereco.cep || "";
+
+    campoRua.value = endereco.rua || "";
+
+    campoNumero.value = endereco.numero || "";
+
+    campoBairro.value = endereco.bairro || "";
+
+    campoCidade.value = endereco.cidade || "";
+
+    campoEstado.value = endereco.estado || "";
+
+}
+
+/*==================================================
+CARREGAR CARRINHO
+==================================================*/
+
+function carregarCarrinho(){
+
+    carrinho = Storage.getCarrinho();
+
+    if(carrinho.length===0){
+
+        alert(
+
+            "Seu carrinho está vazio."
+
+        );
+
+        window.location.href="carrinho.html";
+
+        return;
+
+    }
+
+    renderResumo();
+
+}
+
+/*==================================================
+RESUMO DOS PRODUTOS
+==================================================*/
+
+function renderResumo(){
+
+    listaResumo.innerHTML="";
+
+    carrinho.forEach(item=>{
+
+        listaResumo.innerHTML += `
+
+        <div class="checkout-item">
+
+            <div>
+
+                <strong>
+
+                    ${item.nome}
+
+                </strong>
+
+                <p>
+
+                    ${item.quantidade} x
+
+                    ${moeda(item.preco)}
+
+                </p>
+
+            </div>
+
+            <strong>
+
+                ${moeda(
+
+                    item.preco *
+
+                    item.quantidade
+
+                )}
+
+            </strong>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+/*==================================================
+EVENTOS
+==================================================*/
+
+function registrarEventos(){
+
+    if(btnFinalizar){
+
+        btnFinalizar.addEventListener(
+
+            "click",
+
+            finalizarPedido
+
+        );
+
+    }
+
+}
+/*==================================================
+RESUMO FINANCEIRO
+==================================================*/
+
+function atualizarResumo(){
+
+    subtotal = carrinho.reduce(
+
+        (total,item)=>
+
+        total +
+
+        (
+
+            Number(item.preco) *
+
+            Number(item.quantidade)
+
+        ),
+
+        0
+
+    );
+
+    /*=========================================
+    TAXA DE ENTREGA
+    =========================================*/
+
+    entrega = subtotal >= 80
+
+        ? 0
+
+        : 8;
+
+    /*=========================================
+    DESCONTO
+    =========================================*/
+
+    desconto = 0;
+
+    /*=========================================
+    TOTAL
+    =========================================*/
+
+    total =
+
+        subtotal +
+
+        entrega -
+
+        desconto;
+
+    subtotalPedido.innerHTML =
+
+        moeda(subtotal);
+
+    taxaEntrega.innerHTML =
+
+        entrega === 0
+
+        ? "Grátis"
+
+        : moeda(entrega);
+
+    descontoPedido.innerHTML =
+
+        moeda(desconto);
+
+    totalPedido.innerHTML =
+
+        moeda(total);
+
+}
+
+/*==================================================
+CRIAR PEDIDO
+==================================================*/
+
+function montarPedido(){
+
+    return{
+
+        id:Storage.gerarId(),
+
+        clienteId:cliente.id,
+
+        clienteNome:cliente.nome,
+
+        telefone:cliente.telefone,
+
+        email:cliente.email,
+
+        endereco:{
+
+            cep:campoCep.value,
+
+            rua:campoRua.value,
+
+            numero:campoNumero.value,
+
+            bairro:campoBairro.value,
+
+            cidade:campoCidade.value,
+
+            estado:campoEstado.value
+
+        },
+
+        itens:[...carrinho],
+
+        subtotal,
+
+        entrega,
+
+        desconto,
+
+        total,
+
+        pagamento:
+
+        document.querySelector(
+
+            "input[name='pagamento']:checked"
+
+        ).value,
+
+        observacao:
+
+        document.getElementById(
+
+            "observacaoPedido"
+
+        ).value,
+
+        status:"Recebido",
+
+        data:Storage.dataAtual()
+
+    };
+
+}
+
+/*==================================================
+VALIDAÇÃO
+==================================================*/
+
+function validarCheckout(){
 
     if(carrinho.length===0){
 
@@ -224,113 +438,63 @@ function validarFormulario(){
 
     }
 
+    if(
+
+        campoRua.value.trim()===""
+
+    ){
+
+        alert(
+
+            "Informe o endereço de entrega."
+
+        );
+
+        campoRua.focus();
+
+        return false;
+
+    }
+
+    if(
+
+        campoNumero.value.trim()===""
+
+    ){
+
+        alert(
+
+            "Informe o número."
+
+        );
+
+        campoNumero.focus();
+
+        return false;
+
+    }
+
     return true;
 
-}
-
-/*==================================================
- DADOS DO PEDIDO
-==================================================*/
-
-function obterEntrega(){
-
-    return document.querySelector(
-
-        "input[name='entrega']:checked"
-
-    ).value;
-
-}
-
-function obterPagamento(){
-
-    return document.querySelector(
-
-        "input[name='pagamento']:checked"
-
-    ).value;
-
-}
-/*==================================================
- FINALIZAR PEDIDO
+}/*==================================================
+FINALIZAR PEDIDO
 ==================================================*/
 
 function finalizarPedido(){
 
-    if(!validarFormulario()){
+    if(!validarCheckout()){
+
         return;
+
     }
 
-    /*=========================================
-      DADOS DO CLIENTE
-    =========================================*/
+    mostrarLoading();
 
-    const cliente = Storage.salvarCliente({
+    salvarEnderecoCliente();
 
-        nome: document.getElementById("nome").value.trim(),
+    const pedido = montarPedido();
 
-        telefone: document.getElementById("telefone").value.trim(),
-
-        email: document.getElementById("email")?.value.trim() || "",
-
-        endereco:{
-
-            cep: document.getElementById("cep").value,
-
-            rua: document.getElementById("endereco").value,
-
-            numero: document.getElementById("numero").value,
-
-            complemento: document.getElementById("complemento").value,
-
-            bairro: document.getElementById("bairro").value,
-
-            cidade: document.getElementById("cidade").value,
-
-            estado: document.getElementById("estado")?.value || ""
-
-        }
-
-    });
-
-    /*=========================================
-      PEDIDO
-    =========================================*/
-
-    const pedido = {
-
-        id: Date.now(),
-
-        clienteId: cliente.id,
-
-data: new Date().toLocaleString("pt-BR"),
-
-dataISO: new Date().toISOString(),
-
-        cliente: cliente.nome,
-
-        telefone: cliente.telefone,
-
-        entrega: obterEntrega(),
-
-        pagamento: obterPagamento(),
-
-        status: "Recebido",
-
-        itens: carrinho,
-
-        total: calcularTotal(),
-
-        observacoes:
-            document.getElementById("observacoes").value
-
-    };
-
-const pedidos = Storage.getPedidos() || [];
-
-    pedidos.push(pedido);
-
-    Storage.salvarPedidos(pedidos);
+    Storage.criarPedido(pedido);
 
     Storage.atualizarEstatisticasCliente(
 
@@ -340,114 +504,290 @@ const pedidos = Storage.getPedidos() || [];
 
     );
 
-    enviarWhatsApp(pedido);
+    Storage.salvarCarrinho([]);
+
+    setTimeout(()=>{
+
+        esconderLoading();
+
+        mostrarToast(
+
+            "Pedido realizado com sucesso! 🍔"
+
+        );
+
+        setTimeout(()=>{
+
+            window.location.href=
+
+            "cliente.html";
+
+        },1500);
+
+    },1200);
 
 }
 
 /*==================================================
- TOTAL
+SALVAR ENDEREÇO
 ==================================================*/
 
-function calcularTotal(){
+function salvarEnderecoCliente(){
 
-    return carrinho.reduce(
+    Storage.atualizarCliente(
 
-        (total,item)=>
+        cliente.id,
 
-        total + (item.preco * item.quantidade),
+        {
 
-        0
+            endereco:{
+
+                cep:campoCep.value,
+
+                rua:campoRua.value,
+
+                numero:campoNumero.value,
+
+                bairro:campoBairro.value,
+
+                cidade:campoCidade.value,
+
+                estado:campoEstado.value
+
+            }
+
+        }
+
+    );
+
+    cliente = Storage.getCliente(
+
+        cliente.id
+
+    );
+
+    Storage.login(cliente);
+
+}
+
+/*==================================================
+LOADING
+==================================================*/
+
+function mostrarLoading(){
+
+    const modal =
+
+        document.getElementById(
+
+            "modalLoading"
+
+        );
+
+    if(modal){
+
+        modal.style.display="flex";
+
+    }
+
+}
+
+function esconderLoading(){
+
+    const modal =
+
+        document.getElementById(
+
+            "modalLoading"
+
+        );
+
+    if(modal){
+
+        modal.style.display="none";
+
+    }
+
+}
+
+/*==================================================
+TOAST
+==================================================*/
+
+function mostrarToast(texto){
+
+    const toast =
+
+        document.getElementById(
+
+            "toast"
+
+        );
+
+    if(!toast){
+
+        return;
+
+    }
+
+    toast.innerHTML = texto;
+
+    toast.classList.add(
+
+        "mostrar"
+
+    );
+
+    setTimeout(()=>{
+
+        toast.classList.remove(
+
+            "mostrar"
+
+        );
+
+    },3000);
+
+}
+/*==================================================
+ EL PRADO BURGUER
+ checkout.js
+ Sprint 8.2
+ Parte Final
+==================================================*/
+
+/*=========================================
+ATUALIZAR RESUMO
+=========================================*/
+
+function atualizarCheckout(){
+
+    carregarCarrinho();
+
+    atualizarResumo();
+
+}
+
+/*=========================================
+RECARREGAR DADOS DO CLIENTE
+=========================================*/
+
+function atualizarCliente(){
+
+    cliente = Storage.getUsuario();
+
+    preencherCliente();
+
+}
+
+/*=========================================
+VERIFICA CARRINHO
+=========================================*/
+
+function checkoutPronto(){
+
+    return (
+
+        cliente !== null &&
+
+        carrinho.length > 0
 
     );
 
 }
 
-/*==================================================
- WHATSAPP
-==================================================*/
+/*=========================================
+API PÚBLICA
+=========================================*/
 
-function enviarWhatsApp(pedido){
+window.checkout = {
 
-  const cliente = Storage.buscarClientePorId(
-    pedido.clienteId
-) || {};
+    atualizar(){
 
-    let mensagem =
+        atualizarCheckout();
 
-`🍔 *NOVO PEDIDO - EL PRADO BURGUER*
+    },
 
-👤 *Cliente:*
-${cliente.nome}
+    atualizarCliente(){
 
-📱 *Telefone:*
-${cliente.telefone}
+        atualizarCliente();
 
-📍 *Endereço:*
-${cliente.endereco?.rua || ""}
-, ${cliente.endereco?.numero || ""}
+    },
 
-${cliente.endereco?.complemento || ""}
+    total(){
 
-${cliente.endereco?.bairro || ""}
+        return total;
 
-${cliente.endereco?.cidade || ""}
+    },
 
-🚚 *Entrega:*
-${pedido.entrega}
+    subtotal(){
 
-💳 *Pagamento:*
-${pedido.pagamento}
+        return subtotal;
 
---------------------------------
+    },
 
-🍔 *ITENS*`;
+    itens(){
 
-    pedido.itens.forEach(item=>{
+        return carrinho.length;
 
-        mensagem +=
+    },
 
-`
+    cliente(){
 
-• ${item.quantidade}x ${item.nome}
+        return cliente;
 
-R$ ${(item.preco * item.quantidade)
-.toFixed(2)
-.replace(".",",")}`;
+    }
 
-    });
+};
 
-    mensagem +=
+/*=========================================
+MONITOR DE STORAGE
+=========================================*/
 
-`
+window.addEventListener(
 
---------------------------------
+    "storage",
 
-💰 *TOTAL*
+    ()=>{
 
-R$ ${pedido.total
-.toFixed(2)
-.replace(".",",")}
+        atualizarCheckout();
 
-📝 *Observações*
+        atualizarCliente();
 
-${pedido.observacoes || "Nenhuma"}
+    }
 
-Obrigado pela preferência ❤️`;
+);
 
-    const numero = "5511975342595";
+/*=========================================
+LOG
+=========================================*/
 
-    const url =
-`https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+Storage.log(
 
-    limparCarrinho();
-carrinho = [];
+    "Checkout inicializado."
 
-document.getElementById("formCheckout")?.reset();
+);
 
-    window.open(url,"_blank");
+console.table({
 
-    alert("Pedido enviado com sucesso!");
+    modulo:"Checkout",
 
-    window.location.href="../index.html";
+    versao:"8.2",
 
-}
+    cliente:
+
+        cliente
+
+        ? cliente.nome
+
+        : "Nenhum",
+
+    itens:carrinho.length,
+
+    subtotal,
+
+    entrega,
+
+    total
+
+});
