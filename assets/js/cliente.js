@@ -202,7 +202,138 @@ mostrarPainel();
 
 }
 
+// ==========================
+// PAINEL INTERATIVO
+// ==========================
 
+const conteudoPainel =
+document.getElementById("conteudoPainel");
+
+document.getElementById("btnPerfil").onclick = function(){
+
+conteudoPainel.innerHTML = `
+
+<h2>Meu Perfil</h2>
+
+<div class="painel-box">
+
+<p><strong>Nome:</strong> ${clienteLogado.nome}</p>
+
+<p><strong>E-mail:</strong> ${clienteLogado.email}</p>
+
+<p><strong>Telefone:</strong> ${clienteLogado.telefone}</p>
+
+<br>
+
+<button class="btn-primary">
+
+Salvar Alterações
+
+</button>
+
+</div>
+
+`;
+
+};
+
+document.getElementById("btnPedidos").onclick = function(){
+
+conteudoPainel.innerHTML = `
+
+<h2>Meus Pedidos</h2>
+
+<div class="painel-box">
+
+<p>
+
+Você ainda não realizou nenhum pedido.
+
+</p>
+
+</div>
+
+`;
+
+};
+
+document.getElementById("btnEnderecos").onclick = function(){
+
+conteudoPainel.innerHTML = `
+
+<h2>Meus Endereços</h2>
+
+<div class="painel-box">
+
+<p>
+
+Nenhum endereço cadastrado.
+
+</p>
+
+<button class="btn-primary">
+
+Adicionar Endereço
+
+</button>
+
+</div>
+
+`;
+
+};
+
+document.getElementById("btnFavoritos").onclick = function(){
+
+conteudoPainel.innerHTML = `
+
+<h2>Favoritos</h2>
+
+<div class="painel-box">
+
+<p>
+
+Você ainda não possui favoritos.
+
+</p>
+
+</div>
+
+`;
+
+};
+
+document.getElementById("btnConfiguracoes").onclick = function(){
+
+conteudoPainel.innerHTML = `
+
+<h2>Configurações</h2>
+
+<div class="painel-box">
+
+<label>
+
+<input type="checkbox">
+
+Receber promoções
+
+</label>
+
+<br><br>
+
+<label>
+
+<input type="checkbox">
+
+Receber novidades
+
+</label>
+
+</div>
+
+`;
+
+};
 // ==========================
 // LOGOUT
 // ==========================
