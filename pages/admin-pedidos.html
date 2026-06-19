@@ -1,1 +1,246 @@
-.
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+ProdControl | Pedidos
+
+</title>
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link
+rel="stylesheet"
+href="../assets/css/style.css">
+
+<link
+rel="stylesheet"
+href="../assets/css/admin.css">
+
+<link
+rel="stylesheet"
+href="../assets/css/admin-dashboard.css">
+
+<link
+rel="stylesheet"
+href="../assets/css/admin-pedidos.css">
+
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="sidebar-logo">
+
+<img
+src="../assets/img/logo.png"
+alt="Logo">
+
+<h2>
+
+ProdControl
+
+</h2>
+
+</div>
+
+<nav class="sidebar-menu">
+
+<a href="admin-dashboard.html">
+
+<i class="fa-solid fa-chart-line"></i>
+
+Dashboard
+
+</a>
+
+<a
+href="admin-pedidos.html"
+class="active">
+
+<i class="fa-solid fa-bag-shopping"></i>
+
+Pedidos
+
+</a>
+
+<a href="admin-produtos.html">
+
+<i class="fa-solid fa-burger"></i>
+
+Produtos
+
+</a>
+
+<a href="admin-clientes.html">
+
+<i class="fa-solid fa-users"></i>
+
+Clientes
+
+</a>
+
+<a href="admin-relatorios.html">
+
+<i class="fa-solid fa-chart-column"></i>
+
+Relatórios
+
+</a>
+
+<a href="admin-cozinha.html">
+
+<i class="fa-solid fa-kitchen-set"></i>
+
+Cozinha
+
+</a>
+
+<a href="admin-configuracoes.html">
+
+<i class="fa-solid fa-gear"></i>
+
+Configurações
+
+</a>
+
+</nav>
+
+</aside>
+
+<!-- CONTEÚDO -->
+
+<main class="admin-main">
+
+<header class="topbar">
+
+<h1>
+
+Central de Pedidos
+
+</h1>
+
+<div class="admin-user">
+
+<i class="fa-solid fa-user-shield"></i>
+
+Administrador
+
+</div>
+
+</header>
+
+<section class="pedidos-header">
+
+<input
+
+type="text"
+
+id="pesquisaPedido"
+
+placeholder="Pesquisar por número, cliente ou telefone...">
+
+<div class="filtros">
+
+<button
+class="filtro active"
+data-status="Todos">
+
+Todos
+
+</button>
+
+<button
+class="filtro"
+data-status="Recebido">
+
+Recebidos
+
+</button>
+
+<button
+class="filtro"
+data-status="Em preparo">
+
+Em preparo
+
+</button>
+
+<button
+class="filtro"
+data-status="Saiu para entrega">
+
+Entrega
+
+</button>
+
+<button
+class="filtro"
+data-status="Finalizado">
+
+Finalizados
+
+</button>
+
+<button
+class="filtro"
+data-status="Cancelado">
+
+Cancelados
+
+</button>
+
+</div>
+
+</section>
+
+<section
+id="listaPedidos"
+class="lista-pedidos">
+
+<!--
+Os cards serão criados automaticamente
+pelo admin-pedidos.js
+-->
+
+</section>
+
+</main>
+
+</div>
+
+<script src="../assets/js/storage.js"></script>
+
+<script src="../assets/js/admin-pedidos.js"></script>
+
+</body>
+
+</html>
