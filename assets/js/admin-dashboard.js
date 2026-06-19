@@ -51,7 +51,8 @@ document.getElementById("totalProdutos");
 const nomeAdmin =
 document.getElementById("nomeAdmin");
 
-
+const ultimoLogin =
+document.getElementById("ultimoLogin");
 /*==================================================
 ESTADO
 ==================================================*/
@@ -76,17 +77,41 @@ document.addEventListener(
 
 function iniciarDashboard(){
 
-    if(
+    if(Admin){
 
-        nomeAdmin &&
+        if(nomeAdmin){
 
-        Admin
+            nomeAdmin.textContent =
 
-    ){
+            Admin.nome;
 
-        nomeAdmin.textContent =
+        }
 
-        Admin.nome;
+        if(ultimoLogin){
+
+            const data =
+
+            new Date(Admin.login);
+
+            ultimoLogin.textContent =
+
+            "Online • " +
+
+            data.toLocaleTimeString(
+
+                "pt-BR",
+
+                {
+
+                    hour:"2-digit",
+
+                    minute:"2-digit"
+
+                }
+
+            );
+
+        }
 
     }
 
