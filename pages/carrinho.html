@@ -1,1 +1,186 @@
-.
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Meu Carrinho | El Prado Burguer</title>
+
+    <meta name="description"
+          content="Carrinho de compras El Prado Burguer">
+
+    <!-- Google Fonts -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- CSS -->
+
+    <link rel="stylesheet"
+          href="../assets/css/style.css">
+
+    <link rel="stylesheet"
+          href="../assets/css/carrinho.css">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="container">
+
+        <a href="../index.html" class="logo">
+
+            <img src="../assets/img/logo.png"
+                 alt="El Prado Burguer">
+
+        </a>
+
+        <nav class="menu">
+
+            <a href="../index.html">Início</a>
+
+            <a href="cardapio.html">Cardápio</a>
+
+            <a href="cliente.html">Minha Conta</a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+<main class="carrinho-page">
+
+    <section class="container">
+
+        <div class="titulo-pagina">
+
+            <h1>
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                Meu Carrinho
+
+            </h1>
+
+            <p>
+
+                Confira seus produtos antes de finalizar seu pedido.
+
+            </p>
+
+        </div>
+
+        <!-- Lista de Produtos -->
+
+        <section id="listaCarrinho"
+                 class="lista-carrinho">
+
+        </section>
+
+        <!-- Resumo -->
+
+        <aside class="resumo-carrinho">
+
+            <h2>
+
+                Resumo do Pedido
+
+            </h2>
+
+            <div class="linha">
+
+                <span>Subtotal</span>
+
+                <strong id="subtotal">
+
+                    R$ 0,00
+
+                </strong>
+
+            </div>
+
+            <div class="linha">
+
+                <span>Entrega</span>
+
+                <strong id="entrega">
+
+                    A calcular
+
+                </strong>
+
+            </div>
+
+            <div class="linha total">
+
+                <span>Total</span>
+
+                <strong id="total">
+
+                    R$ 0,00
+
+                </strong>
+
+            </div>
+
+            <button
+                id="btnCheckout"
+                class="btn-finalizar">
+
+                Finalizar Pedido
+
+            </button>
+
+            <a href="cardapio.html"
+               class="btn-continuar">
+
+                Continuar Comprando
+
+            </a>
+
+        </aside>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+
+    <div class="container">
+
+        <p>
+
+            © 2026 El Prado Burguer
+
+        </p>
+
+    </div>
+
+</footer>
+
+<script src="../assets/js/storage.js"></script>
+
+<script src="../assets/js/carrinho.js"></script>
+
+</body>
+
+</html>
