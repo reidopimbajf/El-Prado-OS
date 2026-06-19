@@ -198,23 +198,7 @@ function registrarEventos(){
 SESSÃO
 ==================================================*/
 
-function verificarSessao(){
 
-    if(
-
-        Storage.estaLogado()
-
-    ){
-
-        clienteLogado =
-
-            Storage.getUsuario();
-
-        mostrarPainel();
-
-    }
-
-}
 
 /*==================================================
 TELAS
@@ -379,10 +363,11 @@ function realizarLogin(e){
 
     Storage.login(cliente);
 
-    atualizarDados();
+clienteLogado = cliente;
 
-    mostrarPainel();
+atualizarDados();
 
+mostrarPainel();
 }
 
 /*==================================================
@@ -391,19 +376,31 @@ PAINEL
 
 function mostrarPainel(){
 
-    const cardLogin = document.querySelector(".cliente-card");
+   const cardLogin = document.querySelector(".cliente-card");
 
-    if(cardLogin){
+if(cardLogin){
 
-        cardLogin.style.display = "none";
+    cardLogin.style.display = "none";
 
-    }
+}
 
-    if(painelCliente){
+if(cadastroContainer){
 
-        painelCliente.style.display = "block";
+    cadastroContainer.style.display = "none";
 
-    }
+}
+
+if(formLogin){
+
+    formLogin.style.display = "none";
+
+}
+
+if(painelCliente){
+
+    painelCliente.style.display = "block";
+
+}
 
     if(nomeCliente){
 
