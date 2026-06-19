@@ -33,6 +33,24 @@ document.getElementById(
 
 );
 
+const totalTodos =
+document.getElementById("totalTodos");
+
+const totalRecebidos =
+document.getElementById("totalRecebidos");
+
+const totalPreparo =
+document.getElementById("totalPreparo");
+
+const totalEntrega =
+document.getElementById("totalEntrega");
+
+const totalFinalizados =
+document.getElementById("totalFinalizados");
+
+const totalCancelados =
+document.getElementById("totalCancelados");
+
 /*==================================================
 ESTADO
 ==================================================*/
@@ -80,7 +98,7 @@ function carregarPedidos(){
         new Date(a.data)
 
     );
-
+atualizarContadores();
 }
 
 /*==================================================
@@ -503,6 +521,67 @@ function aplicarFiltros(){
 
 }
 /*==================================================
+CONTADORES
+==================================================*/
+
+function atualizarContadores(){
+
+    totalTodos.textContent =
+
+        pedidos.length;
+
+    totalRecebidos.textContent =
+
+        pedidos.filter(
+
+            pedido=>
+
+            pedido.status==="Recebido"
+
+        ).length;
+
+    totalPreparo.textContent =
+
+        pedidos.filter(
+
+            pedido=>
+
+            pedido.status==="Em preparo"
+
+        ).length;
+
+    totalEntrega.textContent =
+
+        pedidos.filter(
+
+            pedido=>
+
+            pedido.status==="Saiu para entrega"
+
+        ).length;
+
+    totalFinalizados.textContent =
+
+        pedidos.filter(
+
+            pedido=>
+
+            pedido.status==="Finalizado"
+
+        ).length;
+
+    totalCancelados.textContent =
+
+        pedidos.filter(
+
+            pedido=>
+
+            pedido.status==="Cancelado"
+
+        ).length;
+
+}
+/*==================================================
 AÇÕES
 ==================================================*/
 window.verPedido=function(id){
@@ -609,11 +688,15 @@ window.alterarStatus=function(id){
 
     }
 
-    Storage.salvarPedidos(pedidos);
+    Storage.salvarPedidos(
 
-    renderPedidos();
+    pedidos
 
-}
+);
+
+atualizarContadores();
+
+renderPedidos();
 
 /*==================================================
 MONITOR
@@ -625,11 +708,13 @@ window.addEventListener(
 
     ()=>{
 
-        carregarPedidos();
+    carregarPedidos();
 
-        renderPedidos();
+    atualizarContadores();
 
-    }
+    renderPedidos();
+
+}
 
 );
 /*==================================================
