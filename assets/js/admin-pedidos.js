@@ -411,11 +411,93 @@ window.verPedido=function(id){
 
 window.alterarStatus=function(id){
 
-    alert(
+    const pedido = pedidos.find(
 
-        "Alteração de status será implementada na Parte 4."
+        p=>p.id===id
 
     );
+
+    if(!pedido){
+
+        return;
+
+    }
+
+    switch(pedido.status){
+
+        case "Recebido":
+
+            pedido.status="Em preparo";
+
+            break;
+
+        case "Em preparo":
+
+            pedido.status="Saiu para entrega";
+
+            break;
+
+        case "Saiu para entrega":
+
+            pedido.status="Finalizado";
+
+            break;
+
+        default:
+
+            return;
+
+    }
+
+    /*==================================
+    TIMELINE
+    ==================================*/
+
+    if(!pedido.timeline){
+
+        pedido.timeline={
+
+            recebido:pedido.data,
+
+            preparo:null,
+
+            saiuEntrega:null,
+
+            finalizado:null,
+
+            cancelado:null
+
+        };
+
+    }
+
+    if(pedido.status==="Em preparo"){
+
+        pedido.timeline.preparo=
+
+        Storage.dataAtual();
+
+    }
+
+    if(pedido.status==="Saiu para entrega"){
+
+        pedido.timeline.saiuEntrega=
+
+        Storage.dataAtual();
+
+    }
+
+    if(pedido.status==="Finalizado"){
+
+        pedido.timeline.finalizado=
+
+        Storage.dataAtual();
+
+    }
+
+    Storage.salvarPedidos(pedidos);
+
+    renderPedidos();
 
 }
 
